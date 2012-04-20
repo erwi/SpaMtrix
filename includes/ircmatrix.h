@@ -1,7 +1,9 @@
 #ifndef IRCMATRIX
 #define IRCMATRIX
 #include <iostream>
+#include <stdio.h>
 #include <assert.h>
+#include <stdlib.h>
 typedef unsigned int idx;
 typedef double real;
 struct ColVal{
@@ -14,9 +16,9 @@ struct ColVal{
 // Interleaved Row Compressed Matrix
 class IRCMatrix
 {
-    idx* rows;			// ROW COUNTER
+    idx* rows;		// ROW COUNTER
     ColVal* cvPairs;	// COLUMN-VALUE PAIRS
-    idx nnz;			// NUMBER OF NON-ZEROS
+    idx nnz;		// NUMBER OF NON-ZEROS
     idx numRows, numCols;
     
     idx getIndex(const idx row, const idx col) const;
@@ -37,6 +39,15 @@ public:
     void sparse_set(const idx row, const idx col , const real val );
     void sparse_add(const idx row, const idx col , const real val );
     real sparse_get(const idx row, const idx col ) const;
+    
+    
+    //================================================
+    // DEBUG FUNCTIONS
+    #ifdef DEBUG
+    bool isNonZero(const idx row, const idx col) const;
+    void spy()const;
+    void print() const;
+    #endif
     
     
 };

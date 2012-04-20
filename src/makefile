@@ -4,10 +4,12 @@ IRCMATOBJS = ircmatrix.o ircmatrix_test.o makeircmatrix.o
 OBJS += $(IRCMATOBJS)
 EXECS = ircmatrix_test.exe
 
+CXXFLAGS = -Wall -DDEBUG
+
 INCDIR = ../includes
 all:$(OBJS)
 .cpp.o:
-	g++ -c -g $< -I$(INCDIR)
+	g++ -c -g $< -I$(INCDIR) $(CXXFLAGS)
 	
 
 ircmatrix_test.exe: $(IRCMATOBJS)
