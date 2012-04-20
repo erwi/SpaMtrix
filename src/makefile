@@ -1,5 +1,5 @@
 
-OBJS = mvvd.o rcmatrix.o 
+OBJS = rcmatrix.o vector.o
 IRCMATOBJS = ircmatrix.o ircmatrix_test.o makeircmatrix.o
 OBJS += $(IRCMATOBJS)
 EXECS = ircmatrix_test.exe

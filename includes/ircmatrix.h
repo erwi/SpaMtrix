@@ -4,8 +4,9 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
-typedef unsigned int idx;
-typedef double real;
+
+#include <setup.h>
+
 struct ColVal{
 	idx col;	// COLUMN INDEX
 	real val;	// VALUE
