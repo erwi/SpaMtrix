@@ -1,6 +1,6 @@
 
-OBJS = rcmatrix.o vector.o
-IRCMATOBJS = ircmatrix.o ircmatrix_test.o makeircmatrix.o
+OBJS = spamtrix_blas.o
+IRCMATOBJS = ircmatrix.o ircmatrix_test.o makeircmatrix.o vector.o spamtrix_blas.o cg.o
 OBJS += $(IRCMATOBJS)
 EXECS = ircmatrix_test.exe
 
@@ -12,7 +12,7 @@ all:$(OBJS)
 	g++ -c -g $< -I$(INCDIR) $(CXXFLAGS)
 	
 
-ircmatrix_test.exe: $(IRCMATOBJS)
+ircmatrix_test.exe: $(IRCMATOBJS) $(OBJS)
 	g++ -o $@ $(IRCMATOBJS)
 	
 clean:
