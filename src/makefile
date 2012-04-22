@@ -1,6 +1,6 @@
 
-OBJS = spamtrix_blas.o
-IRCMATOBJS = ircmatrix.o ircmatrix_test.o makeircmatrix.o vector.o spamtrix_blas.o cg.o
+OBJS = spamtrix_blas.o ircmatrix.o ircmatrix_test.o makeircmatrix.o vector.o spamtrix_blas.o cg.o pcg.o diagpreconditioner.o
+
 OBJS += $(IRCMATOBJS)
 EXECS = ircmatrix_test.exe
 
