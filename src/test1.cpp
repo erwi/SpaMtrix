@@ -3,6 +3,7 @@
 #include <iostream>
 #include <spamtrix_blas.h>
 #include <cg.h>
+#include <matrixmaker.h>
 using std::cout;
 using std::endl;
 int main ()
@@ -11,9 +12,13 @@ int main ()
  * Solves the linear example problem Ax=b from schewchuck's text
  * using the conjugate gradient method.
  */	
-    // CREATE 2x2 SPARSE MATRIX A
-    idx t[2] = {0,1};
-    IRCMatrix A = makeIRCMatrix(t , 2, 1);
+    // CREATE EMPTY SPARSE MATRIX    
+    MatrixMaker mm;
+    mm.setMatrixSize(2,2);
+    mm.addNonZero(0,0); mm.addNonZero(0,1);
+    mm.addNonZero(1,0); mm.addNonZero(1,1);
+    IRCMatrix A = mm.getIRCMatrix();
+    mm.clear();
     
     // SET  A = |3,2|
     //		|2,6|
