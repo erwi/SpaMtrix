@@ -4,9 +4,11 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <cstring>
+#include <omp.h>
 
 #include <setup.h>
-
+#include <vector.h>
 struct ColVal{
 	idx col;	// COLUMN INDEX
 	real val;	// VALUE
@@ -32,7 +34,10 @@ public:
                 idx * const rows, ColVal *const cvPairs):
                 rows(rows), cvPairs(cvPairs), nnz(nnz), 
                 numRows(numRows) , numCols(numCols){}
-    
+
+    IRCMatrix(const IRCMatrix &m);
+    IRCMatrix& operator=(const IRCMatrix& m);
+    ~IRCMatrix();
     //================================================
     idx getnnz()const {return nnz;}
     idx getNumRows()const {return numRows;}
@@ -42,6 +47,10 @@ public:
     real sparse_get(const idx row, const idx col ) const;
     
     
+    //===============================================
+    // FRIEND FUNCTIONS IN SPAMTRIX_BLAS - THIS MAY GET MESSY
+    friend void multiply(const IRCMatrix& A, const Vector& x, Vector& b);
+    
     //================================================
     // DEBUG FUNCTIONS
     #ifdef DEBUG
@@ -49,6 +58,8 @@ public:
     void spy()const;
     void print() const;
     #endif
+    
+    
     
     
 };

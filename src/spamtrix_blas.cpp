@@ -23,13 +23,17 @@ void multiply(const IRCMatrix& A,
     
   */    
     // FOR EACH ROW
+#pragma omp parallel for
     for (idx i = 0 ; i < A.getNumRows() ; i++)
     {
       // FOR EACH COLUMN
       real r(0);
-      for (idx j = 0 ; j < A.getNumCols() ; j++)
+      idx row_start = A.rows[i];
+      idx row_end   = A.rows[i+1];
+      for (idx j = row_start ; j < row_end ; j++)
       {
-	r += A.sparse_get(i,j)*x[j];
+	idx col = A.cvPairs[j].col;
+	r += A.cvPairs[j].val * x[col];
       }//j
       b[i] = r;
       
@@ -67,6 +71,7 @@ real dot(const Vector& v1, const Vector& v2)
   assert(v1.getLength() == v2.getLength() );
 #endif
   real d(0.0);
+#pragma omp parallel for reduction(+:d)
   for (idx i = 0 ; i < v1.getLength() ; ++i)
     d+= v1[i] * v2[i];
   

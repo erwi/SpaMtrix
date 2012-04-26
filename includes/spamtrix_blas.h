@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <iostream>
 #include <stdlib.h>
+#include <omp.h>
 // MATRIX VECTOR MULTIPLICATION b = Ax
 void multiply(const IRCMatrix& A,
 	     const Vector& x,

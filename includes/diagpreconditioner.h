@@ -3,6 +3,7 @@
 #include <setup.h>
 #include <vector.h>
 #include <ircmatrix.h>
+#include <omp.h>
 class DiagPreconditioner{
   
     Vector diagonal;

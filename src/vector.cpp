@@ -41,9 +41,7 @@ Vector& Vector::operator=(const Vector& v)
   if (length != v.length )
   {
     length = v.length;
-    delete [] values;
-    values = NULL;
-    values = new real[length];
+    this->resize(length);
   }
   
   for (idx i = 0 ; i < length ; ++i )
@@ -73,32 +71,11 @@ void Vector::resize(const idx length)
   this->setAllValuesTo(0.0);
 }
 
-void Vector::setAllValuesTo(const real val)
-{
-  for (idx i = 0 ; i < length ; i++)
-    values[i] = val;
-}
 
 
-real& Vector::operator[](const idx i)
-{
-#ifdef DEBUG
-  assert( i<this->length );
-  assert( this->values );
-#endif
-  
-  return this->values[i];
-}
 
-const real& Vector::operator[](const idx i ) const
-{
- #ifdef DEBUG
-  assert( i<this->length );
-  assert( this->values );
-#endif
-  
-  return this->values[i]; 
-}
+
+
 
 const Vector& Vector::operator+=(const Vector& v)
 {
@@ -127,7 +104,7 @@ const Vector& Vector::operator-=(const Vector& v)
 //============================================
 // 	DEBUG FUNCTIONS
 //============================================
-#ifdef DEBUG
+
 void Vector::print() const
 {
   cout << "Vector length " << this->length << endl;
@@ -136,7 +113,7 @@ void Vector::print() const
     cout <<"Vector["<<i<<"] = " << values[i] << endl;
   }
 }
-#endif
+
 
 
 

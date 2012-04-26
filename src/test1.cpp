@@ -26,7 +26,7 @@ int main ()
     A.sparse_set(0,1, 2.0);
     A.sparse_set(1,0, 2.0);
     A.sparse_set(1,1, 6.0);
-    A.print();
+    //A.print();
     
     // MAKE VECTORS b AND x
     Vector b(2); b[0] = 2; b[1] = -8;

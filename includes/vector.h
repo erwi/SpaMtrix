@@ -20,19 +20,42 @@ public:
   
   ~Vector();
    
-  real& operator[](const idx i);
-  const real& operator[](const idx i) const;
+  real& operator[](const idx i)
+  {
+    #ifdef DEBUG
+    assert( i<this->length );
+    assert( this->values );
+    #endif
+  
+    return this->values[i];
+  }
+  const real& operator[](const idx i ) const
+  {
+    #ifdef DEBUG
+    assert( i<this->length );
+    assert( this->values );
+    #endif
+    return this->values[i]; 
+  }
+  
+  void setAllValuesTo(const real val)
+  {
+      for (idx i = 0 ; i < length ; i++)
+      values[i] = val;
+  }
+
+  
   
   Vector& operator=(const Vector& v);
   const Vector& operator-=(const Vector& v);
   const Vector& operator+=(const Vector& v);
   
   void resize(const idx length);
-  void setAllValuesTo(const real val);
+  
   idx getLength()const{return this->length;}
-#ifdef DEBUG
+
   void print()const;
-#endif
+
   
 };
 

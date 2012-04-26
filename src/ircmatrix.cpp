@@ -1,5 +1,39 @@
 #include <ircmatrix.h>
 
+  IRCMatrix::IRCMatrix(const IRCMatrix& m):
+  rows(NULL),
+  cvPairs(NULL),
+  nnz(0),
+  numRows(0),numCols(0)
+  {
+    nnz = m.nnz;
+    numRows = m.numRows;
+    numCols = m.numCols;
+    
+    rows = new idx [nnz+1];
+    if (!rows)
+    {
+      cout << "error in " << __func__ << " could not allocate rows" << endl; 
+      exit(1);
+    }
+    
+    cvPairs = new ColVal[nnz];
+    if (!cvPairs)
+    {
+      cout << "error in " << __func__ << " could not allocate cvPairs" << endl;
+      exit(1);
+    }
+    
+    memcpy(rows, m.rows, (nnz+1)*sizeof(idx));
+    memcpy(cvPairs, m.cvPairs, nnz*sizeof(ColVal) );
+  }
+
+  IRCMatrix& IRCMatrix::operator=(const IRCMatrix& m)
+  {
+    // TODO 
+    return *this;
+  }
+  
   inline idx IRCMatrix::getIndex(const idx row, const idx col) const
   {
   /*! FINDS INDEX TO ColVal CORRESPONDING INPUT TO ROW AND COLUMN
@@ -24,18 +58,27 @@
       exit(1);
   }
 
-
+  IRCMatrix::~IRCMatrix()
+  {
+    delete [] rows;
+    delete [] cvPairs;
+    numCols = 0;
+    numRows = 0;
+    nnz = 0;
+    cout << "MATRIX DESTRUCTOR"<< endl;
+  }
   void IRCMatrix::sparse_set(const idx row, const idx col, const real val)
   {
       idx i = getIndex(row, col);
-      #pragma omp atomic
+ 
+  //    #pragma omp atomic
       this->cvPairs[i].val = val;
   }
 
   void IRCMatrix::sparse_add(const idx row, const idx col, const real val)
   {
       idx i = getIndex(row, col);
-      #pragma omp atomic
+  //    #pragma omp atomic
       this->cvPairs[i].val+= val;
   }
 

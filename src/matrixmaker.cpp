@@ -56,7 +56,7 @@ void MatrixMaker::clear()
   nonZeros.clear();
 }
 
-IRCMatrix& MatrixMaker::getIRCMatrix()
+IRCMatrix MatrixMaker::getIRCMatrix()
 {
   /*!
    * Converts sparsity pattern to 0-initialised IRCMatrix
@@ -102,10 +102,9 @@ IRCMatrix& MatrixMaker::getIRCMatrix()
   }// end for rows
   rows[nRows] = cnt; // LAST = NNZ+1
   
-  // CREATE MATRIX
-  IRCMatrix* ircm = new IRCMatrix(nRows, nCols, nnz, rows, cvPairs);
-  return *ircm;
-  
-}
+  // CREATE MATRIX - FINGERS CROSSED FOR RETURN VALUE OPTIMIZATION
+  // USE C++11 MOVE SEMANTICS HERE?
+  return IRCMatrix(nRows, nCols, nnz, rows, cvPairs);
+ }
 
 

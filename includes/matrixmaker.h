@@ -30,7 +30,7 @@ public:
 
   void clear();
   
-  IRCMatrix& getIRCMatrix();
+  IRCMatrix getIRCMatrix();
   
 };
 

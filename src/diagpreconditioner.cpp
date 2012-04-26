@@ -12,10 +12,14 @@ diagonal(A.getNumRows() )
 
 void DiagPreconditioner::applyToVector(Vector& v) const
 {
+/*!
+ * Performs v = M^(-1)v
+ */  
+
 #ifdef DEBUG
   assert(diagonal.getLength() == v.getLength() );
 #endif
-    
+#pragma omp parallel for
     for (idx i = 0 ; i < diagonal.getLength() ; ++i)
       v[i]/=diagonal[i];
 }
