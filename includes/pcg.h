@@ -9,7 +9,7 @@
 bool pcg(const IRCMatrix& A,
 	 const Vector& b,
 	 Vector& x,
-	 const DiagPreconditioner& M,
+	 const Preconditioner& M,
 	 idx& maxIter,
 	 real& toler);
 

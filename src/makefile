@@ -5,6 +5,7 @@ OBJS += $(IRCMATOBJS)
 EXECS = ircmatrix_test.exe
 
 CXXFLAGS += -Wall 
+CXXFLAGS += -DUSES_OPENMP # WHETHER COMPILED WITH OPENMP FOR LOOPS
 #CXXFLAGS += -DDEBUG -g
 CXXFLAGS += -O3 -g -fopenmp -march=native -ffast-math
 
@@ -23,7 +24,7 @@ clean:
 
 TEST1_OBJS = test1.o ircmatrix.o vector.o cg.o spamtrix_blas.o matrixmaker.o
 test1:
-	g++ -o test1.exe $(TEST1_OBJS)
+	g++ -o test1.exe $(TEST1_OBJS) $(LIBS)
 
 TEST2_OBJS = test2.o ircmatrix.o vector.o diagpreconditioner.o cg.o pcg.o spamtrix_blas.o matrixmaker.o	
 test2:

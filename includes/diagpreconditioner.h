@@ -3,8 +3,9 @@
 #include <setup.h>
 #include <vector.h>
 #include <ircmatrix.h>
+#include <preconditioner.h>
 #include <omp.h>
-class DiagPreconditioner{
+class DiagPreconditioner: public Preconditioner {
   
     Vector diagonal;
     
@@ -12,8 +13,8 @@ class DiagPreconditioner{
 public:
   DiagPreconditioner(const IRCMatrix& A);
    
-  void applyToVector(Vector& v) const;
-    
+  //void applyToVector(Vector& v) const;
+  virtual void solveMxb(Vector &x, Vector &b) const;  
   
 };
 

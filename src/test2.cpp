@@ -74,7 +74,7 @@ int main(int nargs, char* args[])
   
   // CREATE PRECONDITIONER
   DiagPreconditioner D(A);
-  D.print();
+ 
   // SOLVE Ax=b
   idx maxIter = np;
   real toler(1e-7);

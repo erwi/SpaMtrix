@@ -65,7 +65,7 @@
     numCols = 0;
     numRows = 0;
     nnz = 0;
-    cout << "MATRIX DESTRUCTOR"<< endl;
+   
   }
   void IRCMatrix::sparse_set(const idx row, const idx col, const real val)
   {

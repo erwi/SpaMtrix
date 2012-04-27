@@ -3,7 +3,7 @@
 bool pcg(const IRCMatrix& A,
 	 const Vector& b,
 	 Vector& x,
-	 const DiagPreconditioner& M,
+	 const Preconditioner& M,
 	 idx& maxIter,
 	 real& toler)
 {
@@ -22,8 +22,8 @@ bool pcg(const IRCMatrix& A,
   r-=temp1;
   
   // d = M^(-1) r
-  Vector d(r);
-  M.applyToVector(d);
+  Vector d(b.getLength() );
+  M.solveMxb(d,r);
   
   real delta_n = dot(r,d);
   real delta_0 = delta_n;
@@ -56,8 +56,10 @@ bool pcg(const IRCMatrix& A,
     }
 
     // s = M^(-1)*r
-    temp1 = r;
-    M.applyToVector(temp1); // temp1 = s
+    //temp1 = r;
+    //M.applyToVector(temp1); // temp1 = s
+    M.solveMxb(temp1,r);
+    
     
     real delta_old = delta_n;
     delta_n = dot(r,temp1);

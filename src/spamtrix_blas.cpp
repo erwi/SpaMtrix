@@ -15,15 +15,11 @@ void multiply(const IRCMatrix& A,
   // IF b AND x ARE NOT REFERENCES TO SAME VECTOR
   if (&b != &x)
   {
-/*
-    (if (b.getLength() != x.getLength() ) // RESIZE b IF NECESSARY
-    {
-      b.resize( x.getLength() )
-    }
-    
-  */    
+
     // FOR EACH ROW
+#ifdef USES_OPENMP
 #pragma omp parallel for
+#endif
     for (idx i = 0 ; i < A.getNumRows() ; i++)
     {
       // FOR EACH COLUMN
