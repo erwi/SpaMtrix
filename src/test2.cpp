@@ -2,9 +2,15 @@
 #include <vector.h>
 #include <matrixmaker.h>
 #include <spamtrix_blas.h>
+
+#include <diagpreconditioner.h>
+#include <jacobipreconditioner.h>
+#include <sorpreconditioner.h>
 #include <pcg.h>
 #include <cg.h>
 #include <iostream>
+#include <math.h>
+
 // TEST 2. SOLVES 1D POISSON FINITE DIFFERENCES PROBLEM
 using std::cout;
 using std::endl;
@@ -61,7 +67,7 @@ int main(int nargs, char* args[])
   
   // APPLY BOUNDARY CONDITIONS
   multiply(A,x,b); 	// b = Ax;
-  multiply(b, -1.0, b); // WANT TO SOLVE Ax = -b, SO PREMULTIPLY BY -1 HERE
+  scale(-1.0, b); // WANT TO SOLVE Ax = -b, SO MULTIPLY BY -1 HERE
   // FIRST NODE
   A.sparse_set(0, 0, 1.0); 
   A.sparse_set(0, 1, 0.0); 
@@ -72,23 +78,22 @@ int main(int nargs, char* args[])
   A.sparse_set(np-1, np-2, 0.0);
   //A.print();
   
-  // CREATE PRECONDITIONER
+  // CREATE PRECONDITIONERS
   DiagPreconditioner D(A);
- 
+  JacobiPreconditioner J(A);
+  SORPreconditioner S(A,0);
   // SOLVE Ax=b
   idx maxIter = np;
   real toler(1e-7);
+  //SOR(A,x,b,1);
+  //x.print();
+  cout << "error before pcg: "<< sqrt(errorNorm2(A,x,b)) << endl;
   cout << "solving pcg..."; fflush(stdout);
   bool conv = pcg(A, b, x, D, maxIter, toler);
   //bool conv = cg(A,b,x,maxIter,toler);
   cout << "OK" << endl;
-  // WRITE BACK FIXED NODES TO x
-  x[0] = 1.0;
-  x[np-1] = -1.0;
-  
-  
-  
-  //x.print();
+  real error = errorNorm2(A, x, b);
+  cout << "Error norm = " << error << endl;
   cout << "CONVERGENCE FOR MATRIX SIZE " << np << " = " ;
   if (conv)
     cout <<"OK"<<endl;
@@ -97,6 +102,6 @@ int main(int nargs, char* args[])
   
   cout << "iterations used: " << maxIter << endl;
   cout << "Tolerance achieved: " << toler << endl;
-  
+ 
   return 0;
 }

@@ -3,7 +3,7 @@
 #include <setup.h>
 #include <ircmatrix.h>
 #include <vector.h>
-
+#include <spamtrix_blas.h>
 bool cg(const IRCMatrix& A,
 	const Vector& b,
 	Vector& x,

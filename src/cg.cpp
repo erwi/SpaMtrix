@@ -1,5 +1,5 @@
 #include <cg.h>
-#include <spamtrix_blas.h>
+//#include <spamtrix_blas.h>
 bool cg(const IRCMatrix& A,
 	const Vector& b,
 	Vector& x,
@@ -15,63 +15,50 @@ bool cg(const IRCMatrix& A,
   
   // r = b - Ax
   Vector r = b;
-  Vector temp1( b.getLength() );
-  Vector temp2( b.getLength() );
-  multiply(A,x,temp1);		// temp = Ax
-  r-= temp1;
-  
-  // d = r
-  Vector d(r);
-  
-  real delta_n = dot(r,r);
-  real delta_0 = delta_n;
+  Vector Av(r.getLength() ); // TEMPORARY VECTOR FOR MATRIX*VEC 
+  multiply(A, x, Av);
+  r-=Av;
+  // p = r;
+  Vector p = r;
   
   // START MAIN LOOP
   idx i = 0;
   
-  while ( (i < maxIter) && (delta_n > toler*toler*delta_0 ) )
+  real error_old = dot(r,r);
+  cout << "initial error :" << error_old << endl;
+  while ( (i < maxIter) && ( error_old > toler*toler ) )
+    //(delta_n > //toler*toler*delta_0 ) )
   {
-  
-      multiply(A,d,temp1); // temp = Ad (= q)
-      real a = delta_n / dot(d,temp1);
+      // CALCULATE alpha
+      multiply(A,p,Av); 
+      real alpha = error_old / dot(p,Av);
       
-      // x = x + a*d
-      multiply(d,a,temp2);
-      x+=temp2;
-      
-      if (i % 50 == 0 )
-      {
-	
-	// r = b-Ax
-	r = b;
-	multiply(A,x, temp2);
-	r-=temp2;
-      }
-      else
-      {
-	// r = r-a*q
-	multiply(temp1, a, temp2);
-	r-=temp2;
-      }
+      // x = x + alpha*d
+      axpy(alpha,p,x);
+        
+      //r = r-alpha*Ad
+      axpy( -1.0*alpha , Av, r);
             
-      real delta_old = delta_n;
-      delta_n =  dot(r,r);
-      real Beta = delta_n / delta_old;
+      const real error_new = dot(r,r);
+      if ( error_new < toler*toler )
+      {
+	error_old = error_new;
+	break;
+      }
       
-      // d = r + Beta*d
-      multiply(d,Beta,temp2); 	// Beta*r
-      d = r;
-      d+= temp2;
-      
+      printf("iter %i , error %e\n", (int) i, error_new);
+      const real error_ratio = error_new / error_old;
+      // p = error_ratio*p + r
+      aypx(error_ratio, p, r);
+      error_old = error_new;
       i++;
-  
   }
   
   // NUMBER OF ITERATIONS PERFORMED
   bool converged(i < maxIter);
   maxIter = i; 
   
-  toler = delta_n;
+  toler = error_old;
   
   
   return converged;

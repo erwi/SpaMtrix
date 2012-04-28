@@ -48,8 +48,16 @@ public:
     
     
     //===============================================
-    // FRIEND FUNCTIONS IN SPAMTRIX_BLAS - THIS MAY GET MESSY
+    // FRIEND FUNCTIONS THAT REQUIRE ACCESS TO PRIVATE
+    // DATA FOR PERFORMANCE - THIS MAY GET MESSY
+    //===============================================
+    // SPAMTRIX-BLAS
     friend void multiply(const IRCMatrix& A, const Vector& x, Vector& b);
+    // RELAXERS
+    friend void jacobi(const IRCMatrix& A, Vector &x, const Vector &b,const idx &maxIter);
+    friend void SOR(const IRCMatrix& A, Vector &x, const Vector& b, idx maxIter);
+    // friend void gauss-seidel
+    // frined void sor
     
     //================================================
     // DEBUG FUNCTIONS

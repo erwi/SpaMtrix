@@ -1,5 +1,5 @@
 #include <pcg.h>
-
+#include <math.h>
 bool pcg(const IRCMatrix& A,
 	 const Vector& b,
 	 Vector& x,
@@ -11,70 +11,56 @@ bool pcg(const IRCMatrix& A,
  * Preconditioned conjugate gradient solver for solving Ax=b.
  * Returns true if converged to solution with tolerance toler
  * in maxIter iterations. Total number of iterations needed is returned
- * in maxIter and tolerance achieved in toler 
+ * in maxIter and tolerance achieved in toler.  
  */
-  Vector temp1( b.getLength() );
-  Vector temp2( b.getLength() );
   
-  // INITIAL RESIDUAL r = b - Ax
-  multiply (A,x,temp1);
+// INITIAL RESIDUAL
   Vector r = b;
-  r-=temp1;
-  
-  // d = M^(-1) r
-  Vector d(b.getLength() );
-  M.solveMxb(d,r);
-  
-  real delta_n = dot(r,d);
-  real delta_0 = delta_n;
-  unsigned int i = 0;
-  
-  while ( (i < maxIter) && (delta_n > toler*toler*delta_0) )
-  {
-    // q = Ad
-    multiply(A,d,temp1); // temp1 = q
-    
-    // CALCULATE alpha
-    real alpha = delta_n / dot(d,temp1);
- 
-    // x = x + alpha*d
-    multiply(d,alpha,temp2); // temp2 = alpha*d
-    x+= temp2;
-    
-    if ( i % 50 == 0 )
-    {
-      // r = b - Ax
-      r = b;
-      multiply(A,x, temp2 );
-      r-= temp2;
-    }
-    else
-    {
-      // r = r - alpha*q
-      multiply(temp1,alpha, temp2); // temp2 = alpha*q
-      r-= temp2;
-    }
+  Vector Av(x.getLength() );
+  multiply(A,x,Av);
+  r-= Av;
 
-    // s = M^(-1)*r
-    //temp1 = r;
-    //M.applyToVector(temp1); // temp1 = s
-    M.solveMxb(temp1,r);
+  // z = M^(-1)r
+  Vector z(x.getLength() );
+  M.solveMxb(z,r);
+  
+  // p = z
+  Vector p(z);
+  idx k(0);
+  bool converged = false;
+  real error_new = dot(r,z);
+   
+  while ( ( k < maxIter ) &&
+	  (error_new > toler*toler) )
+  {
     
+    // Av = A*p
+    multiply(A,p,Av);
+    const real alpha = error_new / dot (Av, p);
     
-    real delta_old = delta_n;
-    delta_n = dot(r,temp1);
+
+    // UPDATE SOLUTION x = x + alpha*p
+
+    axpy(alpha, p, x);
     
-    real beta = delta_n / delta_old;
+    // UPDATE RESIDUAL r = r - alpha*Ap
+
+    axpy(-1*alpha, Av, r);
     
-    // d = s + beta*d
-    multiply(d,beta,d); // d*beta
-    d += temp1; 	// + s
-    
-    i++;
+       
+    M.solveMxb(z,r);
+    const real error_old = error_new;
+    error_new = dot(r,z);
+    const real beta = error_new / error_old ;
+    // p = beta*p + z
+    aypx(beta,p,z);
+        
+    k++;
   }
-    
-  bool converged( i < maxIter);
-  maxIter = i;
-  toler = delta_n;
+  converged = sqrt(error_new) <= toler;
+  
+  maxIter = k;
+  toler = sqrt(error_new);
+  
   return converged;
 }

@@ -14,7 +14,7 @@ public:
   DiagPreconditioner(const IRCMatrix& A);
    
   //void applyToVector(Vector& v) const;
-  virtual void solveMxb(Vector &x, Vector &b) const;  
+  void solveMxb(Vector &x, const Vector &b) const;  
   
 };
 
