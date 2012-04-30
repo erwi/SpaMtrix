@@ -1,0 +1,2 @@
+1. Finish Tridiagonal matrix "print" method
+2. Finish Tridiagonal matrix "isValidIndexFunction"

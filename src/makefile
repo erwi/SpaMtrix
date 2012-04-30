@@ -1,5 +1,5 @@
 
-OBJS = spamtrix_blas.o ircmatrix.o vector.o cg.o pcg.o diagpreconditioner.o matrixmaker.o test1.o test2.o
+OBJS = setup.o spamtrix_blas.o ircmatrix.o vector.o cg.o pcg.o diagpreconditioner.o matrixmaker.o test1.o test2.o tdmatrix.o
 
 OBJS += $(IRCMATOBJS)
 EXECS = ircmatrix_test.exe
@@ -26,6 +26,6 @@ TEST1_OBJS = test1.o ircmatrix.o vector.o cg.o spamtrix_blas.o matrixmaker.o
 test1:
 	g++ -o test1.exe $(TEST1_OBJS) $(LIBS)
 
-TEST2_OBJS = test2.o ircmatrix.o vector.o diagpreconditioner.o cg.o pcg.o spamtrix_blas.o matrixmaker.o	
+TEST2_OBJS = test2.o ircmatrix.o vector.o diagpreconditioner.o cg.o pcg.o spamtrix_blas.o matrixmaker.o tdmatrix.o
 test2:
 	g++ -o test2.exe $(TEST2_OBJS) $(LIBS)
