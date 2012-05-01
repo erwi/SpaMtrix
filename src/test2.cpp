@@ -64,10 +64,10 @@ int main(int nargs, char* args[])
     }
   }
   
-  cout << "OK" << endl;
   
+  cout << endl;
   tdm.print();
-  
+  cout << "OK" << endl;
   // CREATE UNKNOWN VECTOR x, WITH FIXED VALUES 1, -1 AT BOTH ENDS
   Vector x(np);
   x[0] = 1.0;
@@ -86,8 +86,8 @@ int main(int nargs, char* args[])
   A.sparse_set(1, 0, 0.0); tdm.sparse_set(1, 0, 0.0);
   // LAST NODE
   A.sparse_set(np-1, np-1, 1.0); tdm.sparse_set(np-1, np-1, 1.0);
-  A.sparse_set(np-2, np-1, 0.0); //tdm.sparse_set(np-2, np-1, 0.0);
-  A.sparse_set(np-1, np-2, 0.0); //tdm.sparse_set(np-1, np-2, 0.0);
+  A.sparse_set(np-2, np-1, 0.0); tdm.sparse_set(np-2, np-1, 0.0);
+  A.sparse_set(np-1, np-2, 0.0); tdm.sparse_set(np-1, np-2, 0.0);
   //A.print();
   
   // CREATE PRECONDITIONERS

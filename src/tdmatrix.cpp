@@ -35,8 +35,14 @@ bool TDMatrix::isValidIndex(const idx row, const idx col) const
    * Checks for out of bounds indexing. TODO
    */
 
+  if ( (row >= size ) || (col>=size) )
+    return false;
   
-  return true;
+  if (row == col ) return true; 	// diagonal
+  if (row == col+1) return true;	// lower
+  if (col == row+1) return true;	// upper
+  
+  return false;	// otherwise not tridiagonal
 }
 
 
@@ -162,10 +168,14 @@ void TDMatrix::print()
   
   for (idx r = 0 ; r < size ; r++)
   {
-    for idx c = 0 ; c < size ; c++)
+    for (idx c = 0 ; c < size ; c++)
     {
-      
+     if (this->isValidIndex(r,c) )
+       printf( "%1.0f\t", this->sparse_get(r,c) );
+     else
+       printf("%1.0f\t",0.0);
     }
+    printf("\n");
   }
     
 }

@@ -1,2 +1,8 @@
+3. Fix tridiagonal matrix solver function
+
+==================================================
+01/05/12 DONE
 1. Finish Tridiagonal matrix "print" method
+
+01/05/12 DONE
 2. Finish Tridiagonal matrix "isValidIndexFunction"
