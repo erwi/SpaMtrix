@@ -126,14 +126,13 @@ void TDMatrix::solveAxb(Vector& x, const Vector& b) const
   real *d = new real[size]; // ALLOCATE TEMPORARY DIAGONAL
   real *v = new real[size]; // TEMPORARY RHS VECTOR
   
-// COPY TEMPORARY VARIABLES
-  for (idx i = 0 ; i < size ; i++)
-  {
-    d[i] = diagonal[i];
-    v[i] = b[i];
-  }
   
 
+  
+// COPY TEMPORARY VARIABLES
+    d[0] = diagonal[0];
+    v[0] = b[0];
+  
   for ( idx i = 1 ; i < size; ++i)
   {
     if ( d[i-1] == 0.0 )
@@ -142,15 +141,17 @@ void TDMatrix::solveAxb(Vector& x, const Vector& b) const
       exit(1);
     }
     double m = a[i] / d[i-1];
-    
-    d[i] -= m*c[i-1];
-    v[i] -= m*v[i-1];
+    //printf("a = %f, d = %f ,m = %f\n",a[i],d[i-1], m);
+    d[i] = diagonal[i] - m*c[i-1];
+    v[i] = b[i] - m*v[i-1];
   }
   
   x[size-1] = v[size-1] / d[size-1];
-  
+  // BACK-SUBSTITUTION
   for (idx i = size - 1; i > 0 ; --i)
+  {
     x[i-1] = (v[i-1]- c[i-1] * x[i] ) / d[i-1];
+  }
   
   delete [] d;
   delete [] v;

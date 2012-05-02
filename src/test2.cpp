@@ -102,10 +102,12 @@ int main(int nargs, char* args[])
   //b.print();
   tdm.print();
   tdm.solveAxb(x,b);
-  //b.print();
+  b.print();
   //SOR(A,x,b,1);
-  //x.print();
+  x.print();
   cout << "error before pcg: "<< sqrt(errorNorm2(A,x,b)) << endl;
+  
+  return 0;
   cout << "solving pcg..."; fflush(stdout);
   bool conv = true;
   //bool conv = pcg(A, b, x, D, maxIter, toler);
