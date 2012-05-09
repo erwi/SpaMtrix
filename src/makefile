@@ -1,5 +1,5 @@
 
-OBJS = setup.o spamtrix_blas.o ircmatrix.o vector.o cg.o pcg.o diagpreconditioner.o matrixmaker.o test1.o test2.o tdmatrix.o
+OBJS = spamtrix_blas.o ircmatrix.o vector.o cg.o pcg.o diagpreconditioner.o matrixmaker.o test1.o test2.o tdmatrix.o
 
 OBJS += $(IRCMATOBJS)
 EXECS = ircmatrix_test.exe

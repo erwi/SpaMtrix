@@ -104,60 +104,39 @@ real TDMatrix::sparse_get(const idx row, const idx col) const
       
 }
 
-void TDMatrix::solveAxb(Vector& x, const Vector& b) const
+void TDMatrix::solveAxb(Vector& x, Vector& b) //const
 {
   /*!
    * Solves Ax=b using Tridiagonal Matrix Algorithm (TDMA) a.k.a. Thomas algorithm.
    * See wikipedia http://en.wikipedia.org/wiki/Tridiagonal_matrix_algorithm
+   * WARNING: Currently this modified the matrix!!
    */
+  idx N = this->size;	// LENGTH OF VECTOR
   
-  /*
-   
-     a - sub-diagonal (means it is the diagonal below the main diagonal) -- indexed from 1..n-1
-    * d - the main diagonal
-    * c - sup-diagonal (means it is the diagonal above the main diagonal) -- indexed from 0..n-2
-    * v - right part
-    * x - the answer
-    */
+  // FORWARD LOOP - ELIMINATE SUB-DIAGONAL
+  // MODIFY FIRST-ROW COEFFS
+  upper[0] = upper[0] / diagonal[0];
+  b[0] = b[0] / diagonal[0];
+  for (idx i = 1 ; i < N-1 ; ++i)
+  {
+    real temp = diagonal[i] - lower[i-1]*upper[i-1];
+    upper[i] = upper[i] / temp;
+    b[i] = (b[i] - lower[i-1]*b[i-1] ) / temp;
+  }
   
-  real *a = this->lower;
-  real *c = this->upper;
+  b[N-1] = (b[N-1] - lower[N-2]*b[N-2] ) / (diagonal[N-1] - lower[N-2]*upper[N-2] );
   
-  real *d = new real[size]; // ALLOCATE TEMPORARY DIAGONAL
-  real *v = new real[size]; // TEMPORARY RHS VECTOR
-  
-  
+  // BACKWARD SUBSTITUTION
+  x[N-1] = b[N-1];
+ 
+  for (idx i = N-1; i>0 ; i--)
+  {
+      x[i-1] = (b[i-1] - upper[i-1]*x[i] );
+  }
 
-  
-// COPY TEMPORARY VARIABLES
-    d[0] = diagonal[0];
-    v[0] = b[0];
-  
-  for ( idx i = 1 ; i < size; ++i)
-  {
-    if ( d[i-1] == 0.0 )
-    {
-      cout << "error in " << __func__ << " diagonal "<<i<< "is zero"<< endl;
-      exit(1);
-    }
-    double m = a[i] / d[i-1];
-    //printf("a = %f, d = %f ,m = %f\n",a[i],d[i-1], m);
-    d[i] = diagonal[i] - m*c[i-1];
-    v[i] = b[i] - m*v[i-1];
-  }
-  
-  x[size-1] = v[size-1] / d[size-1];
-  // BACK-SUBSTITUTION
-  for (idx i = size - 1; i > 0 ; --i)
-  {
-    x[i-1] = (v[i-1]- c[i-1] * x[i] ) / d[i-1];
-  }
-  
-  delete [] d;
-  delete [] v;
 }
 
-void TDMatrix::print()
+void TDMatrix::print() const
 {
   /*
   cout << "Tridiagonal matrix size: "<< size << endl;
@@ -172,9 +151,9 @@ void TDMatrix::print()
     for (idx c = 0 ; c < size ; c++)
     {
      if (this->isValidIndex(r,c) )
-       printf( "%1.0f\t", this->sparse_get(r,c) );
+       printf( "%1.1f\t", this->sparse_get(r,c) );
      else
-       printf("%1.0f\t",0.0);
+       printf("%1.1f\t",0.0);
     }
     printf("\n");
   }
