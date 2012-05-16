@@ -104,7 +104,7 @@ real TDMatrix::sparse_get(const idx row, const idx col) const
       
 }
 
-void TDMatrix::solveAxb(Vector& x, Vector& b) //const
+void TDMatrix::solveAxb(Vector& x, const Vector& b) const
 {
   /*!
    * Solves Ax=b using Tridiagonal Matrix Algorithm (TDMA) a.k.a. Thomas algorithm.
@@ -113,27 +113,36 @@ void TDMatrix::solveAxb(Vector& x, Vector& b) //const
    */
   idx N = this->size;	// LENGTH OF VECTOR
   
+  
+  real* b_temp = new real[N]; // TEMPORARY R.H.S VECTOR
+  real* u_temp = new real[N]; // TEMPORARY SUP-DIAGONAL VALUES
+  
   // FORWARD LOOP - ELIMINATE SUB-DIAGONAL
   // MODIFY FIRST-ROW COEFFS
-  upper[0] = upper[0] / diagonal[0];
-  b[0] = b[0] / diagonal[0];
+  u_temp[0] = upper[0] / diagonal[0];
+  b_temp[0] = b[0] / diagonal[0];
+    
   for (idx i = 1 ; i < N-1 ; ++i)
   {
-    real temp = diagonal[i] - lower[i-1]*upper[i-1];
-    upper[i] = upper[i] / temp;
-    b[i] = (b[i] - lower[i-1]*b[i-1] ) / temp;
+    real temp = diagonal[i] - lower[i-1]*u_temp[i-1];
+    u_temp[i] = upper[i] / temp;
+    b_temp[i] = (b[i] - lower[i-1]*b_temp[i-1] ) / temp;
   }
   
-  b[N-1] = (b[N-1] - lower[N-2]*b[N-2] ) / (diagonal[N-1] - lower[N-2]*upper[N-2] );
+  b_temp[N-1] = (b_temp[N-1] - lower[N-2]*b_temp[N-2] ) / (diagonal[N-1] - lower[N-2]*u_temp[N-2] );
   
   // BACKWARD SUBSTITUTION
-  x[N-1] = b[N-1];
+  x[N-1] =  b_temp[N-1];  // <----- WRONG VALUE HERE!!!
  
+  //cout << "last x=" << x[N-1] << endl;
   for (idx i = N-1; i>0 ; i--)
   {
-      x[i-1] = (b[i-1] - upper[i-1]*x[i] );
+      x[i-1] = (b_temp[i-1] - u_temp[i-1]*x[i] );
   }
 
+  //x[0] = b_temp[0] - u_temp[0]*x[1];
+  delete [] b_temp;
+  delete [] u_temp;
 }
 
 void TDMatrix::print() const

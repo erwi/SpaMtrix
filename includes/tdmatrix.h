@@ -27,7 +27,7 @@ public:
   void sparse_add(const idx row, const idx col, const real val);
   real sparse_get(const idx row, const idx col)const;
   
-  void solveAxb(Vector& x, Vector& b);// const;
+  void solveAxb(Vector& x, const Vector& b) const;
   void print() const;
 };
 

@@ -1,4 +1,4 @@
-3. Fix tridiagonal matrix solver function
+3. Fix tridiagonal matrix solver function. Last value in solution vector seems wrong.
 
 ==================================================
 01/05/12 DONE

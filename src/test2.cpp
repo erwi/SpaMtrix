@@ -66,7 +66,7 @@ int main(int nargs, char* args[])
   
   
   cout << endl;
-  tdm.print();
+  
   cout << "OK" << endl;
   // CREATE UNKNOWN VECTOR x, WITH FIXED VALUES 1, -1 AT BOTH ENDS
   Vector x(np);
@@ -91,27 +91,32 @@ int main(int nargs, char* args[])
   //A.print();
   
   // CREATE PRECONDITIONERS
-  DiagPreconditioner D(A);
-  JacobiPreconditioner J(A);
-  SORPreconditioner S(A,0);
+  //DiagPreconditioner D(A);
+  //JacobiPreconditioner J(A);
+  //SORPreconditioner S(A,0);
   // SOLVE Ax=b
   idx maxIter = np;
   real toler(1e-7);
   
   
-  //b.print();
+  b.print();
   tdm.print();
   tdm.solveAxb(x,b);
-  //b.print();
+ 
+  b.print();
   //SOR(A,x,b,1);
+  //x[0] = 1.0;
+  //x[np-1] = -1.0;
+  
   x.print();
   cout << "error before pcg: "<< sqrt(errorNorm2(A,x,b)) << endl;
   
-  return 0;
+ // SOLVE USING PCG
+  x.setAllValuesTo(0);
   cout << "solving pcg..."; fflush(stdout);
   bool conv = true;
   //bool conv = pcg(A, b, x, D, maxIter, toler);
-  //bool conv = cg(A,b,x,maxIter,toler);
+  conv = cg(A,b,x,maxIter,toler);
   cout << "OK" << endl;
   real error = errorNorm2(A, x, b);
   cout << "Error norm = " << error << endl;
@@ -121,8 +126,9 @@ int main(int nargs, char* args[])
   else
     cout << "NO!!"<<endl;
   
-  cout << "iterations used: " << maxIter << endl;
-  cout << "Tolerance achieved: " << toler << endl;
+ cout << "iterations used: " << maxIter << endl;
+ cout << "Tolerance achieved: " << toler << endl;
+ x.print();
  
   return 0;
 }
