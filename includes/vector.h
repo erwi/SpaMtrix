@@ -54,7 +54,7 @@ public:
   
   idx getLength()const{return this->length;}
 
-  void print()const;
+  void print(const char* name = NULL)const;
 
   
 };

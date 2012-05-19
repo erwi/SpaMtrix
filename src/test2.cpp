@@ -22,21 +22,10 @@ int main(int nargs, char* args[])
   if (nargs > 1)
     np = atoi( args[1] );
   
-  cout << "creating sparse matrix of size:" << np <<"x" <<np<<"...";
-  MatrixMaker mm;
-  mm.setMatrixSize(np, np);
-  for (unsigned int i = 0 ; i < np ; i++)
-  {
-    mm.addNonZero(i,i); // ALWAYS ADD DIAGONAL ENTRY
-    if ( i > 0)
-      mm.addNonZero(i,i-1); // IF NOT ROW 0 
-    if (i < np-1)
-      mm.addNonZero(i,i+1);	// IF NOT LAST ROW
-  }
-  IRCMatrix A = mm.getIRCMatrix();
-  mm.clear();
-  cout << "OK" << endl;
-  //A.spy();
+  
+  cout <<"Solving : Ax=b"<<endl;
+  cout << "creating tridiagonal matrix of size:" << np <<"x" <<np<<"...";
+  
 
   // FILL IN MATRIX VALUES
   //		    | 2  -1     |
@@ -46,89 +35,67 @@ int main(int nargs, char* args[])
   // USING h = 1:
   
   TDMatrix tdm(np); // MAKE TRIDIAGONAL MATRIX
-  
-  cout <<"filling in values...";
+
   for (unsigned int i = 0 ; i < np ; i++ )
   {
-    A.sparse_set(i,i, 2.0);	// SET DIAGONAL
-    tdm.sparse_set(i,i,2.0);
+    tdm.sparse_set(i,i,2.0);  // DIAGONAL
     if ( i > 0 )
     {
-      A.sparse_set(i, i-1, -1.0);
-      tdm.sparse_set(i,i-1, -1.0);
+      tdm.sparse_set(i,i-1, -1.0); // SUB-DIAGONAL
     }
     if ( i < np - 1)
     {
-      A.sparse_set(i , i+1 , -1.0);
-      tdm.sparse_set(i, i+1 , -1);
+      tdm.sparse_set(i, i+1 , -1); // SUP-DIAGONAL
     }
   }
-  
-  
-  cout << endl;
-  
-  cout << "OK" << endl;
+  cout<<"OK"<<endl;  
   // CREATE UNKNOWN VECTOR x, WITH FIXED VALUES 1, -1 AT BOTH ENDS
   Vector x(np);
   x[0] = 1.0;
   x[np-1] = -1.0;
- 
-  
+   
   // R.H.S VECTOR b
   Vector b(np);
-
+  // ===================================== 
   // APPLY BOUNDARY CONDITIONS
-  multiply(A,x,b); 	// b = Ax;
-  scale(-1.0, b); // WANT TO SOLVE Ax = -b, SO MULTIPLY BY -1 HERE
-  // FIRST NODE
-  A.sparse_set(0, 0, 1.0); tdm.sparse_set(0, 0, 1.0);
-  A.sparse_set(0, 1, 0.0); tdm.sparse_set(0, 1, 0.0);
-  A.sparse_set(1, 0, 0.0); tdm.sparse_set(1, 0, 0.0);
-  // LAST NODE
-  A.sparse_set(np-1, np-1, 1.0); tdm.sparse_set(np-1, np-1, 1.0);
-  A.sparse_set(np-2, np-1, 0.0); tdm.sparse_set(np-2, np-1, 0.0);
-  A.sparse_set(np-1, np-2, 0.0); tdm.sparse_set(np-1, np-2, 0.0);
-  //A.print();
-  
-  // CREATE PRECONDITIONERS
-  //DiagPreconditioner D(A);
-  //JacobiPreconditioner J(A);
-  //SORPreconditioner S(A,0);
-  // SOLVE Ax=b
-  idx maxIter = np;
-  real toler(1e-7);
-  
-  
-  b.print();
-  tdm.print();
-  tdm.solveAxb(x,b);
+  // =====================================
+  multiply(tdm,x,b); 	// b = Ax;
  
-  b.print();
-  //SOR(A,x,b,1);
-  //x[0] = 1.0;
-  //x[np-1] = -1.0;
+  scale(-1.0, b); // WANT TO SOLVE Ax = -b, SO MULTIPLY BY -1 HERE
   
-  x.print();
-  cout << "error before pcg: "<< sqrt(errorNorm2(A,x,b)) << endl;
+  // MODIFY MATRIX COLUMNS/ROWS FOR KNOWN NODES
+  // FIRST NODE
+  tdm.sparse_set(0, 0, 1.0);
+  tdm.sparse_set(0, 1, 0.0);
+  tdm.sparse_set(1, 0, 0.0);
+  // LAST NODE
+  tdm.sparse_set(np-1, np-1, 1.0);
+  tdm.sparse_set(np-2, np-1, 0.0);
+  tdm.sparse_set(np-1, np-2, 0.0);
   
- // SOLVE USING PCG
-  x.setAllValuesTo(0);
-  cout << "solving pcg..."; fflush(stdout);
-  bool conv = true;
-  //bool conv = pcg(A, b, x, D, maxIter, toler);
-  conv = cg(A,b,x,maxIter,toler);
-  cout << "OK" << endl;
-  real error = errorNorm2(A, x, b);
-  cout << "Error norm = " << error << endl;
-  cout << "CONVERGENCE FOR MATRIX SIZE " << np << " = " ;
-  if (conv)
-    cout <<"OK"<<endl;
-  else
-    cout << "NO!!"<<endl;
+ // PRINT IF SMALL PROBLEM
+  if (np <= 10)
+  {
+    cout << "R.H.S. vector b:"<<endl;
+    b.print("b");
+    tdm.print("A");
+  }
+    
+  // SOLVE Ax=b
+  tdm.solveAxb(x,b);
+   
+  cout << "error after TDM solver : "<< sqrt(errorNorm2(tdm,x,b)) << endl;
   
- cout << "iterations used: " << maxIter << endl;
- cout << "Tolerance achieved: " << toler << endl;
- x.print();
+  // RESTORE FIXED BOUNDARY NODE VALUES
+  x[0] = 1.0;
+  x[np-1] = -1.0;
+  
+  // PRINT RESULT IF SMALL PROBLEM
+  if (np <= 10)
+  {
+    cout << "solution vector x:"<< endl;
+    x.print("x");
+  }
  
   return 0;
 }

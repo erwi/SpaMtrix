@@ -105,12 +105,16 @@ const Vector& Vector::operator-=(const Vector& v)
 // 	DEBUG FUNCTIONS
 //============================================
 
-void Vector::print() const
+void Vector::print(const char* name) const
 {
   cout << "Vector length " << this->length << endl;
   for (idx i = 0 ; i < length ; i++ )
   {
-    cout <<"Vector["<<i<<"] = " << values[i] << endl;
+    if (name)
+      cout << name;
+    else
+      cout << "Vector";
+    cout <<"["<<i<<"] = " << values[i] << endl;
   }
 }
 

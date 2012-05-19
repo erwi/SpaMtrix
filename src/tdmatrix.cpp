@@ -117,6 +117,11 @@ void TDMatrix::solveAxb(Vector& x, const Vector& b) const
   real* b_temp = new real[N]; // TEMPORARY R.H.S VECTOR
   real* u_temp = new real[N]; // TEMPORARY SUP-DIAGONAL VALUES
   
+ // COPY RHS TO TEMP
+ for (idx i = 0 ; i < N ; i++)
+ {
+   b_temp [i] = b[i];
+ }
   // FORWARD LOOP - ELIMINATE SUB-DIAGONAL
   // MODIFY FIRST-ROW COEFFS
   u_temp[0] = upper[0] / diagonal[0];
@@ -128,11 +133,11 @@ void TDMatrix::solveAxb(Vector& x, const Vector& b) const
     u_temp[i] = upper[i] / temp;
     b_temp[i] = (b[i] - lower[i-1]*b_temp[i-1] ) / temp;
   }
-  
+    
   b_temp[N-1] = (b_temp[N-1] - lower[N-2]*b_temp[N-2] ) / (diagonal[N-1] - lower[N-2]*u_temp[N-2] );
-  
+    
   // BACKWARD SUBSTITUTION
-  x[N-1] =  b_temp[N-1];  // <----- WRONG VALUE HERE!!!
+  x[N-1] =  b_temp[N-1];  // 
  
   //cout << "last x=" << x[N-1] << endl;
   for (idx i = N-1; i>0 ; i--)
@@ -145,15 +150,13 @@ void TDMatrix::solveAxb(Vector& x, const Vector& b) const
   delete [] u_temp;
 }
 
-void TDMatrix::print() const
+void TDMatrix::print(const char* name) const
 {
-  /*
-  cout << "Tridiagonal matrix size: "<< size << endl;
-  for (idx i = 0 ; i < size - 1 ; i++)
-    cout << "l,d,u " << i <<" = " << lower[i] << "," << diagonal[i] << "," << upper[i] << endl;
   
-  cout << "  d   " << size-1<< " = " << diagonal[size-1] << endl;
-  */
+  if (name)
+  {
+    printf("Tridiagonal matrix %s:\n", name);
+  }
   
   for (idx r = 0 ; r < size ; r++)
   {

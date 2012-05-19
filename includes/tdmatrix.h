@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <vector.h>
+#include <string.h>
 /*!
 * Declares a class for tridiagonal sparse matrix
 */
@@ -28,7 +29,12 @@ public:
   real sparse_get(const idx row, const idx col)const;
   
   void solveAxb(Vector& x, const Vector& b) const;
-  void print() const;
+  void print(const char* name = NULL) const;
+  
+  //=============================================
+  // FRIEND FUNCTIONS
+  //
+  friend void multiply(const TDMatrix& A, const Vector& x, Vector& b); // defined in spamtrix_blas.h
 };
 
 

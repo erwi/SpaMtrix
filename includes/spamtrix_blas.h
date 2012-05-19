@@ -3,6 +3,7 @@
 
 #include <setup.h>
 #include <ircmatrix.h>
+#include <tdmatrix.h>
 #include <vector.h>
 #include <assert.h>
 #include <iostream>
@@ -40,6 +41,38 @@ inline void multiply(const IRCMatrix& A,
       b[i] = r;
       
     }//
+  
+}
+
+
+inline void multiply(const TDMatrix& A,
+		     const Vector& x,
+		     Vector& b)
+{
+  /*!
+   * Matrix vector muliplication Ax = b
+   * where A is a tridiagonal matrix
+   */
+  
+#ifdef DEBUG
+  assert(A.size == x.getLength() );
+#endif
+  idx n = b.getLength();
+  for (idx i = 0 ; i < n ; i++)
+  {
+    b[i] = A.diagonal[i]*x[i];
+    if (i > 0 )
+    {
+      b[i]   += A.lower[i-1] * x[i-1];
+    }
+    if (i < (n-1) )
+    {
+      b[i] += A.upper[i] * x[i+1];
+    }
+ 
+  }
+  
+  
   
 }
 // ======================================
@@ -110,7 +143,7 @@ inline void aypx(const real a, Vector& y , const Vector& x)
 // ESTIMATES ERROR NORM FOR SYSTEM Ax=b
 // RETURNING (b - Ax).(b - Ax)
 real errorNorm2(const IRCMatrix& A, const Vector& x, const Vector& b);
-
+real errorNorm2(const TDMatrix& A, const Vector& x, const Vector& b);
 
 
 #endif
