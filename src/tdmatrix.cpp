@@ -49,7 +49,7 @@ bool TDMatrix::isValidIndex(const idx row, const idx col) const
 void TDMatrix::sparse_set(const idx row, const idx col, const real val)
 {
   #ifdef DEBUG
-    assert(isValidIndex(row,col);
+    assert(isValidIndex(row,col));
   #endif
       
      if (row==col)
@@ -70,7 +70,7 @@ void TDMatrix::sparse_set(const idx row, const idx col, const real val)
 void TDMatrix::sparse_add(const idx row, const idx col, const real val) 
 {
   #ifdef DEBUG
-    assert(isValidIndex(row,col);
+    assert(isValidIndex(row,col) );
   #endif
     
      
@@ -92,7 +92,7 @@ void TDMatrix::sparse_add(const idx row, const idx col, const real val)
 real TDMatrix::sparse_get(const idx row, const idx col) const
 {
   #ifdef DEBUG
-    assert(isValidIndex(row,col);
+    assert(isValidIndex(row,col));
   #endif
     
     if (row==col)
