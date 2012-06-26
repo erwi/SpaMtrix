@@ -9,6 +9,7 @@
 
 #include <setup.h>
 #include <vector.h>
+#include <cholincpreconditioner.h>
 struct ColVal{
 	idx col;	// COLUMN INDEX
 	real val;	// VALUE
@@ -19,6 +20,7 @@ struct ColVal{
 // Interleaved Row Compressed Matrix
 class IRCMatrix
 {
+protected:
     idx* rows;		// ROW COUNTER
     ColVal* cvPairs;	// COLUMN-VALUE PAIRS
     idx nnz;		// NUMBER OF NON-ZEROS
@@ -56,8 +58,10 @@ public:
     // RELAXERS
     friend void jacobi(const IRCMatrix& A, Vector &x, const Vector &b,const idx &maxIter);
     friend void SOR(const IRCMatrix& A, Vector &x, const Vector& b, idx maxIter);
-    // friend void gauss-seidel
-    // frined void sor
+    
+    // PRECONDITIONER(S) NEED INTIMATE ACCESS TO SPRSITY PATTERN
+    friend class CholIncPreconditioner;
+    
     
     //================================================
     // DEBUG FUNCTIONS
@@ -73,6 +77,6 @@ public:
 };
 
 // MAKES SIMPLE IRCMatrix OUT OF AN ARRAY OF CONNECTED INDEXES
-IRCMatrix& makeIRCMatrix(const idx* t, const idx npt, const idx nt);
+//IRCMatrix& makeIRCMatrix(const idx* t, const idx npt, const idx nt);
 
 #endif
