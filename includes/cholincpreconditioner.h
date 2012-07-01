@@ -10,7 +10,7 @@ using std::cout;
 using std::endl;
 
 // THIS FILE IS ICLUDED FROM 'ircmatrix.h', SO NEED TO DECLARE IRCMatrix HERE
-class IRCMatrix; 
+class IRCMatrix;
 
 class CholIncPreconditioner:public Preconditioner
 {

@@ -31,6 +31,7 @@
   IRCMatrix& IRCMatrix::operator=(const IRCMatrix& m)
   {
     // TODO 
+      std::cout<< "unimplemented functionality: "<<__func__<< "in file "<< __FILE__<< std::endl;
     return *this;
   }
   
@@ -90,26 +91,56 @@
       return val;
   }
 
+bool IRCMatrix::isNonZero(const idx row, const idx col) const
+{
+/*! Returns true if this matrix contains storage at location row, col, otherwise false
+*/
+#ifdef DEBUG
+  assert(row < this->numRows);
+  assert(col < this->numCols);
+#endif
+  idx i = this->rows[row];
+  idx max = this->rows[row+1];
+  while ( i < max )
+  {
+    if (this->cvPairs[i].col == col )
+      return true;
+    ++i;
+  }
+  // IF REACHED THIS POINT, COLUMN NOT FOUND
+  return false;
+  }
+
+bool IRCMatrix::isNonZero(const idx row, const idx col, real &val) const
+{
+/*!
+ Returns true if this matrix contains storage at location row, col, otherwise false.
+ The actual value of location row,col is returned in val
+*/
+#ifdef DEBUG
+    assert(row < this->numRows);
+    assert(col < this->numCols);
+#endif
+    idx i = this->rows[row];
+    idx max = this->rows[row+1];
+
+    while (i<max)
+    {
+        if (this->cvPairs[i].col == col)
+        {
+            val = cvPairs[i].val;
+            return true;
+        }
+        ++i;
+    }
+
+    val = 0.0;
+    return false;
+}
+
 
   #ifdef DEBUG
 
-  bool IRCMatrix::isNonZero(const idx row, const idx col) const
-  {
-  /*! Returns true if this matrix contains storage at location row, col, otherwise false
-  */
-    assert(row < this->numRows );
-    assert(col < this->numCols );
-    idx i = this->rows[row];
-      idx max = this->rows[row+1];
-      while ( i < max )
-      {
-	  if (this->cvPairs[i].col == col )
-	      return true;
-	  ++i;
-      }
-      // IF REACHED THIS POINT, COLUMN NOT FOUND
-    return false;  
-  }
 
   void IRCMatrix::spy() const
   {
