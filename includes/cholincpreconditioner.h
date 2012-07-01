@@ -14,9 +14,13 @@ class IRCMatrix;
 
 class CholIncPreconditioner:public Preconditioner
 {
-  
+  IRCMatrix* LD; // LOWER DIAGONAL INCOMPLETE CHOLESKY FACTORISED MATRIX
+
+  void makeLowerDiagonal(const IRCMatrix& A);
+
 public:
   CholIncPreconditioner(const IRCMatrix &A);
+  ~CholIncPreconditioner() {if (LD) delete LD;}
   void solveMxb(Vector &x, const Vector &b) const;
 };
 
