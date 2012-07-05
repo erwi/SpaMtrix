@@ -20,7 +20,7 @@ class CholIncPreconditioner:public Preconditioner
 
 public:
   CholIncPreconditioner(const IRCMatrix &A);
-  ~CholIncPreconditioner() {if (LD) delete LD;}
+  //~CholIncPreconditioner() {if (LD) delete LD;}
   void solveMxb(Vector &x, const Vector &b) const;
 };
 

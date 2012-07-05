@@ -46,7 +46,7 @@ int main()
   A.print();
 
   Cholesky M(A);
-
+  M.print();
 
   return 0;
 }

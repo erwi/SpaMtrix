@@ -11,6 +11,8 @@ typedef double real;		// VALUES
 struct ColVal{
     idx col;	// COLUMN INDEX
     real val;	// VALUE
+    ColVal(const idx col, const real val):col(col), val(val){}
+    ColVal():col(0),val(0){}
 };
 
 
