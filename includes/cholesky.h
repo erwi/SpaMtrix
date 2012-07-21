@@ -10,11 +10,13 @@
 class Cholesky
 {
 
-  FlexiMatrix L;
+  FlexiMatrix L;    // LOWER DIAGONAL
+
 
   Cholesky():L(0,0){}
   void forwardSubstitution(Vector&x, const Vector& b) const;
   void backwardSubstitution(Vector&x, const Vector& b) const;
+
 public:
   Cholesky(const IRCMatrix& A);
   void print()const;

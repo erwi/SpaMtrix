@@ -5,19 +5,19 @@ Cholesky::Cholesky(const IRCMatrix &A)
 /*!
   Creates a cholesky decomposition lower diagonal of matrix A
   */
-    L.numRows = A.getNumRows();
-    L.numCols = A.getNumCols();
+    L.numDim1 = A.getNumRows();
+    L.numDim2 = A.getNumCols();
     for (idx r = 0 ; r < A.getNumRows() ; r++)
     {
-        L.nonZeros.push_back(vector<ColVal>() ); // ADD NEW ROW
+        L.nonZeros.push_back(vector<IndVal>() ); // ADD NEW ROW
         for (idx c = 0 ; c <= r ; c++)
         {
             if (r==c) // DIAGONAL
             {
                 real s = 0;
                 // SUM OVER ALL VALUES SQUARED TO LEFT ON THIS ROW
-                std::vector< ColVal>::iterator itr1 = L.nonZeros[r].begin();
-                std::vector< ColVal>::iterator itr2 = L.nonZeros[r].end();
+                std::vector< IndVal>::iterator itr1 = L.nonZeros[r].begin();
+                std::vector< IndVal>::iterator itr2 = L.nonZeros[r].end();
                 for( ; itr1 != itr2 ; itr1++)
                     s+= itr1->val * itr1->val;
 
@@ -31,7 +31,7 @@ Cholesky::Cholesky(const IRCMatrix &A)
                   }
                 #endif
 
-                  L.nonZeros[r].push_back(ColVal(c,s) );// std::move could be used here?
+                  L.nonZeros[r].push_back(IndVal(c,s) );// std::move could be used here?
             }
             else // OFF-DIAGONAL
             {
@@ -41,19 +41,23 @@ Cholesky::Cholesky(const IRCMatrix &A)
 
                 real a(0.0);
                 A.isNonZero(r,c,a); // GETS VALUE IN A AT r,c. INCLUDING ZERO VALUES
-
-
                 s =  ( a - s );
 
                 if ( s != 0.0 ) // IF NOT ZERO, ADD TERM TO MATRIX
                 {
                     real last= L.nonZeros[c].back().val;
                     s /= last;
-                    L.nonZeros[r].push_back( ColVal(c,s) );
+                    L.nonZeros[r].push_back( IndVal(c,s) );
+
+                    // ALSO ADD UPPER DIAGONAL VALUES - THESE ARE TRANSPOSES OF LOWER DIAG
+                    L.nonZeros[c].push_back( IndVal(r,s) );
+
                 }
             }
         }//end for columns
     }
+
+   // this->makeUpper();
 }
 
 
@@ -78,18 +82,26 @@ void Cholesky::solve(Vector &x, const Vector &b) const
 
 void Cholesky::forwardSubstitution(Vector &x, const Vector &b) const
 {
-    // x[i] =  ( b[i] - sum( A[i,j]x[j] ) ) / A[i,i]
-
+/*!
+     x[i] =  ( b[i] - sum( A[i,j]x[j] ) ) / A[i,i]
+ */
     // FOR EACH ROW
     for (idx i = 0 ; i < x.getLength() ; ++i)
     {
+
+        // FORM SUM OVER ALL LOWER DIAGONAL MATRIX VALUES
         real sum(0.0);
-        idx maxCol = L.nonZeros[i].size()-1;
-        for (idx j = 0 ; j < maxCol ; j++)
+        std::vector<IndVal>::const_iterator itr1 = L.nonZeros[i].begin();
+        idx col = itr1->ind;
+        // WHILE LOWER DIAGONAL NONZEROS ONLY
+        // UPPER DIAGONAL VALUES TAKEN CARE OF IN back-substitution
+        while (col < i)
         {
-            sum+= x[j]*L.nonZeros[i][j].val;
+            sum+= x[col] * ( itr1->val );
+            itr1++;
+            col = itr1->ind;
         }
-        x[i] = ( b[i]-sum ) / L.nonZeros[i].back().val;
+        x[i] = ( b[i]-sum ) / itr1->val;
     }
 }
 

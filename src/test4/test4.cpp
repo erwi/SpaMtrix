@@ -48,5 +48,10 @@ int main()
   Cholesky M(A);
   M.print();
 
+  Vector x(A.getNumCols());
+  Vector b(x);
+
+  M.solve(x,b);
+
   return 0;
 }
