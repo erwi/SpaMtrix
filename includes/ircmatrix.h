@@ -23,9 +23,9 @@
 class IRCMatrix
 {
 protected:
-    idx* rows;		// ROW COUNTER
-    ColVal* cvPairs;	// COLUMN-VALUE PAIRS
-    idx nnz;		// NUMBER OF NON-ZEROS
+    idx* rows;      // ROW COUNTER
+    IndVal* cvPairs;// COLUMN-VALUE PAIRS
+    idx nnz;        // NUMBER OF NON-ZEROS
     idx numRows, numCols;
     
     idx getIndex(const idx row, const idx col) const;
@@ -35,7 +35,7 @@ public:
         rows(0), cvPairs(0), nnz(0), numRows(0), numCols(0) {}
     IRCMatrix(  const idx numRows, const idx numCols,
                 const idx nnz, 
-                idx * const rows, ColVal *const cvPairs):
+                idx * const rows, IndVal *const cvPairs):
                 rows(rows), cvPairs(cvPairs), nnz(nnz), 
                 numRows(numRows) , numCols(numCols){}
 

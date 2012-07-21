@@ -29,7 +29,7 @@ void jacobi(const IRCMatrix& A,
       const idx row_end = A.rows[i+1];
       for (idx j = row_start ; j < row_end ; ++j)
       {
-	const idx col = A.cvPairs[j].col;
+    const idx col = A.cvPairs[j].ind;
 	if (col != i ) // IF NOT DIAGONAL ENTRY
 	{
 	  rho += A.cvPairs[j].val * x_old[j];
@@ -93,13 +93,13 @@ void SOR(const IRCMatrix& A,
       
       for (idx j = col_start ; j < col_end ; ++j)
       {
-	if ( i ==A.cvPairs[j].col ) // IF DIAGONAL
+    if ( i ==A.cvPairs[j].ind ) // IF DIAGONAL
 	{
 	  diagonal = omega / A.cvPairs[j].val;
 	}
 	else // OFF-DIAGONAL
 	{
-	  rho += A.cvPairs[j].val*x[A.cvPairs[j].col]; // rho = rho + A[i,j]*x[j]
+      rho += A.cvPairs[j].val*x[A.cvPairs[j].ind]; // rho = rho + A[i,j]*x[j]
 	}
       }// end for j
       x[i] = (1.0-omega)*x[i] + diagonal*(b[i] - rho );

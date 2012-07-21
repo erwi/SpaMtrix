@@ -17,7 +17,7 @@
       exit(1);
     }
     
-    cvPairs = new ColVal[nnz];
+    cvPairs = new IndVal[nnz];
     if (!cvPairs)
     {
       cout << "error in " << __func__ << " could not allocate cvPairs" << endl;
@@ -25,7 +25,7 @@
     }
     
     memcpy(rows, m.rows, (nnz+1)*sizeof(idx));
-    memcpy(cvPairs, m.cvPairs, nnz*sizeof(ColVal) );
+    memcpy(cvPairs, m.cvPairs, nnz*sizeof(IndVal) );
   }
 
   IRCMatrix& IRCMatrix::operator=(const IRCMatrix& m)
@@ -49,9 +49,9 @@
       idx max = this->rows[row+1];
       while ( i < max )
       {
-	  if (this->cvPairs[i].col == col )
-	      return i;
-	  ++i;
+          if (this->cvPairs[i].ind == col )
+              return i;
+          ++i;
       }
       // IF REACHED THIS POINT, COLUMN NOT FOUND
       
@@ -103,7 +103,7 @@ bool IRCMatrix::isNonZero(const idx row, const idx col) const
   idx max = this->rows[row+1];
   while ( i < max )
   {
-    if (this->cvPairs[i].col == col )
+    if (this->cvPairs[i].ind == col )
       return true;
     ++i;
   }
@@ -126,7 +126,7 @@ bool IRCMatrix::isNonZero(const idx row, const idx col, real &val) const
 
     while (i<max)
     {
-        if (this->cvPairs[i].col == col)
+        if (this->cvPairs[i].ind == col)
         {
             val = cvPairs[i].val;
             return true;

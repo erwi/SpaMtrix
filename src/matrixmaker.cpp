@@ -81,9 +81,9 @@ IRCMatrix MatrixMaker::getIRCMatrix()
   }
   
   // ALLOCATE MEMORY FOR FINAL MATRIX ARRAYS
-  idx* rows = new idx[nRows + 1]; 	// ROW COUNTER
-  ColVal* cvPairs = new ColVal[nnz]; 	// COLUMN INDEXES AND VALUES
-  memset(cvPairs, 0 , nnz*sizeof( ColVal ) );
+  idx* rows = new idx[nRows + 1]; 	    // ROW COUNTER
+  IndVal* cvPairs = new IndVal[nnz];    // COLUMN INDEXES AND VALUES
+  memset(cvPairs, 0 , nnz*sizeof( IndVal ) );
   
   // FILL IN COLUMN AND ROW INDEX ARRAYS
   idx cnt = 0; // counter
@@ -96,7 +96,7 @@ IRCMatrix MatrixMaker::getIRCMatrix()
     for (citr = nonZeros[r].begin() ; citr != nonZeros[r].end(); citr++) 
     {
       // COPY INDEX FROM jTH COLUMN INDEX TO cvPairs
-      cvPairs[cnt].col = *citr;
+      cvPairs[cnt].ind = *citr;
       cnt++;
     }// end for cols
   }// end for rows

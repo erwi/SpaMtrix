@@ -35,7 +35,7 @@ inline void multiply(const IRCMatrix& A,
       const idx row_end   = A.rows[i+1];
       for (idx j = row_start ; j < row_end ; j++)
       {
-	const idx col = A.cvPairs[j].col;
+    const idx col = A.cvPairs[j].ind;
 	r += A.cvPairs[j].val * x[col];
       }//j
       b[i] = r;

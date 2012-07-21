@@ -39,8 +39,8 @@ void CholIncPreconditioner:: makeLowerDiagonal(const IRCMatrix &A)
 
     // ALLOCATE MEMORY FOR ROW-COUNTER AND COLUMN INDEX/VALUE PAIRS
     idx* rows = new idx[numRows + 1];
-    ColVal* cvPairs = new ColVal[nnz];
-    memset(cvPairs, 0, nnz*sizeof(ColVal) );
+    IndVal* cvPairs = new IndVal[nnz];
+    memset(cvPairs, 0, nnz*sizeof(IndVal) );
 
     // FILL IN COLUMN AND ROW INDEX ARRAYS
     // LOOP OVER EACH ROW OF A, SELECTING ONLY COLUMNS THAT ARE BELOW DIAGONAL
@@ -54,14 +54,14 @@ void CholIncPreconditioner:: makeLowerDiagonal(const IRCMatrix &A)
 
         for (idx i = rstart ; i < rend ; i++) // FOR EACH NONZERO COLUMN IN THIS ROW
         {
-            ColVal *cv = &A.cvPairs[i];
-            if ( cv->col > row ) // IF UPPER DIAGONAL COLUMN, THIS ROW IS DONE, START NEXT
+            IndVal *cv = &A.cvPairs[i];
+            if ( cv->ind > row ) // IF UPPER DIAGONAL COLUMN, THIS ROW IS DONE, START NEXT
             {
                 break;
             }
             else //  LOWER DIAGONAL -> COPY COLUMN INDEX AND INCREMENT COUNTER
             {
-                cvPairs[cnt].col = cv->col;
+                cvPairs[cnt].ind = cv->ind;
                 cnt++;
             }
 

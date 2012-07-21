@@ -5,14 +5,14 @@ typedef unsigned int idx;	// INDEX
 typedef double real;		// VALUES
 
 /*!
-  The ColVal struct represents a non-zero value in a sparse matrix along column.
-  The nonzero is on column ColVal::col, and its value is ColVal::val
+  The IndVal struct represents a non-zero value in a sparse matrix at column or row postion ind.
+  The nonzero is on row/col IndVal::ind, and its value is IndVal::val
 */
-struct ColVal{
-    idx col;	// COLUMN INDEX
+struct IndVal{
+    idx  ind;	// POSITION INDEX, CAN BE EITHER ROW OR COLUMN INDEX
     real val;	// VALUE
-    ColVal(const idx col, const real val):col(col), val(val){}
-    ColVal():col(0),val(0){}
+    IndVal(const idx ind, const real val):ind(ind), val(val){}
+    IndVal():ind(0),val(0){}
 };
 
 
