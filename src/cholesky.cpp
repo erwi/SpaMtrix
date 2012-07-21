@@ -64,3 +64,36 @@ void Cholesky::print() const
       */
     L.print();
 }
+
+void Cholesky::solve(Vector &x, const Vector &b) const
+{
+/*!
+  Solves Ax=b using forward/backward substitution
+*/
+
+    forwardSubstitution(x,b);
+    backwardSubstitution(x,b);
+
+}
+
+void Cholesky::forwardSubstitution(Vector &x, const Vector &b) const
+{
+    // x[i] =  ( b[i] - sum( A[i,j]x[j] ) ) / A[i,i]
+
+    // FOR EACH ROW
+    for (idx i = 0 ; i < x.getLength() ; ++i)
+    {
+        real sum(0.0);
+        idx maxCol = L.nonZeros[i].size()-1;
+        for (idx j = 0 ; j < maxCol ; j++)
+        {
+            sum+= x[j]*L.nonZeros[i][j].val;
+        }
+        x[i] = ( b[i]-sum ) / L.nonZeros[i].back().val;
+    }
+}
+
+void Cholesky::backwardSubstitution(Vector &x, const Vector &b) const
+{
+
+}
