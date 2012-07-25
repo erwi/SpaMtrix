@@ -13,6 +13,7 @@
 #include <matrixmaker.h>
 #include <ircmatrix.h>
 #include <cholesky.h>
+#include <spamtrix_blas.h>
 int main()
 {
 
@@ -50,8 +51,12 @@ int main()
 
   Vector x(A.getNumCols());
   Vector b(x);
-
+  b[0] = 1.0;
   M.solve(x,b);
+
+  real e = sqrt(errorNorm2(A,x,b));
+
+  std::cout<< "error is " << e << std::endl;
 
   return 0;
 }

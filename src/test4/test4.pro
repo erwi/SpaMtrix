@@ -5,7 +5,8 @@ CONFIG -= qt
 HEADERS += \
     ../../includes/cholesky.h \
     ../../includes/fleximatrix.h \
-    ../../includes/vector.h
+    ../../includes/vector.h \
+    ../../includes/spamtrix_blas.h
 
 SOURCES += \
     test4.cpp \
@@ -13,7 +14,8 @@ SOURCES += \
     ../ircmatrix.cpp \
     ../cholesky.cpp \
     ../fleximatrix.cpp \
-    ../vector.cpp
+    ../vector.cpp \
+    ../spamtrix_blas.cpp
 
 
 

@@ -7,9 +7,12 @@ Cholesky::Cholesky(const IRCMatrix &A)
   */
     L.numDim1 = A.getNumRows();
     L.numDim2 = A.getNumCols();
+
+    // FOR EACH ROW
     for (idx r = 0 ; r < A.getNumRows() ; r++)
     {
-        L.nonZeros.push_back(vector<IndVal>() ); // ADD NEW ROW
+        L.nonZeros.push_back(vector<IndVal>() ); // ADD NEW EMPTY ROW
+        // FOR EACH COLUMN, LOWERD DIAGONAL ONLY, i.e. c < r
         for (idx c = 0 ; c <= r ; c++)
         {
             if (r==c) // DIAGONAL
@@ -36,7 +39,7 @@ Cholesky::Cholesky(const IRCMatrix &A)
             else // OFF-DIAGONAL
             {
                 real s = 0;
-                for (idx k = 0 ; k <= c; k++)
+                for (idx k = 0 ; k < c; k++)
                   s+= L.getValue(r,k)*L.getValue(c,k);
 
                 real a(0.0);
@@ -48,14 +51,10 @@ Cholesky::Cholesky(const IRCMatrix &A)
                     real last= L.nonZeros[c].back().val;
                     s /= last;
                     L.nonZeros[r].push_back( IndVal(c,s) );
-
-                    // ALSO ADD UPPER DIAGONAL VALUES - THESE ARE TRANSPOSES OF LOWER DIAG
-                    L.nonZeros[c].push_back( IndVal(r,s) );
-
                 }
             }
         }//end for columns
-    }
+    }// end for rows
 
    // this->makeUpper();
 }
@@ -73,11 +72,13 @@ void Cholesky::solve(Vector &x, const Vector &b) const
 {
 /*!
   Solves Ax=b using forward/backward substitution
+    Ax = b
+    L'(Ly) = b
+    L'x = y
 */
-
-    forwardSubstitution(x,b);
-    backwardSubstitution(x,b);
-
+    Vector y( b.getLength() ); // TEMPORARY VECTOR
+    forwardSubstitution(y,b);
+    backwardSubstitution(x,y);
 }
 
 void Cholesky::forwardSubstitution(Vector &x, const Vector &b) const
@@ -85,7 +86,7 @@ void Cholesky::forwardSubstitution(Vector &x, const Vector &b) const
 /*!
      x[i] =  ( b[i] - sum( A[i,j]x[j] ) ) / A[i,i]
  */
-    // FOR EACH ROW
+    // FOR EACH ROW, STARTING FROM FIRST
     for (idx i = 0 ; i < x.getLength() ; ++i)
     {
 
@@ -107,5 +108,26 @@ void Cholesky::forwardSubstitution(Vector &x, const Vector &b) const
 
 void Cholesky::backwardSubstitution(Vector &x, const Vector &b) const
 {
+/*!
+  Performs back substitution of transposed lower triangular matrix.
 
+  x[i] = ( b[i] - sum(L'x[i+1:end]) ) / L(i,i)
+*/
+
+    idx n = b.getLength();
+    // FOR EACH ROW, STARTING FROM LAST, COUNTING BACKWARDS
+    // NOTE: i < n FOR UNSIGNED INTS IS EQUIVALENT TO
+    // i >= 0 FOR SIGNED INTS
+    for (idx i = n-1 ; i < n ; --i)
+    {
+        real sum(0.0);
+        x[i] = b[i];
+        // PERFORM SUM OF L'x, WHERE L' IS TRANSPOSE OF L
+        // THIS USES MATRIX SEARCH AND SHOULD BE OPTIMISED
+        for ( idx j = n-1 ; j > i ; --j)
+        {
+            x[i]-= L.getValue(j,i)*x[j];
+        }
+        x[i] /= L.getValue(i,i);
+    }// end for each row
 }
