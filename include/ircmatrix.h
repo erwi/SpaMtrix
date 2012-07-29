@@ -69,10 +69,10 @@ public:
     
     //================================================
     // DEBUG FUNCTIONS
-#ifdef DEBUG
+
     void spy()const;
     void print() const;
-#endif
+
     
     
     

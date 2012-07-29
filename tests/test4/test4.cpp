@@ -16,7 +16,7 @@
 #include <spamtrix_blas.h>
 int main()
 {
-
+  std::cout <<"Solving linear system Ax=b using Cholesky decomposition"<<std::endl;
 // CREATE EMPTY SPARSE MATRIX
   MatrixMaker mm;
   mm.setMatrixSize(5,5);
@@ -43,19 +43,24 @@ int main()
   A.sparse_set(2,4,2);
   A.sparse_set(3,2,-6); A.sparse_set(3,3,24);
   A.sparse_set(4,2,2); A.sparse_set(4,4,8);
-
+  
+  std::cout<<"Matrix A : "<<std::endl;
   A.print();
 
   Cholesky M(A);
-  M.print();
+  //M.print();
 
+  // CREATE VECTORS x AND b FOR SYSTEM Ax=b
   Vector x(A.getNumCols());
   Vector b(x);
-  b[0] = 1.0;
+  b[0] = 1.0;   // INITIAL CONDITION
+
+  // SOLVE SYSTEM USING FORWARD/BACK-SUBSTITUTION
+  std::cout << "Solving Ax=b...";
   M.solve(x,b);
-
+  std::cout << "OK" << std::endl;
+  // PRINT NUMERICAL ERROR MAGNITUDE
   real e = sqrt(errorNorm2(A,x,b));
-
   std::cout<< "error is " << e << std::endl;
 
   return 0;
