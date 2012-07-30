@@ -46,7 +46,7 @@ int main()
   A.print();
   
   CholIncPreconditioner C(A);
-  
+  C.print();
   
   
   return 0;

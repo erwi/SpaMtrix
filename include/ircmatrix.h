@@ -11,14 +11,6 @@
 #include <vector.h>
 
 
-
-// CLASSES THAT NEED ACCES TO INTERNALS.
-// NO-ONE SHOULD NEED IT.THIS SHOULD BE CHANGED!!!
-#include <cholincpreconditioner.h>
-
-
-
-
 // Interleaved Row Compressed Matrix
 class IRCMatrix
 {
@@ -63,10 +55,7 @@ public:
     friend void jacobi(const IRCMatrix& A, Vector &x, const Vector &b,const idx &maxIter);
     friend void SOR(const IRCMatrix& A, Vector &x, const Vector& b, idx maxIter);
     
-    // PRECONDITIONER(S) NEED INTIMATE ACCESS TO SPRSITY PATTERN
-    friend class CholIncPreconditioner;
 
-    
     //================================================
     // DEBUG FUNCTIONS
 

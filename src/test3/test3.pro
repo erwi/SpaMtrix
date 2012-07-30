@@ -6,10 +6,15 @@ SOURCES += \
     test3.cpp \
     ../matrixmaker.cpp \
     ../ircmatrix.cpp \
-    ../cholincpreconditioner.cpp
+    ../cholincpreconditioner.cpp \
+    ../cholesky.cpp \
+    ../fleximatrix.cpp \
+    ../vector.cpp
 
 DEFINES = DEBUG
-INCLUDEPATH += ../../includes
+INCLUDEPATH += ../../include
 
 HEADERS += \
-    ../../includes/cholincpreconditioner.h
+    ../../include/cholincpreconditioner.h \
+    ../../include/cholesky.h \
+    ../../include/ircmatrix.h

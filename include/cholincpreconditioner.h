@@ -2,25 +2,23 @@
 #define CHOLINCPRECONDITIONER_H
 #include <setup.h>
 #include <ircmatrix.h>
-#include <preconditioner.h>
 #include <vector.h>
+#include <fleximatrix.h>
+#include <preconditioner.h>
 
 #include <iostream>
-using std::cout;
-using std::endl;
-
-// THIS FILE IS ICLUDED FROM 'ircmatrix.h', SO NEED TO DECLARE IRCMatrix HERE
-class IRCMatrix;
+#include <math.h>
 
 class CholIncPreconditioner:public Preconditioner
 {
-  IRCMatrix* LD; // LOWER DIAGONAL INCOMPLETE CHOLESKY FACTORISED MATRIX
+  FlexiMatrix L;
 
-  void makeLowerDiagonal(const IRCMatrix& A);
-
+  CholIncPreconditioner():L(0,0){}
+  void forwardSubstitution(Vector&x, const Vector& b) const;
+  void backwardSubstitution(Vector&x, const Vector& b) const;
 public:
   CholIncPreconditioner(const IRCMatrix &A);
-  //~CholIncPreconditioner() {if (LD) delete LD;}
+  void print() const;
   void solveMxb(Vector &x, const Vector &b) const;
 };
 
