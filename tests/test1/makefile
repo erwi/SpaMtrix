@@ -9,4 +9,3 @@ test:test1.o $(LIBRARIES_PATH)/libspamtrix.a
 
 test1.o:test1.cpp
 	g++ -c test1.cpp -I$(INCLUDE_PATH)
-	

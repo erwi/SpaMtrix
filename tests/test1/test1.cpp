@@ -12,22 +12,17 @@ int main ()
  * Solves the linear example problem Ax=b from schewchuck's text
  * using the conjugate gradient method.
  */	
-    // CREATE EMPTY SPARSE MATRIX    
-    MatrixMaker mm;
-    mm.setMatrixSize(2,2);
-    mm.addNonZero(0,0); mm.addNonZero(0,1);
-    mm.addNonZero(1,0); mm.addNonZero(1,1);
+    // CREATE SPARSE MATRIX    
+    //      A = |3,2|
+    //          |2,6|
+    
+    MatrixMaker mm(2,2);
+    mm.addNonZero(0,0,3); 
+    mm.addNonZero(0,1,2);
+    mm.addNonZero(1,0,2); 
+    mm.addNonZero(1,1,6);
     IRCMatrix A = mm.getIRCMatrix();
-    mm.clear();
-    
-    // SET  A = |3,2|
-    //		|2,6|
-    A.sparse_set(0,0, 3.0);
-    A.sparse_set(0,1, 2.0);
-    A.sparse_set(1,0, 2.0);
-    A.sparse_set(1,1, 6.0);
-    A.print();
-    
+      
     // MAKE VECTORS b AND x
     Vector b(2); b[0] = 2; b[1] = -8;
     Vector x(2);      

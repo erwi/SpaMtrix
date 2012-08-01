@@ -139,7 +139,7 @@ bool IRCMatrix::isNonZero(const idx row, const idx col, real &val) const
 }
 
 
-  #ifdef DEBUG
+ // #ifdef DEBUG
 
 
   void IRCMatrix::spy() const
@@ -184,4 +184,4 @@ bool IRCMatrix::isNonZero(const idx row, const idx col, real &val) const
   }
   
   
-  #endif
+ // #endif

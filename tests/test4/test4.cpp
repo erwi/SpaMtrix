@@ -18,32 +18,23 @@ int main()
 {
   std::cout <<"Solving linear system Ax=b using Cholesky decomposition"<<std::endl;
 // CREATE EMPTY SPARSE MATRIX
-  MatrixMaker mm;
-  mm.setMatrixSize(5,5);
+  MatrixMaker mm(5,5);
+  
   // ROW 1
-  mm.addNonZero(0,0);  mm.addNonZero(0,2);
+  mm.addNonZero(0,0, 24);  mm.addNonZero(0,2,6);
   // ROW 2
-  mm.addNonZero(1,1);  mm.addNonZero(1,2);
+  mm.addNonZero(1,1,8);  mm.addNonZero(1,2,2);
   // ROW 3
-  mm.addNonZero(2,0);  mm.addNonZero(2,1);
-  mm.addNonZero(2,2);  mm.addNonZero(2,3);
-  mm.addNonZero(2,4);
+  mm.addNonZero(2,0,6);  mm.addNonZero(2,1,2);
+  mm.addNonZero(2,2,8);  mm.addNonZero(2,3,-6);
+  mm.addNonZero(2,4,2);
   // ROW 4
-  mm.addNonZero(3,2);  mm.addNonZero(3,3);
+  mm.addNonZero(3,2,-6);  mm.addNonZero(3,3,24);
   // ROW 5
-  mm.addNonZero(4,2);  mm.addNonZero(4,4);
+  mm.addNonZero(4,2,2);  mm.addNonZero(4,4,8);
 
   IRCMatrix A = mm.getIRCMatrix();
 
-// SET VALUES IN SPARSE MATRIX A
-  A.sparse_set(0,0, 24); A.sparse_set(0,2, 6);
-  A.sparse_set(1,1,8); A.sparse_set(1,2,2);
-  A.sparse_set(2,0,6); A.sparse_set(2,1,2);
-  A.sparse_set(2,2,8); A.sparse_set(2,3,-6);
-  A.sparse_set(2,4,2);
-  A.sparse_set(3,2,-6); A.sparse_set(3,3,24);
-  A.sparse_set(4,2,2); A.sparse_set(4,4,8);
-  
   std::cout<<"Matrix A : "<<std::endl;
   A.print();
 

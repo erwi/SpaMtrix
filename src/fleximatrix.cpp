@@ -39,7 +39,7 @@ void FlexiMatrix::addNonZero(const idx dim1, const IndVal &iv)
 */
     assert( dim1 < (idx) nonZeros.size() );
 
-    // IF EMPTY ROW OR NEW VALUE PLACED AT END, JUST PUSH IT BACK AND EXIT
+    // IF EMPTY ROW OR NEW VALUE PLACED AT END, JUST APPEND TO ROW AND EXIT FUNCTION
     if  ( (nonZeros[dim1].size() == 0 ) ||
           (nonZeros[dim1].back().ind < iv.ind) )
     {
@@ -49,9 +49,11 @@ void FlexiMatrix::addNonZero(const idx dim1, const IndVal &iv)
 
 
     // FIND CORRECT POSITION BY SEARCHING FOR COLUMN POSITIONS.
-    // ALL COLUMN VALUES MUST INCREASE, I.E MAINTAINING AN ASCENDIGLY
-    // SORTED VECTOR OF NON-ZERO COLUMNS
+        // ALL COLUMN VALUES MUST INCREASE, I.E MAINTAINING AN ASCENDIGLY
+        // SORTED VECTOR OF NON-ZERO COLUMNS
 
+    // UPPER BOUND RETURNS ITERATOR TO FIRST ELEMENT IN SORTED CONTAINER
+    // THAT IS LARGER THAN THE COMPARED VALUE iv
     std::vector<IndVal>::iterator itr =
     std::upper_bound(nonZeros[dim1].begin(),
                      nonZeros[dim1].end(),
@@ -59,14 +61,17 @@ void FlexiMatrix::addNonZero(const idx dim1, const IndVal &iv)
                      compare_columns
                      );
 
-    // CHECK THAT AN ENTRY FOR THIS COLUMN DOES NOT ALREADY EXIST.
-    // IF IT DOES, IT WOULD EXIST IMMEDIATELY BEFORE THE RETURNED ITERATOR
+    // CHECK WHETHER AN ENTRY FOR THIS COLUMN ALREADY EXISTS.
+        // IF YES, IT IS IMMEDIATELY BEFORE THE RETURNED ITERATOR
     idx i = itr - nonZeros[dim1].begin(); // ITERATOR IS AT i'th POSITION
 
+    // IF ENTRY EXISTS, UPDATE VALUE
     if ( ( nonZeros[dim1].begin() + (i-1) )->ind == iv.ind ) // CHECK ( i-1 )th POSITION
-        return;
+        ( nonZeros[dim1].begin() + (i-1) )->val = iv.val;
+    // OTHERWISE INSERT
+    else
+        nonZeros[dim1].insert(itr, iv); // INSERT TO LIST
 
-    nonZeros[dim1].insert(itr, iv); // INSERT TO LIST
 
 }
 
