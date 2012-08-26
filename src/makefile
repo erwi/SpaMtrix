@@ -5,18 +5,8 @@ OBJS = spamtrix_blas.o ircmatrix.o \
 	diagpreconditioner.o\
 	cholincpreconditioner.o\
 	matrixmaker.o  tdmatrix.o\
-	cholesky.o fleximatrix.o
-
-	#test1.o test2.o test3.o
-
-#OBJS += $(IRCMATOBJS)
-#EXECS = ircmatrix_test.exe
-
-#CXXFLAGS += -Wall 
-#CXXFLAGS += -DUSES_OPENMP # WHETHER COMPILED WITH OPENMP FOR LOOPS
-#CXXFLAGS += -DDEBUG -g
-#CXXFLAGS += -O3 -g -fopenmp -march=native -ffast-math
-
+	cholesky.o fleximatrix.o\
+	writer.o
 
 LIBS += -lgomp
 

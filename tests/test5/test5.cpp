@@ -12,6 +12,7 @@
 #include <vector.h>
 #include <cholesky.h>
 #include <spamtrix_blas.h>
+#include <writer.h>
 using std::cout;
 using std::endl;
 int main( int nargs, char *args[] )
@@ -47,6 +48,12 @@ int main( int nargs, char *args[] )
     // PRINT NUMERICAL ERROR MAGNITUDE
     real e = sqrt(errorNorm2(A,x,b));
     cout<< "error is " << e << endl;
+    
+    // WRITE RESULT IN A COMMA SEPARATED TEXT FILE
+    // ROWS AND COLUMNS ARE ORDERED ACCORDING TO THE
+    // FD GRID USED FOR THE CALCULATION
+    Writer w;
+    w.writeCSV("out.csv", x , gridLen );
     
     return 0;
 

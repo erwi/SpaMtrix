@@ -1,5 +1,6 @@
 # IGNORE THESE
 *.o
 *.exe
-*.a
+lib/*.a
 /temp
+/lib
