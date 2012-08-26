@@ -4,11 +4,11 @@
 #include <ircmatrix.h>
 #include <fleximatrix.h>
 #include <vector>
-//#include <list>
 #include <iostream>
 #include <stdlib.h>
 #include <algorithm>
 #include <cstring>
+#include <cmath>
 using std::vector;
 
 using std::cout;
@@ -29,6 +29,8 @@ public:
   MatrixMaker(const idx nRows, const idx nCols);
   void addNonZero(const idx row, const idx col, const real val = 0.0);
 
+  void poisson5Point(); // CREATES A 5 POINT POISSON FINITE DIFFERENCES TEST MATRIX
+  
   
   IRCMatrix getIRCMatrix();
   

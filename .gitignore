@@ -1,4 +1,5 @@
 # IGNORE THESE
 *.o
 *.exe
+*.a
 /temp

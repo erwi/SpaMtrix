@@ -26,6 +26,12 @@ void FlexiMatrix::addNonZero(const idx dim1, const idx dim2, const real val)
 */
     // CHECK DIMENSION1 VECTOR SIZE
 #ifdef DEBUG
+  if(dim1 >= (idx) nonZeros.size() )
+  {
+    std::cout << "dim1 = " << dim1 << "nonZeros.size() = " << nonZeros.size() << std::endl;
+    
+  }
+
     assert( dim1 < (idx) nonZeros.size() );
 #endif
     this->addNonZero( dim1, IndVal(dim2,val) );
@@ -66,8 +72,8 @@ void FlexiMatrix::addNonZero(const idx dim1, const IndVal &iv)
     idx i = itr - nonZeros[dim1].begin(); // ITERATOR IS AT i'th POSITION
 
     // IF ENTRY EXISTS, UPDATE VALUE
-    if ( ( nonZeros[dim1].begin() + (i-1) )->ind == iv.ind ) // CHECK ( i-1 )th POSITION
-        ( nonZeros[dim1].begin() + (i-1) )->val = iv.val;
+    if ( ( nonZeros[dim1].begin() + (i) )->ind == iv.ind ) // CHECK ( i-1 )th POSITION
+        ( nonZeros[dim1].begin() + (i) )->val = iv.val;
     // OTHERWISE INSERT
     else
         nonZeros[dim1].insert(itr, iv); // INSERT TO LIST
