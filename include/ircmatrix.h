@@ -14,6 +14,9 @@
 // Interleaved Row Compressed Matrix
 class IRCMatrix
 {
+  /*!
+   * Sparse matrix class, using Interleaved Row Compressed storage scheme
+   */
 protected:
     idx* rows;      // ROW COUNTER
     IndVal* cvPairs;// COLUMN-VALUE PAIRS
@@ -35,13 +38,27 @@ public:
     IRCMatrix& operator=(const IRCMatrix& m);
     ~IRCMatrix();
     //================================================
-    idx getnnz()const {return nnz;}
-    idx getNumRows()const {return numRows;}
-    idx getNumCols()const {return numCols;}
+    inline idx getnnz()const 
+    {
+      /*!Returns total number of non-zeros in matrix.*/
+      return nnz;
+    }
+    inline idx getNumRows()const 
+    { /*! Returns number of rows in matrx.*/
+      return numRows;
+    }
+    inline idx getNumCols()const 
+    {/*!Returns number of columns in matrix*/
+      return numCols;
+    }
     void sparse_set(const idx row, const idx col , const real val );
     void sparse_add(const idx row, const idx col , const real val );
     real sparse_get(const idx row, const idx col ) const;
     
+
+    // MATHS OPERATORS
+    Vector operator*(const Vector& x) const; // MATRIX VECTOR MULTIPLICATION
+
     // RETURNS TRUE IS ROW,COL ENTRY EXISTS AS A NON-ZERO. ACTUAL VALUE IS RETURNED IN val
     bool isNonZero(const idx row, const idx col) const;
     bool isNonZero(const idx row, const idx col, real& val) const;

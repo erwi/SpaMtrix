@@ -1,12 +1,12 @@
 include ../makefile.def
 
 OBJS = spamtrix_blas.o ircmatrix.o \
-	vector.o cg.o pcg.o\
+	vector.o\
 	diagpreconditioner.o\
 	cholincpreconditioner.o\
 	matrixmaker.o  tdmatrix.o\
 	cholesky.o fleximatrix.o\
-	writer.o
+	writer.o densematrix.o
 
 LIBS += -lgomp
 

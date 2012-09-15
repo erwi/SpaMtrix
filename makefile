@@ -5,6 +5,7 @@ clean:
 	cd tests/test2; rm *.o
 	cd tests/test4; rm *.o
 	cd tests/test5; rm *.o
+	cd tests/test6; rm *.o
 
 all:
 	make libs
@@ -32,4 +33,9 @@ test:
 	@echo "      TEST 5:"
 	@echo "-------------------"
 	cd tests/test5; make test
-	
+	@echo "-------------------"
+	@echo "      TEST 6:"
+	@echo "-------------------"
+	cd tests/test6; make test
+
+

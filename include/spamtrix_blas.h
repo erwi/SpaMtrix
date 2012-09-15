@@ -145,6 +145,10 @@ inline void aypx(const real a, Vector& y , const Vector& x)
 real errorNorm2(const IRCMatrix& A, const Vector& x, const Vector& b);
 real errorNorm2(const TDMatrix& A, const Vector& x, const Vector& b);
 
+inline real norm(const Vector& x)
+{
+    return x.getNorm();
+}
 
 #endif
 
