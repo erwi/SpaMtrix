@@ -21,6 +21,7 @@
 
 #include <setup.h>
 #include <spamtrix_blas.h>
+#include <cmath>
 template < class Matrix, class Vector >
 void 
 Update(Vector &x, int k, Matrix &h, Vector &s, Vector v[])
@@ -60,7 +61,7 @@ gmres(const Operator &A,
       Real &tol)
 {
   Real resid;
-  int i, j = 1, k;
+  idx i, j = 1, k;
   Vector s(m+1), cs(m+1), sn(m+1), w;
   
   Real normb = norm(M.solve(b));
@@ -99,7 +100,7 @@ gmres(const Operator &A,
       ApplyPlaneRotation(H(i,i), H(i+1,i), cs(i), sn(i));
       ApplyPlaneRotation(s(i), s(i+1), cs(i), sn(i));
       
-      if ((resid = abs(s(i+1)) / normb) < tol) {
+      if ((resid = fabs(s(i+1)) / normb) < tol) {
         Update(x, i, H, s, v);
         tol = resid;
         max_iter = j;
@@ -133,7 +134,7 @@ void GeneratePlaneRotation(Real &dx, Real &dy, Real &cs, Real &sn)
   if (dy == 0.0) {
     cs = 1.0;
     sn = 0.0;
-  } else if (abs(dy) > abs(dx)) {
+  } else if (fabs(dy) > fabs(dx)) {
     Real temp = dx / dy;
     sn = 1.0 / sqrt( 1.0 + temp*temp );
     cs = temp * sn;

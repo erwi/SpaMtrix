@@ -13,7 +13,7 @@ LIBS += -lgomp
 
 all:$(OBJS)
 .cpp.o:
-	g++ -c -g $< -I$(INCLUDE_PATH) $(CXXFLAGS)
+	g++ -c -g $< $(CXXFLAGS) -I$(INCLUDE_PATH) 
 
 clean:
 	rm -f *.o; rm -f *.exe

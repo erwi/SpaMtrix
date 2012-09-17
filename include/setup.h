@@ -5,14 +5,15 @@
 typedef unsigned int idx;	// INDEX
 typedef double real;		// VALUES
 
-inline real abs(const real& a)
-{
-  /*! 
-    Oevrloads abs(real) to handle absolute values of floating point numbers without
-    truncating to integer.
-  */
-  return fabs(a); 
-} 
+
+//inline real abs(const real& a)
+//{
+//  /*! 
+//    Oevrloads abs(real) to handle absolute values of floating point numbers without
+//    truncating to integer.
+//  */
+//  return fabs(a); 
+//} 
 
 struct IndVal{
 /*!

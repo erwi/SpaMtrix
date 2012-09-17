@@ -39,6 +39,10 @@ Vector& Vector::operator=(const Vector& v)
 Vector& Vector::operator=(const real& a)
 {
     idx len = this->getLength();
+    
+#ifdef USES_OMP
+#pragma omp parallel for
+#endif
     for (idx i = 0 ; i < len ; ++i)
         values[i] = a;
     return *this;
@@ -140,6 +144,9 @@ real Vector::getNorm() const
   */
 
     real sum(0);
+#ifdef USES_OMP
+#pragma omp parallel for reduction(+:sum)
+#endif
     for (idx i = 0 ; i < this->getLength() ; i++ )
         sum += values[i]*values[i];
 

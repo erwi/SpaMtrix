@@ -100,7 +100,9 @@ inline real dot(const Vector& v1, const Vector& v2)
   assert(v1.getLength() == v2.getLength() );
 #endif
   real d(0.0);
+#ifdef USES_OPENMP
 #pragma omp parallel for reduction(+:d)
+#endif
   for (idx i = 0 ; i < v1.getLength() ; ++i)
     d+= v1[i] * v2[i];
   

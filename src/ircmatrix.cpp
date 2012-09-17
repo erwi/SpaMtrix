@@ -71,15 +71,21 @@ IRCMatrix::~IRCMatrix()
 void IRCMatrix::sparse_set(const idx row, const idx col, const real val)
 {
     idx i = getIndex(row, col);
-
-    //    #pragma omp atomic
-    this->cvPairs[i].val = val;
+#ifdef USES_OPENMP
+    #pragma omp critical
+#endif
+    {
+      cvPairs[i].val = val;
+    }
+    
 }
 
 void IRCMatrix::sparse_add(const idx row, const idx col, const real val)
 {
     idx i = getIndex(row, col);
-    //    #pragma omp atomic
+#ifdef USES_OPENMP
+    #pragma omp atomic
+#endif
     this->cvPairs[i].val+= val;
 }
 
