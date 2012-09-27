@@ -1,6 +1,7 @@
 # IGNORE THESE
 *.o
 *.exe
-lib/*.a
+*.csv
+*.a
 /temp
 /lib

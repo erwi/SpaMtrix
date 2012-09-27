@@ -9,7 +9,7 @@
 
 #include <setup.h>
 #include <vector.h>
-
+#include <fleximatrix.h>
 
 // Interleaved Row Compressed Matrix
 class IRCMatrix
@@ -55,6 +55,8 @@ public:
     void sparse_add(const idx row, const idx col , const real val );
     real sparse_get(const idx row, const idx col ) const;
     
+    // RETURNS VALUE AT (ROW,COL), EVEN IF IT IS ZERO
+    real getValue(const idx row, const idx col)const;
 
     // MATHS OPERATORS
     Vector operator*(const Vector& x) const; // MATRIX VECTOR MULTIPLICATION
@@ -72,7 +74,7 @@ public:
     friend void jacobi(const IRCMatrix& A, Vector &x, const Vector &b,const idx &maxIter);
     friend void SOR(const IRCMatrix& A, Vector &x, const Vector& b, idx maxIter);
     
-
+    friend class FlexiMatrix;
     //================================================
     // DEBUG FUNCTIONS
 

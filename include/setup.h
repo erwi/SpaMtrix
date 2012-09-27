@@ -27,6 +27,21 @@ struct IndVal{
 };
 
 
+//inline bool compare_columns(const IndVal &iv1, const IndVal &iv2)
+//{
+//    /*!
+//      Implements the < operation between a IndVal and a position index.
+//      Returns iv.ind < ind
+//      */
+//    return (iv1.ind < iv2.ind); // IF FIRST INDEX IS SMALLER THAN SECOND
+//}
+
+
+
+
+
+
+
 static const idx MAX_INDEX= std::numeric_limits<idx>::max();
 
 #endif

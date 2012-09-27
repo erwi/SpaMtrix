@@ -1,14 +1,15 @@
 #include <fleximatrix.h>
-
+/*
 bool compare_columns(const IndVal &iv1, const IndVal &iv2)
 {
     /*!
       Implements the < operation between a IndVal and a position index.
       Returns iv.ind < ind
       */
-    return (iv1.ind < iv2.ind); // IF FIRST INDEX IS SMALLER THAN SECOND
+//    return (iv1.ind < iv2.ind); // IF FIRST INDEX IS SMALLER THAN SECOND
 
-}
+//}
+//*/
 
 FlexiMatrix::FlexiMatrix(const idx numDim1, const idx numDim2):
     numDim1(numDim1),
@@ -17,6 +18,31 @@ FlexiMatrix::FlexiMatrix(const idx numDim1, const idx numDim2):
 {
 
 }
+
+FlexiMatrix::FlexiMatrix(const IRCMatrix &A):
+    numDim1( A.getNumRows() ),
+    numDim2( A.getNumCols() )
+{
+/*!
+Constructor that makes a copy of an IRCMatrix.
+
+If USES_OMP is defined, uses OpenMP to parallelise construction.
+*/
+
+    nonZeros = vector < vector <IndVal> >(numDim1);
+#ifdef USES_OMP
+#pragma omp parallel for
+#endif
+    for (idx r = 0 ; r < numDim1 ; r++)
+    {
+        idx rowStart = A.rows[r];
+        idx rowEnd   = A.rows[r+1];
+        nonZeros[r] = vector<IndVal>( &A.cvPairs[rowStart] , &A.cvPairs[rowEnd] );
+    }
+
+
+}
+
 
 void FlexiMatrix::addNonZero(const idx dim1, const idx dim2, const real val)
 {
@@ -64,7 +90,7 @@ void FlexiMatrix::addNonZero(const idx dim1, const IndVal &iv)
     std::upper_bound(nonZeros[dim1].begin(),
                      nonZeros[dim1].end(),
                      iv,
-                     compare_columns
+                     [](const IndVal &iv1, const IndVal &iv2) {return iv1.ind < iv2.ind;} // lamda column comparison
                      );
 
     // CHECK WHETHER AN ENTRY FOR THIS COLUMN ALREADY EXISTS.
@@ -87,7 +113,28 @@ real FlexiMatrix::getValue(const idx dim1, const idx dim2) const
   returns the value held at row, col. If id does not exist, return 0.0 by default
   */
 
+    //if (nonZeros[dim1].empty() )
+
+    IndVal temp(dim2,0.0);
+    // GET ITERATOR TO FIRST ELEMENT THAT DOES NOT COMPARE TO
+    // LESS THAN dim2
+    std::vector<IndVal>::const_iterator itr =
+    std::lower_bound(nonZeros[dim1].begin() ,
+                            nonZeros[dim1].end(),
+                             temp,
+                             [](const IndVal &iv1, const IndVal &iv2) {return iv1.ind < iv2.ind;} // lamda column comparison
+                    );
+
+    if (itr == nonZeros[dim1].end() )
+        return 0.0;
+    else
+    if (itr->ind == dim2 )
+        return itr->val;
+    else
+        return 0.0;
+
     // LINEAR SEARCH.
+    /*
     std::vector<IndVal>::const_iterator itr1 = nonZeros[dim1].begin();
     std::vector<IndVal>::const_iterator itr2 = nonZeros[dim1].end();
     for ( ; itr1 != itr2 ; itr1++)
@@ -95,8 +142,34 @@ real FlexiMatrix::getValue(const idx dim1, const idx dim2) const
         if (itr1->ind == dim2)
             return itr1->val;
     }
+    */
+
+
+
     return 0.0;
 }
+
+void FlexiMatrix::setValue(const idx dim1, const idx dim2, const real val)
+{
+    /*!
+      Sets value at (dim1,dim2) to value val. If a non-zero does not already
+      exist at (dim1,dim2), a new non-zero is inserted
+      */
+
+#ifdef DEBUG
+    assert(dim1 < numDim1);
+    assert(dim2 < numDim2);
+#endif
+    real *nnzval;
+    if ( isNonZero(dim1, dim2, nnzval) )    // IF NON-ZERO STORAGE ALREADY EXISTS, SET ITS VALUE
+    {
+        *nnzval = val;
+    }
+    else                                    // OTHERWISE INSERT NEW NONZERO LOCATION
+        addNonZero(dim1, dim2, val);
+
+}
+
 
 void FlexiMatrix::print() const
 {
@@ -114,3 +187,46 @@ void FlexiMatrix::print() const
         printf("\n");
     }
 }
+
+bool FlexiMatrix::isNonZero(const idx dim1, const idx dim2, real *&val)
+{
+ /*!
+    Returns true if memory is allocated for a non-zero value at index dim1,dim2.
+
+    Input argument val is a pointer to location of addres of stored value if non-zero
+    (or NULL pointer otherwise).
+ */
+    val = NULL; // ASSUME STORAGE IS NOT ALLOCATED AT dim1,dim2
+
+    if (dim1 >= (idx) nonZeros.size() )
+        return false;
+
+    // IF VECTOR HAS NOT INITIALISED
+    if ( nonZeros[dim1].empty() )
+        return false;
+
+    // SET ITERATOR TO FIRST ELEMENT THAT DOES NOT COMPARE TO LESS
+    // THAN dim2.
+    IndVal iv(dim2, 0.0);
+    std::vector<IndVal>::iterator itr =
+    std::lower_bound(nonZeros[dim1].begin(),
+                     nonZeros[dim1].end(),
+                     iv,
+                     [](const IndVal &iv1, const IndVal &iv2) {return iv1.ind < iv2.ind;} // lamda column comparison
+                     );
+
+    // itr WILL POINT TO END IF ALL INDEXES ARE LESS THAN dim2
+    if (itr == nonZeros[dim1].end() )
+        return false;
+
+    // itr NOW POINTS EITHER TO dim2 OR THE NEXT AFTER IT
+    if ( (*itr).ind == dim2 )
+    {
+        val =&(itr->val); // SET POINTER TO VALUE AT INDEX dim1,dim2
+        return true;
+    }
+    else
+        return false; // NON-ZERO AT INDEX dim1,dim2 NOT FOUND
+
+}
+

@@ -41,7 +41,7 @@ Vector& Vector::operator=(const real& a)
     idx len = this->getLength();
     
 #ifdef USES_OMP
-#pragma omp parallel for
+//#pragma omp parallel for schedule(static,1000)
 #endif
     for (idx i = 0 ; i < len ; ++i)
         values[i] = a;
@@ -145,7 +145,7 @@ real Vector::getNorm() const
 
     real sum(0);
 #ifdef USES_OMP
-#pragma omp parallel for reduction(+:sum)
+//#pragma omp parallel for reduction(+:sum) schedule(static,1000)
 #endif
     for (idx i = 0 ; i < this->getLength() ; i++ )
         sum += values[i]*values[i];
@@ -169,7 +169,7 @@ void Vector::normalise()
 
     real k = 1.0 / norm;
 #ifdef USES_OMP
-    #pragma omp parallel for
+//    #pragma omp parallel for schedule(static,1000)
 #endif
     for (idx i = 0 ; i < this->getLength() ; i++)
         values[i]*= k;

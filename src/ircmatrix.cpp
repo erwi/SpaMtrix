@@ -72,10 +72,10 @@ void IRCMatrix::sparse_set(const idx row, const idx col, const real val)
 {
     idx i = getIndex(row, col);
 #ifdef USES_OPENMP
-    #pragma omp critical
+    // #pragma omp critical
 #endif
     {
-      cvPairs[i].val = val;
+        cvPairs[i].val = val;
     }
     
 }
@@ -84,7 +84,7 @@ void IRCMatrix::sparse_add(const idx row, const idx col, const real val)
 {
     idx i = getIndex(row, col);
 #ifdef USES_OPENMP
-    #pragma omp atomic
+    //  #pragma omp atomic
 #endif
     this->cvPairs[i].val+= val;
 }
@@ -97,6 +97,18 @@ real IRCMatrix::sparse_get(const idx row, const idx col) const
     return val;
 }
 
+real IRCMatrix::getValue(const idx row, const idx col) const
+{
+    /*!
+      Returns value at (row,col). If a non-zero does not exist at
+      (row,col), a zero is returned.
+      */
+    real val;
+    isNonZero(row,col,val);
+    return val;
+
+}
+
 bool IRCMatrix::isNonZero(const idx row, const idx col) const
 {
     /*! Returns true if this matrix contains storage at location row, col, otherwise false
@@ -105,16 +117,29 @@ bool IRCMatrix::isNonZero(const idx row, const idx col) const
     assert(row < this->numRows);
     assert(col < this->numCols);
 #endif
-    idx i = this->rows[row];
-    idx max = this->rows[row+1];
-    while ( i < max )
-    {
-        if (this->cvPairs[i].ind == col )
-            return true;
-        ++i;
-    }
-    // IF REACHED THIS POINT, COLUMN NOT FOUND
+
+    IndVal *begin = &cvPairs[ rows[row]   ]; // pointer to first in row
+    IndVal *end   = &cvPairs[ rows[row+1] ]; // pointer to first in row+1
+
+
+    // GET POINTER TO FIRST ELEMENT IN cvPairs WHOSE INDEX IS
+    // LARGER OR EQUAL TO col
+    IndVal *itr =
+            std::lower_bound(begin,
+                             end,
+                             col,
+                             [](const IndVal &iv1, const idx &colind){return iv1.val < colind;}
+                             );
+
+
+    if (itr == end) // IF REACHED END OF ROW
+        return false;
+    else
+    if (itr->ind == col)    // IF FOUND
+        return true;
+    else
     return false;
+
 }
 
 bool IRCMatrix::isNonZero(const idx row, const idx col, real &val) const
@@ -127,21 +152,28 @@ bool IRCMatrix::isNonZero(const idx row, const idx col, real &val) const
     assert(row < this->numRows);
     assert(col < this->numCols);
 #endif
-    idx i = this->rows[row];
-    idx max = this->rows[row+1];
-
-    while (i<max)
-    {
-        if (this->cvPairs[i].ind == col)
-        {
-            val = cvPairs[i].val;
-            return true;
-        }
-        ++i;
-    }
 
     val = 0.0;
-    return false;
+    IndVal *begin = &cvPairs[ rows[row]  ]; // pointer to first in row
+    IndVal *end   = &cvPairs[ rows[row+1]]; // pointer to first in row+1
+    // GET POINTER TO FIRST ELEMENT IN cvPairs WHOSE
+    // INDEX IS EQUAL OR LARGER THAN col
+    IndVal *itr = std::lower_bound(begin,end,col,
+                                   [](const IndVal &iv1, const idx& colind){return iv1.ind<colind;}
+                                    );
+    if (itr == end) // END OF ROW REACHED
+    {
+        return false;
+    }
+    else
+    if (itr->ind == col) // FOUND IT
+    {
+        val = itr->val;
+        return true;
+    }
+    else // DID NOT FIND
+        return false;
+
 }
 
 
@@ -160,7 +192,7 @@ Vector IRCMatrix::operator *(const Vector& x) const
 
     // FOR EACH ROW
 #ifdef USES_OPENMP
-#pragma omp parallel for schedule(static,1000)
+#pragma omp parallel for schedule(static,10000)
 #endif
     for (idx i = 0 ; i < getNumRows() ; i++)
     {

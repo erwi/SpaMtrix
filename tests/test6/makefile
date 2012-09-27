@@ -7,6 +7,7 @@ test:test6.o $(LIBRARIES_PATH)/libspamtrix.a
 
 clean:
 	rm -f *.o
+	rm -f ./test6
 
 test6.o:test6.cpp
 	g++ -c test6.cpp $(CXXFLAGS) -I$(INCLUDE_PATH) 

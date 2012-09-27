@@ -25,7 +25,7 @@ inline void multiply(const IRCMatrix& A,
  
     // FOR EACH ROW
 #ifdef USES_OPENMP
-#pragma omp parallel for schedule(static,1000)
+//#pragma omp parallel for schedule(static,1000)
 #endif
     for (idx i = 0 ; i < A.getNumRows() ; i++)
     {
@@ -101,7 +101,7 @@ inline real dot(const Vector& v1, const Vector& v2)
 #endif
   real d(0.0);
 #ifdef USES_OPENMP
-#pragma omp parallel for reduction(+:d)
+//#pragma omp parallel for reduction(+:d) schedule(static,1000)
 #endif
   for (idx i = 0 ; i < v1.getLength() ; ++i)
     d+= v1[i] * v2[i];

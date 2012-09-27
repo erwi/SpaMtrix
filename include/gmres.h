@@ -84,9 +84,11 @@ gmres(const Operator &A,
     s = 0.0;
     s(0) = beta;
     
-    for (i = 0; i < m && j <= max_iter; i++, j++) {
+    for (i = 0; i < m && j <= max_iter; i++, j++) 
+    {
       w = M.solve(A * v[i]);
-      for (k = 0; k <= i; k++) {
+      for (k = 0; k <= i; k++) 
+      {
         H(k, i) = dot(w, v[k]);
         w -= v[k]*H(k, i);
       }

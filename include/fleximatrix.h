@@ -6,7 +6,11 @@
 #include <algorithm>
 #include <iostream>
 #include <stdio.h>
+#include <ircmatrix.h>
 using std::vector;
+
+
+class IRCMatrix;
 
 class FlexiMatrix
 {
@@ -24,7 +28,7 @@ public:
     vector<vector<IndVal> > nonZeros;
     FlexiMatrix():numDim1(0),numDim2(0){}
     FlexiMatrix(const idx numDim1, const idx numDim2);
-
+    FlexiMatrix(const IRCMatrix &A);
 
     // NOTE! THESE TWO HAVE NOT BEEN THOROUGHLY TESTED
     void addNonZero(const idx dim1, const idx dim2, const real val = 0.0 );
@@ -32,7 +36,13 @@ public:
 
     // GET VALUE CURERNTLY USES LINEAR SEARCH. CREATE A BINARY SEARCH VERSION!
     real getValue(const idx dim1, const idx dim2) const;
+
+    // SETS VALUE, IF IT DOES NOT EXIST, INSERTS IT
+    void setValue(const idx dim1, const idx dim2, const real val);
     void print() const; // PRINTS TO STDOUT
+
+    bool isNonZero(const idx dim1, const idx dim2, real *&val);
+
 };
 
 

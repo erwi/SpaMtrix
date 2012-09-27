@@ -1,12 +1,22 @@
 /*!
-  Creating a 5 point poisson (2D finite differences) test matrix.
+  Solution of system Ax = b.
+  
+  Creates a 5 point poisson (2D finite differences) test matrix A.
+  
   The FD grid is assumed square, with equal side lengths n, and
-  grid spacing of unity.
+  grid spacing of unity. 
+  
+  The boundary conditions are all zero Dirchlet nodes and not solved for.
+  
+  The right hand side vector b is set to all ones.
+  
+  The result vector x is writen out in a comma separated values text file 'out.txt' 
+  that can easily be loaded and visualised with a spreadsheet/MATLAB/OCTAVE etc. program.
 */
 
 #include <iostream>
 #include <omp.h>
-// SpaMtrix headers
+// SpaMtrix HEADERS
 #include <matrixmaker.h>
 #include <ircmatrix.h>
 #include <vector.h>
@@ -23,6 +33,9 @@ using std::endl;
 int main( int nargs, char *args[] )
 {
 omp_set_num_threads(0);
+
+ 
+
     // DEFAULT FD GRID SIDE LENGTH IS 10 POINTS
     idx gridLen =5;
     if (nargs > 1)
@@ -41,16 +54,15 @@ omp_set_num_threads(0);
     // CREATE VECTORS FOR SYSTEM OF EQUATIONS Ax = b
     Vector x(numDoF);
     Vector b(numDoF);
-    b[0] = 1.0;
+    b = 1.0;
 
-    // CREATE PERFORMANCE TIMES WITH MILLISECOND ACCURACY
+     // CREATE PERFORMANCE TIMES WITH MILLISECOND ACCURACY
     TickCounter<std::chrono::milliseconds> stopWatch;
-    
     stopWatch.start();
     cout << "making preconditioner ...";
     //CholIncPreconditioner M(A);
     DiagPreconditioner M(A);
-    //SORPreconditioner M(A,20);
+    
     cout << "OK, time elapsed " << stopWatch.getElapsed() << "ms" << endl;
     
     cout << " solving Ax = b ..." << endl;
@@ -79,7 +91,7 @@ omp_set_num_threads(0);
     // FD GRID USED FOR THE CALCULATION
     Writer w;
     w.writeCSV("out.csv", x , gridLen );
-    
+   
     return 0;
 
 }
