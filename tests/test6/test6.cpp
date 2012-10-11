@@ -26,7 +26,6 @@
 #include <cholincpreconditioner.h>
 #include <diagpreconditioner.h>
 #include <sorpreconditioner.h>
-#include <densematrix.h>
 #include <tickcounter.h>	// PERFORMANCE TIMER
 using std::cout;
 using std::endl;
@@ -70,10 +69,8 @@ omp_set_num_threads(0);
     idx maxIter(numDoF);
     idx innerIter(gridLen);
     real toler(1e-6);
-    DenseMatrix H(innerIter+1, innerIter);
-    
     stopWatch.reset();
-    gmres(A, x, b, M, H, innerIter, maxIter, toler);
+    gmres(A, x, b, M, innerIter, maxIter, toler);
     
     cout << "OK, solved in " << stopWatch.getElapsed() << "ms" << endl;
 

@@ -1,26 +1,34 @@
-//*****************************************************************
-// Iterative template routine -- GMRES
-//
-// GMRES solves the unsymmetric linear system Ax = b using the 
-// Generalized Minimum Residual method
-//
-// GMRES follows the algorithm described on p. 20 of the 
-// SIAM Templates book.
-//
-// The return value indicates convergence within max_iter (input)
-// iterations (0), or no convergence within max_iter iterations (1).
-//
-// Upon successful return, output arguments have the following values:
-//  
-//        x  --  approximate solution to Ax = b
-// max_iter  --  the number of iterations performed before the
-//               tolerance was reached
-//      tol  --  the residual after the final iteration
-//  
-//*****************************************************************
+
+/*!
+
+This file is adapted from the file "gmres.h" that originally appeared
+in the IML++ (Iterative Methods Library) v. 1.2a gmres.h library by
+J. Dongarra, A. Lumsdaine, R. Pozo, K. Remington :http://math.nist.gov/iml++/
+
+
+ Iterative template routine -- GMRES
+
+ GMRES solves the unsymmetric linear system Ax = b using the 
+ Generalized Minimum Residual method
+
+ GMRES follows the algorithm described on p. 20 of the 
+ SIAM Templates book.
+
+ The return value indicates convergence within max_iter (input)
+ iterations (0), or no convergence within max_iter iterations (1).
+
+ Upon successful return, output arguments have the following values:
+  
+        x  --  approximate solution to Ax = b
+ max_iter  --  the number of iterations performed before the
+               tolerance was reached
+      tol  --  the residual after the final iteration
+  
+*/
 
 #include <setup.h>
 #include <spamtrix_blas.h>
+#include <densematrix.h>
 #include <cmath>
 template < class Matrix, class Vector >
 void 
@@ -48,14 +56,13 @@ abs(Real x)
 }
 
 
-template < class Operator, class Vector, class Preconditioner,
-           class Matrix, class Real >
+template < class Operator, class Vector, class Preconditioner, class Real >
 bool // RETURN TRUE ON SUCCESS 
 gmres(const Operator &A, 
       Vector &x, 
       const Vector &b,
       const Preconditioner &M, 
-      Matrix &H, 
+      //Matrix &H, 
       idx &m, 
       idx &max_iter,
       Real &tol)
@@ -79,6 +86,10 @@ gmres(const Operator &A,
 
   Vector *v = new Vector[m+1];
 
+  // CREATE HESSENBERG MATRIX NEEDED TO STORE INTERMEDIATES
+  const idx innerIter = m;
+  DenseMatrix H(innerIter+1, innerIter);
+  
   while (j <= max_iter) {
     v[0] = r * (1.0 / beta);    // ??? r / beta
     s = 0.0;
