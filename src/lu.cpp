@@ -74,8 +74,8 @@ LU::LU(const IRCMatrix &A):
 void LU::print()
 {
     /*!
-      DEBUG PRINTOUT OF L AND U
-      */
+      Debug printout to stdout of L and U Matrices.
+    */
 
     cout << "L:" << endl;
     L.print();
@@ -86,10 +86,10 @@ void LU::print()
 void LU::solve(Vector &x, const Vector &b) const
 {
     /*!
-      solves Ax=b using forward/backward substitution.
-      Ax  = b
-      L(Uy) = b
-      Lx = y
+      Solves Ax=b using forward/backward substitution. \n
+      Ax  = b \n
+      L(Uy) = b \n
+      Lx = y \n
       */
     Vector y( b.getLength() );
     forwardSubstitution(y,b);

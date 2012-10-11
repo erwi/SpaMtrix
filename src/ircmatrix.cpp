@@ -244,10 +244,7 @@ void IRCMatrix::print() const
     {
         for (idx col = 0 ; col < this->numCols ; col++)
         {
-            real val = 0.0;
-            if (this->isNonZero(row,col) )
-                val = this->sparse_get(row, col);
-
+            real val = this->getValue(row, col );
             printf("%1.3f\t", val );
         }
         printf("\n");

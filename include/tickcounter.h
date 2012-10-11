@@ -1,15 +1,23 @@
   /*!
-    A siple c++11 cross-platform stopwatch template class that mesures 
-	time by counting ticks of a specified duration. 
+    A siple c++11 cross-platform stopwatch template class that measures 
+	time by counting number of ticks of a specified duration. 
 	
-	The duration can be one of:
-	
-		std::chrono::nanoseconds
-		std::chrono::microseconds
-		std::chrono::milliseconds
-		std::chrono::seconds
-		std::chrono::minutes
-		std::chrono::hours
+	The duration can be one of:\n
+		- std::chrono::nanoseconds \n
+		- std::chrono::microseconds \n
+		- std::chrono::milliseconds \n
+		- std::chrono::seconds \n
+		- std::chrono::minutes \n
+		- std::chrono::hours \n
+		\n \n
+  Example: \n
+  TickCounter< std::chrono::milliseconds > timer; \n
+  timer.start(); \n
+  . \n
+  \\ \\ do something \n
+  . \n
+  timer.stop(); \n
+  size_t numMilliseconds = timer.getElapsed(); \n
   */
 #include <chrono>
 

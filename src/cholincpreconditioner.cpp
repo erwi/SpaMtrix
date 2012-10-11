@@ -45,7 +45,7 @@ CholIncPreconditioner::CholIncPreconditioner(const IRCMatrix& A)
 
                 real s = 0;
                 for (idx k = 0 ; k < c; k++)
-                    s+= L.getValue(r,k)*L.getValue(c,k);
+                    s+= L.getValue(r,k)*L.getValue(c,k); // OPTIMISE ITERATION OVER NONZEROS IN ROW r
 
                 s =  ( a - s );
                 if ( s != 0.0 ) // IF NOT ZERO, ADD TERM TO MATRIX

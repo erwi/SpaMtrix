@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <omp.h>
 /*!
-  A class that performs (non-pivoted) LU factorisation of a sparse matrix
+  A class that performs (non-pivoted) LU factorisation of a sparse matrix using the Crout algorithm.
   */
 
 class LU
