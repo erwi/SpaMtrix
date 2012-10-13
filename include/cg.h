@@ -1,77 +1,91 @@
-//*****************************************************************
-// Iterative template routine -- CG
-//
-// CG solves the symmetric positive definite linear
-// system Ax=b using the Conjugate Gradient method.
-//
-// CG follows the algorithm described on p. 15 in the
-// SIAM Templates book.
-//
-// The return value indicates convergence within max_iter (input)
-// iterations (0), or no convergence within max_iter iterations (1).
-//
-// Upon successful return, output arguments have the following values:
-//
-//        x  --  approximate solution to Ax = b
-// max_iter  --  the number of iterations performed before the
-//               tolerance was reached
-//      tol  --  the residual after the final iteration
-//
-//*****************************************************************
 
 #include <setup.h>
+#include <vector.h>
+#include <ircmatrix.h>
 #include <spamtrix_blas.h>
+#include <preconditioner.h>
 
-template < class Matrix, class Vector, class Preconditioner, class Real >
+//template < class Matrix, class Vector, class Real >
 bool
-cg(const Matrix &A, 
+cg(const IRCMatrix &A,
    Vector &x,
    const Vector &b,
    const Preconditioner &M,
    idx &max_iter,
-   Real &tol)
+   real &tol)
 {
-    Real resid;
-    Vector p, z, q;
-    Vector alpha(1), beta(1), rho(1), rho_1(1);
+    /*!
+      Preconditioned conjugate gradient method.
+    */
 
-    Real normb = norm(b);
+
+    const idx N = x.getLength();
+
+    Vector p( N );
+    Vector z( N );
+    Vector q( N );
     Vector r = b - A*x;
 
-    if (normb == 0.0)
-        normb = 1;
+    real alpha(0), beta(0), rho(0), rho_1(0), resid(0);
+    real normb(0);// = norm(b);
+    real normr(0);// = norm(r);
 
-    if ((resid = norm(r) / normb) <= tol) {
+    for (idx j = 0 ; j < N ; ++j)
+    {
+        normb += b[j]*b[j];
+        normr += r[j]*r[j];
+    }
+    normb = normb == 0 ? 1.0:normb;
+    if ((resid = normr/ normb) <= tol) {
         tol = resid;
         max_iter = 0;
         return 0;
     }
 
-    for (int i = 1; i <= max_iter; i++) {
-        z = M.solve(r);
-        rho(0) = dot(r, z);
+    M.solveMxb(z,r); // z = M^{-1} r
+    rho = dot(r, z);
 
-        if (i == 1)
-            p = z;
-        else {
-            beta(0) = rho(0) / rho_1(0);
-            p = z + beta(0) * p;
+    // MAIN LOOP
+    for (idx i = 0; i < max_iter; ++i)
+    {
+        //rho = 0.0;
+        for (idx j = 0 ; j < N ; ++j)
+        {
+           // rho += r[j]*z[j];
+            p[j] = z[j]+beta*p[j];
         }
 
-        q = A*p;
-        alpha(0) = rho(0) / dot(p, q);
+        multiply(A,p,q); // q = A*p
 
-        x = x + alpha(0) * p;
-        r = r - alpha(0) * q;
+        alpha = rho / dot(p, q);
 
-        if ((resid = norm(r) / normb) <= tol) {
+        // CALCULATE x = x + a*p
+        //           r = r - a*q
+        //   AND     norm(r), WHICH IS NEEDED LATER
+        real normr(0);
+        for (idx j = 0 ; j < N ; ++j)
+        {
+            x[j] += alpha*p[j];
+            r[j] -= alpha*q[j];
+            normr += r[j]*r[j];
+        }
+
+
+        // IF TOLERANCE ACHIVED, EXIT
+        if ((resid = normr / normb) <= tol)
+        {
             tol = resid;
             max_iter = i;
             return true;
         }
 
-        rho_1(0) = rho(0);
-    }
+        // FOR NEXT ITERATION
+        rho_1 = rho;
+        M.solveMxb(z,r); // z = M^{-1} r
+        rho = dot(r, z);
+        beta = rho / rho_1;
+
+    }// end for i, MAIN LOOP
 
     tol = resid;
     return false;
