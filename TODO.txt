@@ -1,8 +1,21 @@
-3. Fix tridiagonal matrix solver function. Last value in solution vector seems wrong.
+Reading and writing of matrix market formatted files.
 
-==================================================
-01/05/12 DONE
-1. Finish Tridiagonal matrix "print" method
+Creation of drift-diffusion test matrices.
 
-01/05/12 DONE
-2. Finish Tridiagonal matrix "isValidIndexFunction"
+Move BiCGStab and MinRes functions to IterativeSolvers class.
+
+Python bindings.
+
+Eigenavalue solvers.
+
+Make spamtrix_blas into a class for easier friend access to IRCMatrix privates ??
+
+Vectorise spamtrix_blas and iterative solvers.
+
+Make use of incomplete cholesky decomposition faster. This probably involves storing both upper and lower diagonals of it. 
+
+Sparse matrix row/column reoredering.
+
+Cuthill-McKee and other bandwidth reduction algorithms.
+
+Improve LU decomposition. Maybe start with LUD? Then pivoting.
