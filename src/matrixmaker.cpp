@@ -1,5 +1,5 @@
 #include <matrixmaker.h>
-
+#include <omp.h>
 /*
 MatrixMaker::MatrixMaker():
 nRows(0),
@@ -52,11 +52,13 @@ void MatrixMaker::poisson5Point()
 
     idx n = sqrt(nRows); // FINITE DIFFERENCES GRID SIDE LENGTH
     // SET MAIN DIAGONALS TO 4
+
     for (idx i = 0 ; i  < nRows; i++)
         addNonZero(i,i, 4);
 
 
     // SET OFF-DIAGONALS
+
     for (idx i = 0 ; i < nRows ; i++)
     {
         idx row = i / n; // ROW OF i'th NODE

@@ -5,7 +5,7 @@
 #include <matrixmaker.h>
 #include <ircmatrix.h>
 #include <vector.h>
-#include <cg.h>
+#include <iterativesolvers.h>
 #include <diagpreconditioner.h>
 
 using std::cout;
@@ -47,7 +47,8 @@ int main ()
     // CREATE DIAGONAL PRECONDITIONER MATRIX
     DiagPreconditioner M(A);
     
-    bool conv = cg(A, x, b, M, maxIter, toler );
+    
+    bool conv = IterativeSolvers::pcg(A, x, b, M, maxIter, toler );
     
     std::cout<<"convergence : ";
     if (conv)

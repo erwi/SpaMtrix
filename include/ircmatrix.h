@@ -70,6 +70,7 @@ public:
     //===============================================
     // SPAMTRIX-BLAS
     friend void multiply(const IRCMatrix& A, const Vector& x, Vector& b);
+    friend real multiply_dot(const IRCMatrix& A, const Vector& x, Vector& b);
     // RELAXERS
     friend void jacobi(const IRCMatrix& A, Vector &x, const Vector &b,const idx &maxIter);
     friend void SOR(const IRCMatrix& A, Vector &x, const Vector& b, idx maxIter);

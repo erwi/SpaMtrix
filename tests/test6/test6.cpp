@@ -21,7 +21,7 @@
 #include <ircmatrix.h>
 #include <vector.h>
 #include <spamtrix_blas.h>
-#include <gmres.h>
+#include <iterativesolvers.h>
 #include <writer.h>
 #include <cholincpreconditioner.h>
 #include <diagpreconditioner.h>
@@ -42,22 +42,27 @@ omp_set_num_threads(0);
         gridLen = atoi(args[1]);
     }
  
+    // CREATE PERFORMANCE TIMES WITH MILLISECOND ACCURACY
+    TickCounter<std::chrono::milliseconds> stopWatch;
+ 
+ 
     // CREATE 5-POINT-POISSON TEST MATRIX
     idx numDoF = gridLen*gridLen;   // NUMBER OF DEGREES OF FREEDOM OF SYSTEM
     cout << "creating test matrix of size "<<numDoF <<"x" <<numDoF <<"...";
+    
+    stopWatch.start();
     MatrixMaker mm(numDoF,numDoF);
     mm.poisson5Point();             // SETS SPARSITY PATTERN
     IRCMatrix A = mm.getIRCMatrix();
-    cout << "OK" << endl;
+    cout << "OK, elapsed: " << stopWatch.getElapsed() << endl;
     
     // CREATE VECTORS FOR SYSTEM OF EQUATIONS Ax = b
     Vector x(numDoF);
     Vector b(numDoF);
     b = 1.0;
 
-     // CREATE PERFORMANCE TIMES WITH MILLISECOND ACCURACY
-    TickCounter<std::chrono::milliseconds> stopWatch;
-    stopWatch.start();
+    
+    stopWatch.reset();
     cout << "making preconditioner ...";
     //CholIncPreconditioner M(A);
     DiagPreconditioner M(A);
@@ -70,7 +75,7 @@ omp_set_num_threads(0);
     idx innerIter(gridLen);
     real toler(1e-6);
     stopWatch.reset();
-    gmres(A, x, b, M, innerIter, maxIter, toler);
+    IterativeSolvers::gmres(A, x, b, M, innerIter, maxIter, toler);
     
     cout << "OK, solved in " << stopWatch.getElapsed() << "ms" << endl;
 

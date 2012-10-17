@@ -39,6 +39,9 @@ LUIncPreconditioner::LUIncPreconditioner(const IRCMatrix &A):
 
 void LUIncPreconditioner::solveMxb(Vector &x, const Vector &b) const
 {
+#ifdef DEBUG
+    assert(x.getLength() == b.getLength() );
+#endif
     Vector y( b.getLength() ); // TEMPORARY VECTOR
     forwardSubstitution(y,b);
     backwardSubstitution(x,y);

@@ -30,8 +30,9 @@ IRCMatrix::IRCMatrix(const IRCMatrix& m):
 
 IRCMatrix& IRCMatrix::operator=(const IRCMatrix& m)
 {
+
     // TODO
-    std::cout<< "unimplemented functionality: "<<__func__<< "in file "<< __FILE__<< std::endl;
+    std::cout<< "unimplemented functionality : "<<__func__<< "in file "<< __FILE__<< std::endl;
     return *this;
 }
 
@@ -191,9 +192,9 @@ Vector IRCMatrix::operator *(const Vector& x) const
     Vector b( x.getLength() );
 
     // FOR EACH ROW
-#ifdef USES_OPENMP
-#pragma omp parallel for schedule(static,10000)
-#endif
+//#ifdef USES_OPENMP
+//#pragma omp parallel for
+    //#endif
     for (idx i = 0 ; i < getNumRows() ; i++)
     {
         // FOR EACH COLUMN

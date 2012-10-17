@@ -6,8 +6,6 @@
 #include <diagpreconditioner.h>
 #include <jacobipreconditioner.h>
 #include <sorpreconditioner.h>
-#include <pcg.h>
-#include <cg.h>
 #include <iostream>
 #include <math.h>
 #include <tdmatrix.h>

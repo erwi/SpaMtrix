@@ -118,17 +118,15 @@ Vector& Vector::operator *=(const real a)
 
 const Vector Vector::operator+(const Vector& rhs) const
 {
-    idx len = this->getLength();
 #ifdef DEBUG
-    assert(len == rhs.getLength() );
+    assert(this->getLength() == rhs.getLength() );
 #endif
     return Vector(*this)+= rhs;
 }
 const Vector Vector::operator-(const Vector& rhs) const
 {
-    idx len = this->getLength();
 #ifdef DEBUG
-    assert(len == rhs.getLength() );
+    assert(this->getLength() == rhs.getLength() );
 #endif
     return Vector(*this)-= rhs;
 }
@@ -144,9 +142,9 @@ real Vector::getNorm() const
   */
 
     real sum(0);
-#ifdef USES_OMP
+//#ifdef USES_OMP
 //#pragma omp parallel for reduction(+:sum) schedule(static,1000)
-#endif
+//#endif
     for (idx i = 0 ; i < this->getLength() ; i++ )
         sum += values[i]*values[i];
 

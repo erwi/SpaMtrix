@@ -108,7 +108,7 @@ void CholIncPreconditioner::backwardSubstitution(Vector &x, const Vector &b) con
         // i >= 0 FOR SIGNED INTS
         for (idx i = n-1 ; i < n ; --i)
         {
-            real sum(0.0);
+
             x[i] = b[i];
             // PERFORM SUM OF L'x, WHERE L' IS TRANSPOSE OF L
             // THIS USES MATRIX SEARCH AND SHOULD BE OPTIMISED

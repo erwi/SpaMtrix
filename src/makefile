@@ -11,6 +11,7 @@ OBJS = spamtrix_blas.o ircmatrix.o \
 	fleximatrix.o\
 	writer.o\
 	densematrix.o\
+	iterativesolvers.o
 
 LIBS += -lgomp
 
