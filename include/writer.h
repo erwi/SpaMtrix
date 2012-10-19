@@ -9,7 +9,7 @@
 // SpaMtrix INCLUDES
 #include <setup.h>
 #include <vector.h>
-
+#include <ircmatrix.h>
 class Writer
 {
 	std::fstream file;
@@ -20,6 +20,9 @@ class Writer
 	bool writeCSV(const std::string &filename,
 		      const Vector &data,
 		      idx numC=0);
+
+    static bool writeMatrixMarket(const std::string &filename,
+                           const IRCMatrix &A);
 
 };
 

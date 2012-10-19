@@ -75,7 +75,7 @@ omp_set_num_threads(0);
     idx innerIter(gridLen);
     real toler(1e-6);
     stopWatch.reset();
-    IterativeSolvers::gmres(A, x, b, M, innerIter, maxIter, toler);
+    IterativeSolvers::gmres(A, x, b, M, maxIter, innerIter, toler);
     
     cout << "OK, solved in " << stopWatch.getElapsed() << "ms" << endl;
 

@@ -19,3 +19,5 @@ Sparse matrix row/column reoredering.
 Cuthill-McKee and other bandwidth reduction algorithms.
 
 Improve LU decomposition. Maybe start with LUD? Then pivoting.
+
+Modified incomplete LU demcomposition (MILU)

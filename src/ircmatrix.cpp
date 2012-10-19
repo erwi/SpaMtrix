@@ -129,7 +129,7 @@ bool IRCMatrix::isNonZero(const idx row, const idx col) const
             std::lower_bound(begin,
                              end,
                              col,
-                             [](const IndVal &iv1, const idx &colind){return iv1.val < colind;}
+                             [](const IndVal &iv1, const idx &colind){return iv1.ind < colind;}
                              );
 
 

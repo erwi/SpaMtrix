@@ -51,3 +51,44 @@ bool Writer::writeCSV(const std::string &filename,
       return true;
 }
 
+
+bool Writer::writeMatrixMarket(const std::string &filename,
+                               const IRCMatrix &A)
+{
+    /*!
+      Writes the sparse matrix A to a file in matrix market format.
+      NOTE: Matrix Market format indexing starts from 1, i.e.
+      A[1,1] is the first row, column of matrix A, not A[0,0].
+      */
+    std::fstream file;
+    // OPEN A FILE FOR WRITING. RETURN FALSE IF FAILS
+    file.open(filename.c_str(), std::fstream::out);
+    if (!file.is_open())
+        return false;
+
+    // WRITE HEADER
+    file << "%%MatrixMarket matrix coordinate real general" << endl;
+    file << "% NOTE: Matrix market indexing is 1-based!"<<endl;
+    // WRITE MATRIX SIZE DESCRIPTOR
+    file << A.getNumRows() << " " << A.getNumCols() << " " << A.getnnz() << endl;
+
+    // WRITE MATRIX DATA
+    // TODO: NEED TO IMPLEMENT ITERATORS OVER NON-ZEROS TO MAKE THIS FASTER!!
+    for (idx r = 0 ; r < A.getNumRows() ; r++)
+    {
+        for (idx c = 0 ; c < A.getNumCols() ; c++)
+        {
+            real val;
+            if ( A.isNonZero(r,c, val) )
+                file << r+1 <<"\t" << c+1 << "\t" << val << endl;
+        }
+    }
+
+    return true;
+
+
+
+
+
+
+}

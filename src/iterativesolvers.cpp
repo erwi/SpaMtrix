@@ -175,6 +175,7 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
     Vector temp(N);
 
     omp_set_nested(1);
+
     // MAIN LOOP
     while (j <= maxIter)
     {
