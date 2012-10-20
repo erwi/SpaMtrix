@@ -36,6 +36,12 @@ public:
 
     IRCMatrix(const IRCMatrix &m);
     IRCMatrix& operator=(const IRCMatrix& m);
+    inline IRCMatrix& operator=(const real &s)	
+    {
+      /*! SETS ALL NONZEROS TO SCALAR s.*/
+      for (IndVal *cvp = cvPairs ; cvp < cvPairs + nnz ; cvp++ , cvp->val = s );
+      return *this;
+    }
     ~IRCMatrix();
     //================================================
     inline idx getnnz()const 
