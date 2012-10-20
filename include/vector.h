@@ -21,7 +21,7 @@ public:
     Vector(){} //:length(0),values(NULL){}
     Vector(const idx length);
     Vector(const Vector& v); // COPY CONSTRUCTOR
-
+    Vector(const real *val, const idx &length);
     ~Vector();
 
     real& operator[](const idx i)
