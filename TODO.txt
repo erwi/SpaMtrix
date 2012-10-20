@@ -1,3 +1,5 @@
+Block expansion of sparsity pattern in MatrixMaker
+
 Reading and writing of matrix market formatted files.
 
 Creation of drift-diffusion test matrices.

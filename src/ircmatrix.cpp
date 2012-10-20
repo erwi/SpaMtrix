@@ -36,6 +36,17 @@ IRCMatrix& IRCMatrix::operator=(const IRCMatrix& m)
     return *this;
 }
 
+IRCMatrix& IRCMatrix::operator=(const real &s)
+{
+      /*! SETS ALL NONZEROS TO SCALAR s.*/
+      for (idx i = 0 ; i < nnz ; ++i)
+      {
+          cvPairs[i].val = s;
+      }
+      return *this;
+}
+
+
 inline idx IRCMatrix::getIndex(const idx row, const idx col) const
 {
     /*! FINDS INDEX TO ColVal CORRESPONDING INPUT TO ROW AND COLUMN

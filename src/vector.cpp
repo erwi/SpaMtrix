@@ -30,7 +30,7 @@ Vector::Vector(const Vector& v)
 Vector::Vector(const real *val, const idx &length)
 {
   /*! Constructor that copies values from an existing array of reals*/
-  values = std::vector<real>(val, val+length/sizeof(real) );
+  values = std::vector<real>(val, val+length );
 }
 
 

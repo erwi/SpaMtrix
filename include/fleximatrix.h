@@ -29,11 +29,12 @@ public:
     FlexiMatrix():numDim1(0),numDim2(0){}
     FlexiMatrix(const idx numDim1, const idx numDim2);
     FlexiMatrix(const IRCMatrix &A);
-
-    // NOTE! THESE TWO HAVE NOT BEEN THOROUGHLY TESTED
+    
     void addNonZero(const idx dim1, const idx dim2, const real val = 0.0 );
     void addNonZero(const idx dim1, const IndVal &iv);
 
+    idx calcNumNonZeros() const;
+    
     // GET VALUE CURERNTLY USES LINEAR SEARCH. CREATE A BINARY SEARCH VERSION!
     real getValue(const idx dim1, const idx dim2) const;
 

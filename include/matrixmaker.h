@@ -27,6 +27,8 @@ class MatrixMaker
 public:
 
   MatrixMaker(const idx nRows, const idx nCols);
+  
+  idx calcNumNonZeros() const;
   void addNonZero(const idx row, const idx col, const real val = 0.0);
 
   void poisson5Point(); // CREATES A 5 POINT POISSON FINITE DIFFERENCES TEST MATRIX

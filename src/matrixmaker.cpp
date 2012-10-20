@@ -27,7 +27,13 @@ void MatrixMaker::addNonZero(const idx row, const idx col, const real val)
     nz.addNonZero(row, col , val);
 }
 
-
+idx MatrixMaker::calcNumNonZeros() const
+{
+  /*!
+   * Returns total number of nonzeros allocated so far. 
+   */
+  return nz.calcNumNonZeros();
+}
 void MatrixMaker::poisson5Point()
 {
   /*!

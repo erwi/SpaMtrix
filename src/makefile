@@ -4,6 +4,7 @@ OBJS = spamtrix_blas.o ircmatrix.o \
 	vector.o\
 	diagpreconditioner.o\
 	cholincpreconditioner.o\
+	luincpreconditioner.o\
 	matrixmaker.o  \
 	tdmatrix.o\
 	cholesky.o \

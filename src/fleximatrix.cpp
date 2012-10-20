@@ -33,6 +33,20 @@ If USES_OMP is defined, uses OpenMP to parallelise construction.
 }
 
 
+idx FlexiMatrix::calcNumNonZeros() const
+{
+  /*!
+   * Returns number of non-zeros allocated. Does this by calculating it, so this gets
+   * linearly slower with larger matrices 
+   */
+
+  idx nnz(0);
+  for(idx i = 0 ; i < nonZeros.size() ; ++i)
+    nnz+= nonZeros[i].size();
+  
+  return nnz;
+}
+
 void FlexiMatrix::addNonZero(const idx dim1, const idx dim2, const real val)
 {
     /*!

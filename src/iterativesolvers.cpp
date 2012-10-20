@@ -172,7 +172,10 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
 
     // CREATE HESSENBERG MATRIX NEEDED TO STORE INTERMEDIATES
     DenseMatrix H(maxInnerIter+1, maxInnerIter);
+
+
     Vector temp(N);
+    Vector temp2(maxInnerIter+1);
 
     omp_set_nested(1);
 
@@ -253,8 +256,8 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
 
                 // COPY S INTO temp WITHOUT RESIZING
                 for (idx id = 0 ; id < maxInnerIter+1 ; ++id)
-                    temp[id] = s[id];
-                Update(x, i, H, temp, v);
+                    temp2[id] = s[id];
+                Update(x, i, H, temp2, v);
                 toler = res;
                 maxIter = j;
                 delete [] v;
@@ -265,9 +268,9 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
 
         // COPY S INTO temp WITHOUT RESIZING
         for (idx id = 0 ; id < maxInnerIter+1 ; ++id)
-            temp[id] = s[id];
+            temp2[id] = s[id];
 
-        Update(x, maxInnerIter - 1, H, temp, v);
+        Update(x, maxInnerIter - 1, H, temp2, v);
 
         //multiply(A, x, temp);     //r = M.solve(b - A * x);
         M.solveMxb(r, b-A*x);
