@@ -73,25 +73,31 @@ void FlexiMatrix::addNonZero(const idx dim1, const IndVal &iv)
     // ALL COLUMN VALUES MUST INCREASE, I.E MAINTAINING AN ASCENDIGLY
     // SORTED VECTOR OF NON-ZERO COLUMNS
 
-    // UPPER BOUND RETURNS ITERATOR TO FIRST ELEMENT IN SORTED CONTAINER
-    // THAT IS LARGER THAN THE COMPARED VALUE iv
+    // LOWER BOUND RETURNS ITERATOR TO FIRST ELEMENT THAT DOES NOT
+    // COMPARE TO LESS THAN dim2
     std::vector<IndVal>::iterator itr =
-            std::upper_bound(nonZeros[dim1].begin(),
+            std::lower_bound(nonZeros[dim1].begin(),
                              nonZeros[dim1].end(),
                              iv,
                              [](const IndVal &iv1, const IndVal &iv2) {return iv1.ind < iv2.ind;} // lamda column comparison
 );
-
+	    // IF ADDING DUPLICATE NONZER, ONLY WRITE VALUE TO EXISTING MEMORY
+	    if (itr->ind == iv.ind)
+	      itr->val = iv.ind;
+	    // OTEHRWISE ADD NEW VALUE
+	    else
+	      nonZeros[dim1].insert(itr,iv);
+	    
 // CHECK WHETHER AN ENTRY FOR THIS COLUMN ALREADY EXISTS.
 // IF YES, IT IS IMMEDIATELY BEFORE THE RETURNED ITERATOR
-idx i = itr - nonZeros[dim1].begin(); // ITERATOR IS AT i'th POSITION
+//idx i = itr - nonZeros[dim1].begin(); // ITERATOR IS AT i'th POSITION
 
 // IF ENTRY EXISTS, UPDATE VALUE
-if ( ( nonZeros[dim1].begin() + (i) )->ind == iv.ind ) // CHECK ( i-1 )th POSITION
-( nonZeros[dim1].begin() + (i) )->val = iv.val;
+//if ( ( nonZeros[dim1].begin() + (i) )->ind == iv.ind ) // CHECK ( i-1 )th POSITION
+//( nonZeros[dim1].begin() + (i) )->val = iv.val;
 // OTHERWISE INSERT
-else
-nonZeros[dim1].insert(itr, iv); // INSERT TO LIST
+//else
+//nonZeros[dim1].insert(itr, iv); // INSERT TO LIST
 
 
 }
