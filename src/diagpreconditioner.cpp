@@ -5,7 +5,7 @@ diagonal(A.getNumRows() )
 {
     for (idx i = 0 ; i < diagonal.getLength() ; ++i)
     {
-      diagonal[i] = A.sparse_get(i,i);
+      diagonal[i] = 1.0/A.sparse_get(i,i);
     }
 }
 
@@ -18,9 +18,9 @@ void DiagPreconditioner::solveMxb(Vector &x, const Vector &b) const
 #endif
   
 #ifdef USES_OPENMP
-//#pragma omp parallel for schedule(static,1000)
+#pragma omp parallel for schedule(static,1000)
 #endif
   for (idx i = 0 ; i < diagonal.getLength() ; ++i)
-    x[i] = b[i] / diagonal[i];
+    x[i] = b[i] * diagonal[i];
   
 }

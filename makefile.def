@@ -3,9 +3,10 @@ SPAMTRIX_PATH = /home/eero/Projects/SpaMtrix
 
 
 #COMPILE OPTIONS
-OPTIONS += -DUSES_OPENMP -fopenmp
-#OPTIONS += -DDEBUG -g
-OPTIONS += -O3 
+#OPTIONS += -DUSES_OPENMP -fopenmp
+#OPTIONS += -march=native -mtune=native
+OPTIONS += -DDEBUG -g
+#OPTIONS += -O3 
 
 
 
