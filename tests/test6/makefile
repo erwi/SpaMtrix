@@ -2,7 +2,7 @@ include ../../makefile.def
 
 
 test:test6.o $(LIBRARIES_PATH)/libspamtrix.a
-	g++ -o test6 test6.o -L$(LIBRARIES_PATH) -lpthread -lgomp -lspamtrix
+	g++ -o test6 test6.o -L$(LIBRARIES_PATH) -fopenmp -lpthread -lgomp -lspamtrix
 	
 
 clean:
