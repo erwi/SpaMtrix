@@ -1,13 +1,18 @@
-Block expansion of sparsity pattern in MatrixMaker
 
-Reading and writing of matrix market formatted files.
+
+Reading of matrix market formatted files.
 
 Creation of drift-diffusion test matrices.
 
 Move BiCGStab and MinRes functions to IterativeSolvers class.
 
 Python bindings.
-
+  - need to create copy functions for Classes. Pythin does not have assignment operators.
+  - Indexed vector access using something like: 
+      #ifdef SWIGPYTHON
+	Column* __getitem__(int i) { return (*this)[i]; }
+      #endif
+ 
 Eigenavalue solvers.
 
 Make spamtrix_blas into a class for easier friend access to IRCMatrix privates ??
