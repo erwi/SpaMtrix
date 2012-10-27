@@ -2,6 +2,10 @@
 #define PRECONDITIONER_H
 #include <vector.h>
 
+
+namespace SpaMtrix
+{
+
 // PURE VIRTUAL PRECONDITIONER BASE CLASS
 class Preconditioner
 {
@@ -16,5 +20,7 @@ public:
     }
   
 };
+
+} // end namespace SpaMtrix
 
 #endif

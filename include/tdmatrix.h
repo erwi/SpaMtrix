@@ -5,12 +5,15 @@
 #include <stdlib.h>
 #include <vector.h>
 #include <string.h>
+
+namespace SpaMtrix
+{
 /*!
 * Declares a class for tridiagonal sparse matrix
 */
-using std::cout;
-using std::endl;
+
 class TDMatrix{
+    
   real* upper;
   real* diagonal;
   real* lower;
@@ -37,6 +40,6 @@ public:
   friend void multiply(const TDMatrix& A, const Vector& x, Vector& b); // defined in spamtrix_blas.h
 };
 
-
+} // end namespace SpaMtrix
 #endif
 

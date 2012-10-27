@@ -7,9 +7,10 @@
 #include <iostream>
 #include <stdio.h>
 #include <ircmatrix.h>
-using std::vector;
+//using std::vector;
 
-
+namespace SpaMtrix
+{
 class IRCMatrix;
 
 class FlexiMatrix
@@ -25,7 +26,7 @@ public:
     idx numDim1, numDim2;   // MATRIX DIMENSIONS.
     // IN CASE OF ROW COMPRESSED MATRIX numDim1 IS NUMBER OF ROWS, numDim2 IS NUMBER OF COLUMNS
     // IN CASE OF COLUMN COMPRESSED MATRIX numDim1 IS NUMBER OF COLUMNS, numDim2 IS NUMBER OF ROWS
-    vector<vector<IndVal> > nonZeros;
+    std::vector<std::vector<IndVal> > nonZeros;
     FlexiMatrix():numDim1(0),numDim2(0){}
     FlexiMatrix(const idx numDim1, const idx numDim2);
     FlexiMatrix(const IRCMatrix &A);
@@ -45,7 +46,7 @@ public:
     bool isNonZero(const idx dim1, const idx dim2, real *&val);
 
 };
-
+} // end namespace SpaMtrix
 
 
 

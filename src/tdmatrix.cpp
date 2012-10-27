@@ -1,5 +1,9 @@
 #include <tdmatrix.h>
 
+
+namespace SpaMtrix
+{
+
 TDMatrix::TDMatrix(const idx size):
 upper(NULL),
 diagonal(NULL),
@@ -12,7 +16,7 @@ size(size)
   
   if ( (!upper) || (!diagonal) || (!lower) )
   {
-    cout <<"error in " << __func__ << "could not allocate for matrix of size " << size << endl;
+    std::cout <<"error in " << __func__ << "could not allocate for matrix of size " << size << std::endl;
     exit(1);
   }
  
@@ -172,4 +176,4 @@ void TDMatrix::print(const char* name) const
     
 }
 
-
+} // end namespace SpaMtrix

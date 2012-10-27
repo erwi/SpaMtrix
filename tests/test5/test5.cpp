@@ -15,6 +15,7 @@
 #include <writer.h>
 using std::cout;
 using std::endl;
+using namespace SpaMtrix;
 int main( int nargs, char *args[] )
 {
 

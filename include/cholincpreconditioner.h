@@ -9,6 +9,9 @@
 #include <iostream>
 #include <math.h>
 
+namespace SpaMtrix
+{
+
 class CholIncPreconditioner:public Preconditioner
 {
   FlexiMatrix L;
@@ -21,5 +24,5 @@ public:
   void print() const;
   void solveMxb(Vector &x, const Vector &b) const;
 };
-
+} // end namespace SpaMtrix
 #endif

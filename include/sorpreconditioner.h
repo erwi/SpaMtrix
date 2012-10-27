@@ -4,7 +4,8 @@
 #include <ircmatrix.h>
 #include <vector.h>
 #include <preconditioner.h>
-
+namespace SpaMtrix
+{
 class SORPreconditioner: public Preconditioner
 {
   IRCMatrix const * const A;
@@ -21,4 +22,5 @@ public:
   }
   
 };
+} // end namespace SpaMtrix
 #endif

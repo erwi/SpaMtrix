@@ -18,6 +18,10 @@
 #include <tickcounter.h>
 #include <chrono>
 #include <omp.h>
+
+using namespace SpaMtrix;
+using std::cout;
+using std::endl;
 int main(int nargs, char* args[])
 {
 

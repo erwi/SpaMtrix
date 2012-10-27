@@ -1,6 +1,8 @@
 #include <iterativesolvers.h>
 #include <spamtrix_blas.h>
 #include <densematrix.h>
+namespace SpaMtrix
+{
 bool IterativeSolvers::pcg(const IRCMatrix &A,
                            Vector &x,
                            const Vector &b,
@@ -32,7 +34,7 @@ bool IterativeSolvers::pcg(const IRCMatrix &A,
         return true;
     }
     // MAIN LOOP
-    for (int i = 1; i <= maxIter; i++)
+    for (idx i = 1; i <= maxIter; i++)
     {
 
         M.solveMxb(z,r);
@@ -50,7 +52,9 @@ bool IterativeSolvers::pcg(const IRCMatrix &A,
         real dp = multiply_dot(A,p,q);
         alpha = rho / dp;
         normr = 0;
+#ifdef USES_OPENMP	
 #pragma omp parallel for reduction(+:normr)
+#endif
         for (idx j = 0 ; j < N ; ++j)
         {
             x[j] += alpha*p[j];// x + alpha(0) * p;
@@ -198,7 +202,9 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
 
             // PRE-CALCULATE DOT PRODUCTS IN PARALLEL
             // H(k,i) = dot( v[k], w)
+#ifdef USES_OPENMP
             #pragma omp parallel for
+#endif
             for (k = 0; k <= i ; ++k)
             {
                 register real dp(0);
@@ -212,7 +218,9 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
             for (k = 0; k <= i; ++k)
             {   // w -= v[k]*H(k,i) without temporaries
                 register real tempr = H(k,i);
+#ifdef USES_OPENMP
                 #pragma omp parallel for // why is this loop so critical??
+#endif
                 for (idx id = 0 ; id < N ; ++id)
                     w[id] -= v[k][id]*tempr;
             }
@@ -222,20 +230,25 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
             // v[i+1] = w * (1.0 / H(i+1, i));
             H(i+1,i) = 0;
             real tempr(0);
+#ifdef USES_OPENMP
             #pragma omp parallel shared(tempr)
+#endif
             {
-
+#ifdef USES_OPENMP
                 #pragma omp for reduction(+:tempr)
+#endif
                 for (idx id = 0 ; id < N ; ++id)
                     tempr += w[id]*w[id]; //norm(w);
-
+#ifdef USES_OPENMP
                 #pragma omp single
+#endif
                 {
                     H(i+1,i) = sqrt(tempr );
                     tempr = (1.0/H(i+1,i) );
                 }
-
+#ifdef USES_OPENMP
                 #pragma omp for
+#endif
                 for (idx id = 0 ; id < N ; ++id)
                     v[i+1][id] = w[id]*tempr;
             }// end for omp parallel
@@ -290,7 +303,5 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
     toler = res;
     delete [] v;
     return false;
-
-
-
 }
+}// end namespace SpaMtrix

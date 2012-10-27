@@ -12,6 +12,7 @@
 // TEST 2. SOLVES 1D POISSON FINITE DIFFERENCES PROBLEM
 using std::cout;
 using std::endl;
+using namespace SpaMtrix;
 int main(int nargs, char* args[])
 {
   // CONSTRUCT 1D FINITE DIFFERENCES MATRIX

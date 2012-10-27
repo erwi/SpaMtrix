@@ -5,6 +5,9 @@
 #include <ircmatrix.h>
 #include <vector.h>
 #include <relaxers.h>
+
+namespace SpaMtrix
+{
 class JacobiPreconditioner:public Preconditioner
 {
   IRCMatrix const * const A; 	// POINTER TO MATRIX THAT IS PRECONDITIONED
@@ -22,6 +25,6 @@ public:
   }
   
 };
-
+} // end namespace SpaMtrix
 #endif
 

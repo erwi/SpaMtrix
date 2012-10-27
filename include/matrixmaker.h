@@ -9,10 +9,10 @@
 #include <algorithm>
 #include <cstring>
 #include <cmath>
-using std::vector;
 
-using std::cout;
-using std::endl;
+namespace SpaMtrix
+{
+
 class MatrixMaker
 {
     /*!
@@ -38,7 +38,7 @@ public:
     IRCMatrix getIRCMatrix();
 
 };
-
+} // end namespace SpaMtrix
 
 #endif
 

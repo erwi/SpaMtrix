@@ -1,5 +1,9 @@
 #include <ircmatrix.h>
 
+
+namespace SpaMtrix
+{
+
 IRCMatrix::IRCMatrix(const IRCMatrix& m):
     rows(NULL),
     cvPairs(NULL),
@@ -13,14 +17,14 @@ IRCMatrix::IRCMatrix(const IRCMatrix& m):
     rows = new idx [nnz+1];
     if (!rows)
     {
-        cout << "error in " << __func__ << " could not allocate rows" << endl;
+        std::cout << "error in " << __func__ << " could not allocate rows" << std::endl;
         exit(1);
     }
     
     cvPairs = new IndVal[nnz];
     if (!cvPairs)
     {
-        cout << "error in " << __func__ << " could not allocate cvPairs" << endl;
+        std::cout << "error in " << __func__ << " could not allocate cvPairs" << std::endl;
         exit(1);
     }
     
@@ -265,5 +269,5 @@ void IRCMatrix::print() const
     
 }
 
-
+} // end namespace SpaMtrix
 // #endif

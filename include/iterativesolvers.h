@@ -6,6 +6,8 @@
 #include <vector.h>
 #include <preconditioner.h>
 
+namespace SpaMtrix
+{
 class IterativeSolvers
 {
 
@@ -33,5 +35,5 @@ public:
                       );
 
 };
-
+} // end namespace SpaMtrix
 #endif // ITERATIVESOLVERS_H

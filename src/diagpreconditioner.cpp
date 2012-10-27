@@ -1,5 +1,6 @@
 #include <diagpreconditioner.h>
-
+namespace SpaMtrix
+{
 DiagPreconditioner::DiagPreconditioner(const IRCMatrix& A ):
 diagonal(A.getNumRows() )
 {
@@ -24,3 +25,4 @@ void DiagPreconditioner::solveMxb(Vector &x, const Vector &b) const
     x[i] = b[i] * diagonal[i];
   
 }
+} // end namespace SpaMtrix

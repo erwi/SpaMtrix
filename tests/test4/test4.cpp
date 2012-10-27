@@ -14,6 +14,8 @@
 #include <ircmatrix.h>
 #include <cholesky.h>
 #include <spamtrix_blas.h>
+
+using namespace SpaMtrix;
 int main()
 {
   std::cout <<"Solving linear system Ax=b using Cholesky decomposition"<<std::endl;

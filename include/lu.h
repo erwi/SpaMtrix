@@ -9,7 +9,8 @@
 /*!
   A class that performs (non-pivoted) LU factorisation of a sparse matrix using the Crout algorithm.
   */
-
+namespace SpaMtrix
+{
 class LU
 {
     idx numRows;
@@ -52,5 +53,5 @@ public:
     void print();
     void solve(Vector& x, const Vector& b) const; // SOLVES Ax = b USING FORWARD/BACKWARD SUBSTITUTION
 };
-
+} // end namespace SpaMtrix
 #endif // LU_H

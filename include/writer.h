@@ -10,6 +10,9 @@
 #include <setup.h>
 #include <vector.h>
 #include <ircmatrix.h>
+
+namespace SpaMtrix
+{
 class Writer
 {
 	std::fstream file;
@@ -25,5 +28,5 @@ class Writer
                            const IRCMatrix &A);
 
 };
-
+} // end namespace SpaMtrix
 #endif

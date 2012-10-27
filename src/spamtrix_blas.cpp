@@ -1,6 +1,8 @@
 #include <setup.h>
 #include <spamtrix_blas.h>
 
+namespace SpaMtrix
+{
 
 real errorNorm2(const IRCMatrix& A,
 		const Vector& x,
@@ -37,3 +39,5 @@ real errorNorm2(const TDMatrix& A,
   error = dot(temp,temp); 
   return error;
 }
+
+} // end namespace SpaMtrix

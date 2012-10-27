@@ -1,5 +1,6 @@
 #include <lu.h>
-
+namespace SpaMtrix
+{
 LU::LU(const IRCMatrix &A):
     numRows(A.getNumRows()),
     L(numRows, numRows ),
@@ -77,9 +78,9 @@ void LU::print()
       Debug printout to stdout of L and U Matrices.
     */
 
-    cout << "L:" << endl;
+    std::cout << "L:" << std::endl;
     L.print();
-    cout <<"U:" << endl;
+    std::cout <<"U:" << std::endl;
     U.print();
 }
 
@@ -108,8 +109,9 @@ void LU::forwardSubstitution(Vector &x, const Vector &b) const
         const std::vector<IndVal> &cvPairs = L.nonZeros[i];
 
         idx n = (idx) cvPairs.size()-1; // ROW LENGTH, NOT INCLUDING DIAGONAL
-
+#ifdef USES_OPENMP
 #pragma omp parallel for reduction(+:sum)
+#endif
         for (idx j = 0 ; j < n ; ++j)
         {
             const idx col = cvPairs[j].ind;
@@ -150,3 +152,4 @@ void LU::backwardSubstitution(Vector &x, const Vector &b) const
     }
 
 }
+} // end namespace SpaMtrix

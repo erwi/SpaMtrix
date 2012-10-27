@@ -1,5 +1,6 @@
 #include <writer.h>
-
+namespace SpaMtrix
+{
 Writer::Writer():
 file()
 {
@@ -33,7 +34,7 @@ bool Writer::writeCSV(const std::string &filename,
       	return false;
       
     // WRITE ALL DATA  
-      int cc = 0;
+      idx cc = 0;
       for (int i = 0 ; i < numD ; i++ )
       {
 	file << data[i]; 
@@ -67,10 +68,10 @@ bool Writer::writeMatrixMarket(const std::string &filename,
         return false;
 
     // WRITE HEADER
-    file << "%%MatrixMarket matrix coordinate real general" << endl;
-    file << "% NOTE: Matrix market indexing is 1-based!"<<endl;
+    file << "%%MatrixMarket matrix coordinate real general" << std::endl;
+    file << "% NOTE: Matrix market indexing is 1-based!"<< std::endl;
     // WRITE MATRIX SIZE DESCRIPTOR
-    file << A.getNumRows() << " " << A.getNumCols() << " " << A.getnnz() << endl;
+    file << A.getNumRows() << " " << A.getNumCols() << " " << A.getnnz() << std::endl;
 
     // WRITE MATRIX DATA
     // TODO: NEED TO IMPLEMENT ITERATORS OVER NON-ZEROS TO MAKE THIS FASTER!!
@@ -80,15 +81,11 @@ bool Writer::writeMatrixMarket(const std::string &filename,
         {
             real val;
             if ( A.isNonZero(r,c, val) )
-                file << r+1 <<"\t" << c+1 << "\t" << val << endl;
+                file << r+1 <<"\t" << c+1 << "\t" << val << std::endl;
         }
     }
 
     return true;
-
-
-
-
-
-
 }
+
+} // end namespace SpaMtrix

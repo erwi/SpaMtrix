@@ -5,6 +5,9 @@
 #include <ircmatrix.h>
 #include <preconditioner.h>
 #include <omp.h>
+
+namespace SpaMtrix
+{
 class DiagPreconditioner: public Preconditioner {
   
     Vector diagonal;
@@ -17,7 +20,7 @@ public:
   void solveMxb(Vector &x, const Vector &b) const;  
   
 };
-
+} // end namespace SpaMtrix
 
 #endif
 

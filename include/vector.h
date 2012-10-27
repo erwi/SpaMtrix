@@ -8,9 +8,12 @@
 #include <stdlib.h>
 #include <math.h>
 #include <vector>
-using std::cout;
-using std::endl;
+
+namespace SpaMtrix
+{
+
 class Vector{
+  
 
     //idx length;
     //real* values;
@@ -82,7 +85,7 @@ inline const Vector operator*(const real a, const Vector &v)
 {
     return Vector(v)*=a;
 }
-
+} // end namespace SpaMtrix
 
 
 #endif

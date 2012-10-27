@@ -1,5 +1,8 @@
 #include <vector.h>
 
+namespace SpaMtrix
+{
+
 Vector::Vector(const idx length )
 {
     //values = new real[length];
@@ -7,7 +10,7 @@ Vector::Vector(const idx length )
     values = std::vector<real>(length,0.0);
     if (values.size() != length )
     {
-      cout << "error in "<< __func__ << "could not allocate " << length << "elements" << endl; 
+      std::cout << "error in "<< __func__ << "could not allocate " << length << "elements" << std::endl; 
     }
     //setAllValuesTo(0.0);
 }
@@ -22,7 +25,7 @@ Vector::Vector(const Vector& v)
     values = v.values;
     if (values.size() != v.getLength() )
     {
-        cout << "error in " <<__func__<< " could not allocate "<< v.getLength() <<" elements "<< endl;
+        std::cout << "error in " <<__func__<< " could not allocate "<< v.getLength() <<" elements "<< std::endl;
         exit(1);
     }
 }
@@ -188,17 +191,17 @@ void Vector::normalise()
 
 void Vector::print(const char* name) const
 {
-    cout << "Vector length " << this->getLength() << endl;
-  for (idx i = 0 ; i < getLength() ; i++ )
-  {
-    if (name)
-      cout << name;
-    else
-      cout << "Vector";
-    cout <<"["<<i<<"] = " << values[i] << endl;
-  }
+    std::cout << "Vector length " << this->getLength() << std::endl;
+    for (idx i = 0 ; i < getLength() ; i++ )
+    {
+        if (name)
+            std::cout << name;
+        else
+            std::cout << "Vector";
+        std::cout <<"["<<i<<"] = " << values[i] << std::endl;
+    }
 }
 
 
 
-
+} // end namespace SpaMtrix

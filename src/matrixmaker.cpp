@@ -1,13 +1,10 @@
 #include <matrixmaker.h>
 #include <omp.h>
-/*
-MatrixMaker::MatrixMaker():
-nRows(0),
-nCols(0)
-{
 
-}
-*/
+namespace SpaMtrix
+{
+  
+
 MatrixMaker::MatrixMaker(const idx nRows, const idx nCols):
     nRows(nRows),
     nCols(nCols),
@@ -181,3 +178,4 @@ IRCMatrix MatrixMaker::getIRCMatrix()
     return IRCMatrix(nRows, nCols, nnz, rows, cvPairs);
 }
 
+} // end namespace SpaMtrix

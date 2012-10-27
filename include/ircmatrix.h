@@ -11,6 +11,9 @@
 #include <vector.h>
 #include <fleximatrix.h>
 
+namespace SpaMtrix
+{
+
 // Interleaved Row Compressed Matrix
 class IRCMatrix
 {
@@ -89,8 +92,5 @@ public:
     
     
 };
-
-// MAKES SIMPLE IRCMatrix OUT OF AN ARRAY OF CONNECTED INDEXES
-//IRCMatrix& makeIRCMatrix(const idx* t, const idx npt, const idx nt);
-
+} // end namespace SpaMtrix
 #endif

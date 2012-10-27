@@ -9,6 +9,9 @@
 #include <iostream>
 #include <math.h>
 
+namespace SpaMtrix
+{
+
 class LUIncPreconditioner: public Preconditioner
 {
 
@@ -27,6 +30,6 @@ public:
     void print() const;
     void solveMxb(Vector &x, const Vector &b) const;
 };
-
+} // end namespace SpaMtrix
 
 #endif // LUINCPRECONDITIONER_H

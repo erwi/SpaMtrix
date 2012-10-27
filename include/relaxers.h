@@ -3,7 +3,8 @@
 #include <setup.h>
 #include <ircmatrix.h>
 #include <vector.h>
-
+namespace SpaMtrix
+{
 /*!
  * THE JACOBI, GAUSS-SEIDEL AND SUCCESSIVE-OVER-RELAXATION (SOR) SOLVERS/SMOOTHERS
  * ARE DECLARED AND DEFINED HERE
@@ -108,7 +109,7 @@ void SOR(const IRCMatrix& A,
   }//end for k
 }
 
-
+} // end namespace SpaMtrix
 
 #endif
 

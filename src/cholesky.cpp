@@ -1,5 +1,7 @@
 #include <cholesky.h>
 
+namespace SpaMtrix
+{
 Cholesky::Cholesky(const IRCMatrix &A)
 {
 /*!
@@ -13,7 +15,7 @@ Cholesky::Cholesky(const IRCMatrix &A)
     {
 
 
-        L.nonZeros.push_back(vector<IndVal>() ); // ADD NEW EMPTY ROW
+        L.nonZeros.push_back(std::vector<IndVal>() ); // ADD NEW EMPTY ROW
         real Arr = A.sparse_get(r,r);
         // FOR EACH COLUMN, LOWERD DIAGONAL ONLY, i.e. c < r
         for (idx c = 0 ; c <= r ; c++)
@@ -42,7 +44,9 @@ Cholesky::Cholesky(const IRCMatrix &A)
             else // OFF-DIAGONAL
             {
                 real s(0.0);
+#ifdef USES_OPENMP
 #pragma omp parallel for reduction (+:s)
+#endif
                 for (idx k = 0 ; k < c; k++)
                 {
                     real Lrk = L.getValue(r,k);
@@ -117,7 +121,9 @@ void Cholesky::forwardSubstitution(Vector &x, const Vector &b) const
 
         idx n = (idx) cvPairs.size()-1;
         // SUM OVER ALL BELOW DIAGONAL. i.e. DON NOT INCLUDE DIAGONAL
+#ifdef USES_OPENMP	
 #pragma omp parallel for reduction(+:sum)
+#endif
         for (idx j = 0 ; j < n ; ++j)
         {
             const idx col = cvPairs[j].ind;
@@ -150,7 +156,9 @@ void Cholesky::backwardSubstitution(Vector &x, const Vector &b) const
         // PERFORM SUM OF L'x, WHERE L' IS TRANSPOSE OF L
         // THIS USES MATRIX SEARCH AND SHOULD BE OPTIMISED
         real xi = b[i];
+#ifdef USES_OPENMP	
 #pragma omp parallel for reduction(-:xi)
+#endif
         //for ( idx j = n-1 ; j > i ; --j)
         for (idx j = i+1 ; j < n ; ++j )
         {
@@ -159,3 +167,4 @@ void Cholesky::backwardSubstitution(Vector &x, const Vector &b) const
         x[i] = xi/L.getValue(i,i);
     }// end for each row
 }
+} // end namespace SpaMtrix

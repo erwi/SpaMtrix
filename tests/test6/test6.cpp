@@ -29,6 +29,7 @@
 #include <tickcounter.h>	// PERFORMANCE TIMER
 using std::cout;
 using std::endl;
+using namespace SpaMtrix;
 int main( int nargs, char *args[] )
 {
 omp_set_num_threads(0);

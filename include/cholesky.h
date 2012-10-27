@@ -5,8 +5,10 @@
 #include <vector>
 #include <math.h>
 #include <fleximatrix.h>
-//struct ColVal; // FORWARD DECLARATION
 
+
+namespace SpaMtrix
+{
 class Cholesky
 {
 
@@ -24,6 +26,6 @@ public:
   void solve(Vector& x, const Vector& b) const; // SOLVES Ax=b USING FORWARD/BACKWARD SUBSTITUTION
 
 };
-
+} // end namespace SpaMtrix
 
 #endif // CHOLESKY_H

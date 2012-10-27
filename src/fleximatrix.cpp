@@ -1,5 +1,7 @@
 #include <fleximatrix.h>
 
+namespace SpaMtrix
+{
 FlexiMatrix::FlexiMatrix(const idx numDim1, const idx numDim2):
     numDim1(numDim1),
     numDim2(numDim2),
@@ -18,7 +20,7 @@ Constructor that makes a copy of an IRCMatrix.
 If USES_OMP is defined, uses OpenMP to parallelise construction.
 */
 
-    nonZeros = vector < vector <IndVal> >(numDim1);
+    nonZeros = std::vector<std::vector<IndVal> >(numDim1);
 #ifdef USES_OMP
 #pragma omp parallel for
 #endif
@@ -26,7 +28,7 @@ If USES_OMP is defined, uses OpenMP to parallelise construction.
     {
         idx rowStart = A.rows[r];
         idx rowEnd   = A.rows[r+1];
-        nonZeros[r] = vector<IndVal>( &A.cvPairs[rowStart] , &A.cvPairs[rowEnd] );
+        nonZeros[r] = std::vector<IndVal>( &A.cvPairs[rowStart] , &A.cvPairs[rowEnd] );
     }
 
 
@@ -238,4 +240,4 @@ else
 return false; // NON-ZERO AT INDEX dim1,dim2 NOT FOUND
 
 }
-
+} // end namespace SpaMtrix

@@ -1,5 +1,6 @@
 #include <cholincpreconditioner.h>
-
+namespace SpaMtrix
+{
 CholIncPreconditioner::CholIncPreconditioner(const IRCMatrix& A)
 {
     /*!
@@ -12,7 +13,7 @@ CholIncPreconditioner::CholIncPreconditioner(const IRCMatrix& A)
     // FOR EACH ROW
     for (idx r = 0 ; r < A.getNumRows() ; r++)
     {
-        L.nonZeros.push_back(vector<IndVal>() ); // ADD NEW EMPTY ROW
+        L.nonZeros.push_back(std::vector<IndVal>() ); // ADD NEW EMPTY ROW
         // FOR EACH COLUMN, LOWERD DIAGONAL ONLY, i.e. c < r
         for (idx c = 0 ; c <= r ; c++)
         {
@@ -125,3 +126,4 @@ void CholIncPreconditioner::print() const
 {
     L.print();
 }
+} // end namespace SpaMtrix

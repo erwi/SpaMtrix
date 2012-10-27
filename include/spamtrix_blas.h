@@ -9,6 +9,11 @@
 #include <iostream>
 #include <stdlib.h>
 #include <omp.h>
+
+
+namespace SpaMtrix
+{
+
 // MATRIX VECTOR MULTIPLICATION b = Ax
 inline void multiply(const IRCMatrix& A,
                      const Vector& x,
@@ -193,6 +198,8 @@ inline real norm(const Vector& x)
 {
     return x.getNorm();
 }
+
+} // end namespace SpaMtrix
 
 #endif
 

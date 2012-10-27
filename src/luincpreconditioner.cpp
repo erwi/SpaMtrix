@@ -1,5 +1,6 @@
 #include <luincpreconditioner.h>
-
+namespace SpaMtrix
+{
 LUIncPreconditioner::LUIncPreconditioner(const IRCMatrix &A):
     a(A)
 {
@@ -111,3 +112,4 @@ void LUIncPreconditioner::print() const
 {
     a.print();
 }
+} // end namespace
