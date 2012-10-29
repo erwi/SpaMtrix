@@ -54,7 +54,9 @@ omp_set_num_threads(0);
     stopWatch.start();
     MatrixMaker mm(numDoF,numDoF);
     mm.poisson5Point();             // SETS SPARSITY PATTERN
-    IRCMatrix A = mm.getIRCMatrix();
+    //IRCMatrix A = mm.getIRCMatrix();
+    IRCMatrix A;
+    mm.makeSparseMatrix(A);
     cout << "OK, elapsed: " << stopWatch.getElapsed() << endl;
     
     // CREATE VECTORS FOR SYSTEM OF EQUATIONS Ax = b

@@ -1,4 +1,6 @@
-
+complete IRCMatrix::clearAllData()
+complete IRCMatrix::reallocate(FlexiMatrix &)
+complete MatrixMaker::makeSparseMatrix(IRCMatrix &);
 
 Reading of matrix market formatted files.
 
@@ -7,11 +9,7 @@ Creation of drift-diffusion test matrices.
 Move BiCGStab and MinRes functions to IterativeSolvers class.
 
 Python bindings.
-  - need to create copy functions for Classes. Pythin does not have assignment operators.
-  - Indexed vector access using something like: 
-      #ifdef SWIGPYTHON
-	Column* __getitem__(int i) { return (*this)[i]; }
-      #endif
+  - openmp?
  
 Eigenavalue solvers.
 

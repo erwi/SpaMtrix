@@ -8,6 +8,7 @@
 #include "../include/ircmatrix.h"
 #include "../include/matrixmaker.h"
 #include "../include/fleximatrix.h"
+#include "../include/iterativesolvers.h"
 %}
 typedef unsigned int idx;
 typedef double real;
@@ -16,3 +17,4 @@ typedef double real;
 %include "../include/ircmatrix.h"
 %include "../include/matrixmaker.h"
 %include "../include/fleximatrix.h"
+%include "../include/iterativesolvers.h"

@@ -16,10 +16,6 @@ OBJS = spamtrix_blas.o ircmatrix.o \
 
 LIBS += -lgomp
 
-
-PYSPAMTRIX_OBJS = vector.o\
-		  ircmatrix.o\
-		  fleximatrix.o
 		  
 	          
 

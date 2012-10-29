@@ -13,6 +13,7 @@
 
 namespace SpaMtrix
 {
+class FlexiMatrix;
 
 // Interleaved Row Compressed Matrix
 class IRCMatrix
@@ -43,6 +44,10 @@ public:
     
     ~IRCMatrix();
     //================================================
+    void clear();	
+    void copyFrom(const FlexiMatrix& A); // reallocates using data from fleximatrix
+    
+    
     inline idx getnnz()const 
     {
       /*!Returns total number of non-zeros in matrix.*/

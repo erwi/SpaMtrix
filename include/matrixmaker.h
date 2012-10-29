@@ -36,7 +36,7 @@ public:
 
 
     IRCMatrix getIRCMatrix();
-
+    void makeSparseMatrix(IRCMatrix &A); //CONVERTS A SPARSITY PATTERN TO A SPARSE MATRIX
 };
 } // end namespace SpaMtrix
 

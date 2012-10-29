@@ -141,7 +141,8 @@ void MatrixMaker::expandBlocks(const idx numExp)
 IRCMatrix MatrixMaker::getIRCMatrix()
 {
     /*!
-   * Converts sparsity pattern to 0-initialised IRCMatrix
+   * Converts sparsity pattern to IRCMatrix \n
+   * Use makeSparseMatrix instead!
    */
 
     // FIND TOTAL NUMBER OF NON-ZEROS
@@ -177,5 +178,14 @@ IRCMatrix MatrixMaker::getIRCMatrix()
     // USE C++11 MOVE SEMANTICS HERE?
     return IRCMatrix(nRows, nCols, nnz, rows, cvPairs);
 }
+
+void MatrixMaker::makeSparseMatrix(IRCMatrix &A)
+{
+/*!
+ * converts a sparsity pattern to a Sparse matrix
+ */
+    A.copyFrom(nz);
+}
+
 
 } // end namespace SpaMtrix

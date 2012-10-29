@@ -77,13 +77,51 @@ inline idx IRCMatrix::getIndex(const idx row, const idx col) const
 
 IRCMatrix::~IRCMatrix()
 {
-    delete [] rows;
-    delete [] cvPairs;
-    numCols = 0;
-    numRows = 0;
-    nnz = 0;
-
+  clear();
 }
+
+void IRCMatrix::clear()
+{
+  /*!
+   * Clears all data and deallocates memory.
+   */
+  delete [] rows;
+  delete [] cvPairs;
+  numCols = 0;
+  numRows = 0;
+  nnz = 0;
+}
+
+void IRCMatrix::copyFrom(const FlexiMatrix &A)
+{
+/*!
+ * Makes a copy of FlexiMatrix A
+ */
+    if (nnz > 0 )
+      clear();
+
+    nnz = A.calcNumNonZeros();
+    numRows = A.numDim1;
+    numCols = A.numDim2;
+        
+    cvPairs = new IndVal[nnz];
+    rows = new idx[numRows+1];
+    
+    idx nzc = 0;    // COUNTER FOR NON-ZEROS
+    // COPY DATA
+    for (idx r = 0 ; r < numRows ; ++r) // FOR EACH ROW
+    {
+      rows[r] = nzc; // INDEX TO START OF ROW r
+      std::vector<IndVal>::const_iterator citr = A.nonZeros[r].begin();
+      for (;citr!=A.nonZeros[r].end(); ++citr)
+      {
+	cvPairs[nzc] = *citr;
+	nzc++;
+      }// end column iterator
+    }// end for rows
+    rows[numRows] = nzc;  
+}
+
 void IRCMatrix::sparse_set(const idx row, const idx col, const real val)
 {
     idx i = getIndex(row, col);
@@ -265,8 +303,6 @@ void IRCMatrix::print() const
         }
         printf("\n");
     }
-    
-    
 }
 
 } // end namespace SpaMtrix
