@@ -1,12 +1,13 @@
  
 clean:
 	cd src; make clean
-	cd tests/test1; rm *.o
-	cd tests/test2; rm *.o
-	cd tests/test3; rm *.o
-	cd tests/test4; rm *.o
-	cd tests/test5; rm *.o
-	cd tests/test6; rm *.o
+	cd lib; rm -f *.*
+	cd tests/test1; rm -f *.o
+	cd tests/test2; rm -f *.o
+	cd tests/test3; rm -f *.o
+	cd tests/test4; rm -f *.o
+	cd tests/test5; rm -f *.o
+	cd tests/test6; rm -f *.o
 
 all:
 	make libs
@@ -16,6 +17,11 @@ all:
 libs:
 	@echo "LIBRARIES"
 	cd src; make lib
+
+python:
+	@echo "MAKING PYTHIN WRAPPERS"
+	cd src; make lib; make python 
+
 
 test:
 	@echo "-------------------"

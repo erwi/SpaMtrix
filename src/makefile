@@ -17,7 +17,11 @@ OBJS = spamtrix_blas.o ircmatrix.o \
 LIBS += -lgomp
 
 
-PYSPAMTRIX_OBJS = vector.o
+PYSPAMTRIX_OBJS = vector.o\
+		  ircmatrix.o\
+		  fleximatrix.o
+		  
+	          
 
 
 all:$(OBJS)
@@ -34,8 +38,9 @@ lib:$(OBJS)
 	mv libspamtrix.a ../lib
 
 # USE SWIG TO MAKE PYTHON BINDINGS
-pyspamtrix:
+python:
 	swig -c++ -v -python spamtrix.i
 	g++ -fPIC -c spamtrix_wrap.cxx -I/usr/include/python2.7 -I$(INCLUDE_PATH)
-	g++ -fPIC -c vector.cpp $(CXXFLAGS) -I$(INCLUDE_PATH) -I/usr/include/python2.7
-	g++ -shared $(PYSPAMTRIX_OBJS) spamtrix_wrap.o -o _SpaMtrix.so
+	g++ -shared $(OBJS) spamtrix_wrap.o -o _SpaMtrix.so
+	mv _SpaMtrix.so ../lib
+	mv SpaMtrix.py ../lib

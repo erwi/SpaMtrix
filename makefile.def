@@ -11,7 +11,7 @@ OPTIONS += -DDEBUG -g
 
 
 CXXFLAGS += $(OPTIONS) -Wall -std=c++0x
-
+CXXFLAGS += -fPIC
 
 
 INCLUDE_PATH = $(SPAMTRIX_PATH)/include

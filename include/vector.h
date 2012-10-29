@@ -77,7 +77,13 @@ public:
 
     real getNorm() const;   // returns vector length
     void normalise();       // normalises to unit vector
-
+    
+    //
+    // FUNCTIONS REQUIRED BY PYTHON WRAPPERS
+    //
+    int __len__(){return (int) values.size();}
+    real __getitem__(int i){return values[i];}
+    void __setitem__(int i, real v){(*this)[i] = v;}
 };
 
 
