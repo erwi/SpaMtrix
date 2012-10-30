@@ -41,15 +41,11 @@ int main ()
     Vector x(2);      
     b.print("b");
     
-    // SOLVE
-    idx maxIter = 10; // MAXIMUM NUMBER OF ITERATION USED
-    real toler(1e-7); // REQUIRED NUMERICAL ACCURACY 
-    
     // CREATE DIAGONAL PRECONDITIONER MATRIX
     DiagPreconditioner M(A);
-    
-    
-    bool conv = IterativeSolvers::pcg(A, x, b, M, maxIter, toler );
+     // SOLVE
+    IterativeSolvers isol = IterativeSolvers(10,1e-7);
+    bool conv = isol.pcg(A, x, b, M);
     
     std::cout<<"convergence : ";
     if (conv)
@@ -57,8 +53,8 @@ int main ()
     else
       cout << "NO" << endl;
     
-    cout << "maxIter = " << maxIter << endl;
-    cout << "toler = " << toler << endl;    
+    cout << "maxIter = " << isol.maxIter << endl;
+    cout << "toler = " << isol.toler << endl;    
     cout << "solution vector : " << endl;
     x.print("x");
     return 0;

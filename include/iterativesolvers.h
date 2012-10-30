@@ -13,26 +13,31 @@ class IterativeSolvers
 
 public:
 
+    
+    
+    // following variables act as input/output parameters
+    idx maxIter;	// maximum/needed iteration count
+    idx maxInnerIter;   // maximim allowed inner iterations
+    real toler;		// required/achieved numerical accuracy
+
     IterativeSolvers();
-
-
-    static bool pcg( const IRCMatrix &A,
+    IterativeSolvers(const idx maxIter, const real toler);
+    IterativeSolvers(const idx maxIter, 
+		     const idx maxInnerIter,
+		     const real toler);
+    
+    
+    bool pcg( const IRCMatrix &A,
               Vector &x,
               const Vector &b,
-              const Preconditioner &M,
-              idx &maxIter,
-              real &toler
+              const Preconditioner &M
               );
 
 
-    static bool gmres(const IRCMatrix &A,
+    bool gmres(const IRCMatrix &A,
                       Vector &x,
                       const Vector &b,
-                      const Preconditioner &M,
-                      idx &maxIter,
-                      const idx &maxInnerIter,
-                      real &toler
-                      );
+                      const Preconditioner &M);
 
 };
 } // end namespace SpaMtrix

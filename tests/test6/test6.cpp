@@ -73,12 +73,9 @@ omp_set_num_threads(0);
     
     cout << " solving Ax = b ..." << endl;
 
-    idx maxIter(numDoF);
-    idx innerIter(gridLen);
-    real toler(1e-6);
     stopWatch.reset();
-    IterativeSolvers::gmres(A, x, b, M, maxIter, innerIter, toler);
-    
+    IterativeSolvers isol(numDoF, gridLen, 1e-7);
+    isol.gmres(A, x, b, M);
     cout << "OK, solved in " << stopWatch.getElapsed() << "ms" << endl;
 
     if (gridLen <= 5) // PRINT SMALL GRID ON SCREEN
@@ -88,7 +85,7 @@ omp_set_num_threads(0);
     // PRINT NUMERICAL ERROR MAGNITUDE
     real e = sqrt(errorNorm2(A,x,b));
     cout<< "error norm is " << e << endl;
-    cout<< "iterations used " << maxIter << endl;
+    cout<< "iterations used " << isol.maxInnerIter << endl;
     
     // WRITE RESULT IN A COMMA SEPARATED TEXT FILE
     // ROWS AND COLUMNS ARE ORDERED ACCORDING TO THE

@@ -1,21 +1,43 @@
 #include <iterativesolvers.h>
 #include <spamtrix_blas.h>
 #include <densematrix.h>
+
+
+
+
 namespace SpaMtrix
 {
+
+IterativeSolvers::IterativeSolvers():
+		  maxIter(0),
+		  maxInnerIter(0),
+		  toler(0)
+{}
+
+IterativeSolvers::IterativeSolvers(const idx maxIter,
+				   const real toler):
+				   maxIter(maxIter),
+				   maxInnerIter(0),
+				   toler(toler)
+{}
+IterativeSolvers::IterativeSolvers(const idx maxIter,
+				   const idx maxInnerIter,
+				   const real toler):
+				   maxIter(maxIter),
+				   maxInnerIter(maxInnerIter),
+				   toler(toler)
+{}
+
 bool IterativeSolvers::pcg(const IRCMatrix &A,
                            Vector &x,
                            const Vector &b,
-                           const Preconditioner &M,
-                           idx &maxIter,
-                           real &toler)
+                           const Preconditioner &M)
 {
     /*!
       Solves Ax=b using the preconditioned conjugate gradient method.
       */
-
     const idx N = x.getLength();
-    real resid;
+    real resid(100.0);
     Vector p(N), z(N), q(N);
 
     real alpha;
@@ -28,15 +50,17 @@ bool IterativeSolvers::pcg(const IRCMatrix &A,
     if (normb == 0.0)
         normb = 1;
     resid = norm(r) / normb;
-    if (resid <= toler) {
-        toler = resid;
-        maxIter = 0;
+    if (resid <= IterativeSolvers::toler) 
+    {
+	IterativeSolvers::toler = resid;
+        IterativeSolvers::maxIter = 0;
         return true;
     }
     // MAIN LOOP
-    for (idx i = 1; i <= maxIter; i++)
+    idx i = 1;
+    for (; i <= IterativeSolvers::maxIter; i++)
     {
-
+  
         M.solveMxb(z,r);
         rho = dot(r, z);
 
@@ -63,15 +87,15 @@ bool IterativeSolvers::pcg(const IRCMatrix &A,
         }
         normr = sqrt(normr);
         resid = normr/normb;
-        if (resid <= toler)
+        if (resid <= IterativeSolvers::toler)
         {
-            toler = resid;
-            maxIter = i;
-            return true;
+            IterativeSolvers::toler = resid;
+            IterativeSolvers::maxIter = i;
+	    return true;
         }
         rho_1 = rho;
     }
-    toler = resid;
+    IterativeSolvers::toler = resid;
     return false;
 }
 
@@ -137,15 +161,10 @@ inline real abs(const real x)
 }
 
 
-
-
 bool IterativeSolvers::gmres(const IRCMatrix &A,
                              Vector &x,
                              const Vector &b,
-                             const Preconditioner &M,
-                             idx &maxIter,
-                             const idx &maxInnerIter,
-                             real &toler)
+                             const Preconditioner &M)
 {
     const idx N = x.getLength();
     //real resid;
