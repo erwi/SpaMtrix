@@ -25,7 +25,6 @@
 #include <writer.h>
 #include <cholincpreconditioner.h>
 #include <diagpreconditioner.h>
-#include <sorpreconditioner.h>
 #include <tickcounter.h>	// PERFORMANCE TIMER
 using std::cout;
 using std::endl;

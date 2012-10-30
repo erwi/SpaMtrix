@@ -1,6 +1,7 @@
 include ../makefile.def
 
-OBJS = spamtrix_blas.o ircmatrix.o \
+OBJS = spamtrix_blas.o\
+	ircmatrix.o \
 	vector.o\
 	diagpreconditioner.o\
 	cholincpreconditioner.o\

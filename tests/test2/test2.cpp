@@ -1,14 +1,14 @@
+#include <iostream>
+#include <math.h>
+
+// SPAMTRIX INCLUDES
 #include <ircmatrix.h>
 #include <vector.h>
 #include <matrixmaker.h>
 #include <spamtrix_blas.h>
-
 #include <diagpreconditioner.h>
-#include <jacobipreconditioner.h>
-#include <sorpreconditioner.h>
-#include <iostream>
-#include <math.h>
 #include <tdmatrix.h>
+
 // TEST 2. SOLVES 1D POISSON FINITE DIFFERENCES PROBLEM
 using std::cout;
 using std::endl;
