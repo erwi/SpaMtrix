@@ -48,7 +48,7 @@ real& DenseMatrix::operator()(const idx row, const idx col)
     assert(col<numCols);
 #endif
 
-    idx ind = col*numRows + row;
+    const idx ind = col*numRows + row;
     return values[ind];
 }
 
@@ -62,7 +62,7 @@ real DenseMatrix::operator ()(const idx row, const idx col) const
     assert(col<numCols);
 #endif
 
-    idx ind = col*numRows + row;
+    const idx ind = col*numRows + row;
     return values[ind];
 }
 

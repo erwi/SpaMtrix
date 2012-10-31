@@ -20,6 +20,4 @@ public:
     void print() const;
 };
 
-
-
 #endif // DENSEMATRIX_H

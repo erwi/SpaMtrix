@@ -19,8 +19,10 @@ inline void multiply(const IRCMatrix& A,
                      const Vector& x,
                      Vector& b)
 {
-    /*!
-   * MATRIX VECTOR MULTIPLICATION Ax=b
+   /*!
+   * Matrix-Vector multiplication Ax=b.
+   * \n
+   * In python wrappers this function is renamed to IRCMatMul.
    */
 
 #ifdef DEBUG
@@ -54,7 +56,7 @@ inline real multiply_dot(const IRCMatrix& A,
 {
     /*!
    * MATRIX VECTOR MULTIPLICATION Ax=b
-     allso returns dot product of x an b
+     also returns dot product of x an b. Used in IterativeSolvers
    */
 
 #ifdef DEBUG
@@ -86,17 +88,14 @@ inline real multiply_dot(const IRCMatrix& A,
 }
 
 
-
-
-
-
 inline void multiply(const TDMatrix& A,
                      const Vector& x,
                      Vector& b)
 {
     /*!
    * Matrix vector muliplication Ax = b
-   * where A is a tridiagonal matrix
+   * where A is a tridiagonal matrix \n \n
+   * In python this function is renamed to TDMatMul. 
    */
 
 #ifdef DEBUG
@@ -107,18 +106,11 @@ inline void multiply(const TDMatrix& A,
     {
         b[i] = A.diagonal[i]*x[i];
         if (i > 0 )
-        {
-            b[i]   += A.lower[i-1] * x[i-1];
-        }
+           b[i]   += A.lower[i-1] * x[i-1];
+        
         if (i < (n-1) )
-        {
-            b[i] += A.upper[i] * x[i+1];
-        }
-
+           b[i] += A.upper[i] * x[i+1];
     }
-
-
-
 }
 // ======================================
 // BLAS LEVEL 1 FUNCTIONS
@@ -131,7 +123,6 @@ inline void scale(const real a, Vector& v)
    */
     for (idx i = 0 ; i < v.getLength() ; ++i)
         v[i]*=a;
-
 }
 
 

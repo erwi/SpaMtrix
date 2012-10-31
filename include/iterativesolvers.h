@@ -5,16 +5,14 @@
 #include <ircmatrix.h>
 #include <vector.h>
 #include <preconditioner.h>
-
+#include <densematrix.h>
 namespace SpaMtrix
 {
+
 class IterativeSolvers
 {
-
+  
 public:
-
-    
-    
     // following variables act as input/output parameters
     idx maxIter;	// maximum/needed iteration count
     idx maxInnerIter;   // maximim allowed inner iterations
@@ -32,7 +30,6 @@ public:
               const Vector &b,
               const Preconditioner &M
               );
-
 
     bool gmres(const IRCMatrix &A,
                       Vector &x,
