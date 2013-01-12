@@ -32,11 +32,31 @@ IRCMatrix::IRCMatrix(const IRCMatrix& m):
     memcpy(cvPairs, m.cvPairs, nnz*sizeof(IndVal) );
 }
 
-IRCMatrix& IRCMatrix::operator=(const IRCMatrix& m)
+IRCMatrix& IRCMatrix::operator=(const IRCMatrix& M)
 {
+    /*!
+      Asigment operator. Sets this matrix equal to matrix M. Reallocates memory if necessary
+    */
+    if (&M == this)
+        return *this;
 
-    // TODO
-    std::cout<< "unimplemented functionality : "<<__func__<< "in file "<< __FILE__<< std::endl;
+    numRows = M.numRows;
+    numCols = M.numCols;
+    // IF OTHER MATRIX SIZE IS DIFFERENT FROM CURRENT, MUST REALLOCATE
+    if (nnz != M.nnz)
+    {
+        // TODO: ADD CHECKS FOR ALLOCATION FAILS
+        delete [] rows;
+        rows = new idx [nnz+1];
+
+        delete [] cvPairs;
+        cvPairs = new IndVal[nnz];
+
+        nnz = M.nnz;
+    }
+    memcpy(rows, M.rows, (nnz+1)*sizeof(idx));
+    memcpy(cvPairs, M.cvPairs, nnz*sizeof(IndVal));
+
     return *this;
 }
 
@@ -155,7 +175,10 @@ real IRCMatrix::getValue(const idx row, const idx col) const
 {
     /*!
       Returns value at (row,col). If a non-zero does not exist at
-      (row,col), a zero is returned.
+      (row,col), a zero is returned. \n\n
+      Note:\n
+      Use bool IRCMatrix::isNonZero(row, col, val) instead if it
+      is important to know wheteher position (row,col) is a non-zero
       */
     real val;
     isNonZero(row,col,val);

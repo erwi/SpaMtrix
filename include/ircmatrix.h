@@ -46,21 +46,10 @@ public:
     //================================================
     void clear();	
     void copyFrom(const FlexiMatrix& A); // reallocates using data from fleximatrix
-    
-    
-    inline idx getnnz()const 
-    {
-      /*!Returns total number of non-zeros in matrix.*/
-      return nnz;
-    }
-    inline idx getNumRows()const 
-    { /*! Returns number of rows in matrx.*/
-      return numRows;
-    }
-    inline idx getNumCols()const 
-    {/*!Returns number of columns in matrix*/
-      return numCols;
-    }
+    idx getnnz()const;      // RETURNS NUMBER OF NONZEROS
+    idx getNumRows()const;  // RETURNS MATRIX ROW COUNT
+    idx getNumCols() const; // RETURNS MATRIX COLUMN COUNT
+
     void sparse_set(const idx row, const idx col , const real val );
     void sparse_add(const idx row, const idx col , const real val );
     real sparse_get(const idx row, const idx col ) const;
@@ -87,5 +76,11 @@ public:
     void spy()const;
     void print() const;
 };
+
+inline idx IRCMatrix::getNumCols() const {/*!Returns matrix column count*/ return numCols;}
+inline idx IRCMatrix::getNumRows() const {/*!Returns matrix row count*/ return numRows;}
+inline idx IRCMatrix::getnnz() const {/*!Returns number of nonzeros in matrix*/ return nnz;}
+
+
 } // end namespace SpaMtrix
 #endif
