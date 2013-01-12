@@ -3,7 +3,17 @@
 
 namespace SpaMtrix
 {
-
+IRCMatrix::IRCMatrix():rows(0), cvPairs(0), nnz(0), numRows(0), numCols(0){/*!Constructs an empty matrix*/}
+IRCMatrix::IRCMatrix(  const idx numRows, const idx numCols,
+                const idx nnz, 
+                idx * const rows, IndVal *const cvPairs):
+                rows(rows), cvPairs(cvPairs), nnz(nnz), 
+                numRows(numRows) , numCols(numCols){ 
+		  /*!Constructs a sparse matrix where sparsity pattern is
+		  defined in the arrays 'rows' and 'cvPairs'. The matrix takes ownership of these arrays and releases
+		  the memory when destructed (i.e. does not make copies).
+		  */
+		}
 IRCMatrix::IRCMatrix(const IRCMatrix& m):
     rows(NULL),
     cvPairs(NULL),
@@ -70,8 +80,25 @@ IRCMatrix& IRCMatrix::operator=(const real &s)
       return *this;
 }
 
+const IRCMatrix IRCMatrix::operator*(const real& s) const
+{
+/*! Matrix scalar multiplication. Returns a scaled version of self.*/  
 
-inline idx IRCMatrix::getIndex(const idx row, const idx col) const
+    idx *rows_n = new idx[nnz+1];
+    IndVal *cvPairs_n = new IndVal[nnz];
+  
+    memcpy(rows_n, rows, (nnz+1)*sizeof(idx) );
+    
+    for(idx i = 0 ; i < nnz ; ++i)
+    {
+      cvPairs_n[i] = cvPairs[i];
+      cvPairs_n[i].val*=s;
+    }
+
+    return IRCMatrix(numRows, numCols, nnz, rows_n, cvPairs_n);
+}
+
+idx IRCMatrix::getIndex(const idx row, const idx col) const
 {
     /*! FINDS INDEX TO ColVal CORRESPONDING INPUT TO ROW AND COLUMN
       TERMINATES WITH ERROR IF NOT FOUND
@@ -221,7 +248,7 @@ bool IRCMatrix::isNonZero(const idx row, const idx col) const
 
 bool IRCMatrix::isNonZero(const idx row, const idx col, real &val) const
 {
-    /*!
+/*!
  Returns true if this matrix contains storage at location row, col, otherwise false.
  The actual value of location row,col is returned in val
 */
@@ -253,6 +280,12 @@ bool IRCMatrix::isNonZero(const idx row, const idx col, real &val) const
 
 }
 
+void IRCMatrix::operator*=(const real &s)
+{
+    /*! Modifies matrix by multiplying all values by scalar coefficient s.*/
+    for (idx i = 0 ; i < nnz ; i++)
+        cvPairs[i].val*=s;
+}
 
 Vector IRCMatrix::operator *(const Vector& x) const
 {
@@ -262,7 +295,13 @@ Vector IRCMatrix::operator *(const Vector& x) const
      */
 
 #ifdef DEBUG
-    assert(this->getNumCols() == x.getLength() );
+    if (numCols != x.getLength() )
+    {
+        std::cout << "error in " << __func__ <<" column count is :" << numCols << 
+        ", vector length is :" << x.getLength() << std::endl;
+	exit(1);
+    }
+    //assert(this->getNumCols() == x.getLength() );
 #endif
 
     Vector b( x.getLength() );

@@ -30,13 +30,10 @@ protected:
     idx getIndex(const idx row, const idx col) const;
 public:
     
-    IRCMatrix():
-        rows(0), cvPairs(0), nnz(0), numRows(0), numCols(0) {}
+    IRCMatrix();
     IRCMatrix(  const idx numRows, const idx numCols,
                 const idx nnz, 
-                idx * const rows, IndVal *const cvPairs):
-                rows(rows), cvPairs(cvPairs), nnz(nnz), 
-                numRows(numRows) , numCols(numCols){}
+                idx * const rows, IndVal *const cvPairs);
 
     IRCMatrix(const IRCMatrix &m);
     IRCMatrix& operator=(const IRCMatrix& m);
@@ -58,8 +55,9 @@ public:
     real getValue(const idx row, const idx col)const;
 
     // MATHS OPERATORS
-    Vector operator*(const Vector& x) const; // MATRIX VECTOR MULTIPLICATION
-
+    Vector operator*(const Vector& x) const;    // MATRIX VECTOR MULTIPLICATION
+    void operator*=(const real &s);             // IN-PLACE MULTIPLICATION BY A SCALAR COEFFICIENT
+    const IRCMatrix operator*(const real &s)const;  // RETURNS A SCALED VERSION OF THE MATRIX
     // RETURNS TRUE IS ROW,COL ENTRY EXISTS AS A NON-ZERO. ACTUAL VALUE IS RETURNED IN val
     bool isNonZero(const idx row, const idx col) const;
     bool isNonZero(const idx row, const idx col, real& val) const;
@@ -77,6 +75,13 @@ public:
     void print() const;
 };
 
+inline const IRCMatrix operator*(const real& s, const IRCMatrix &M)
+{
+  /*! Implements scalar*Matrix, in terms of Matrix*scalar, to achieve commutativity*/
+    return M*s;
+}
+
+// IMPLEMENTATIONS OF INLINDED METHODS - NO NEW DECLARATIONS BELOW THIS
 inline idx IRCMatrix::getNumCols() const {/*!Returns matrix column count*/ return numCols;}
 inline idx IRCMatrix::getNumRows() const {/*!Returns matrix row count*/ return numRows;}
 inline idx IRCMatrix::getnnz() const {/*!Returns number of nonzeros in matrix*/ return nnz;}
