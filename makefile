@@ -29,6 +29,10 @@ test:
 	@echo "-------------------"
 	cd examples/matrix_basics; make 
 	@echo "-------------------"
+	@echo "  INPUT OUTPUT     "
+	@echo "-------------------"
+	cd examples/input_output; make
+	@echo "-------------------"
 	@echo "      TEST 1:"
 	@echo "-------------------"
 	cd examples/test1; make test

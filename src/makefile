@@ -12,6 +12,7 @@ OBJS = spamtrix_blas.o\
 	lu.o\
 	fleximatrix.o\
 	writer.o\
+	reader.o\
 	densematrix.o\
 	iterativesolvers.o
 

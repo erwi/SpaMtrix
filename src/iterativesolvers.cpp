@@ -101,7 +101,6 @@ bool IterativeSolvers::pcg(const IRCMatrix &A,
 
 //=====================================================
 // FUNCTIONS USED BY GMRES ONLY
-//template<class real>
 inline void GeneratePlaneRotation(const real &dx, const real &dy, real &cs, real &sn)
 {
     if (dy == 0.0)
@@ -122,25 +121,22 @@ inline void GeneratePlaneRotation(const real &dx, const real &dy, real &cs, real
 }
 
 
-//template<class real>
+
 inline void ApplyPlaneRotation(real &dx, real &dy, const real &cs, const real &sn)
 {
-    real temp  =  cs * dx + sn * dy;
+    const real temp  =  cs * dx + sn * dy;
     dy = -sn * dx + cs * dy;
     dx = temp;
 }
 
-//template < class Matrix >
+
 inline void Update(Vector &x,
                    const idx k,
                    const DenseMatrix &h,
                    Vector &temp,
                    const Vector v[]
-
                    )
 {
-
-    //temp = s;
     // Backsolve:
     for (int i = k; i >= 0; --i)
     {
@@ -167,7 +163,6 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
                              const Preconditioner &M)
 {
     const idx N = x.getLength();
-    //real resid;
     idx i, j = 1, k;
     Vector s(maxInnerIter+1);
     Vector cs(maxInnerIter+1);
@@ -196,10 +191,8 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
     // CREATE HESSENBERG MATRIX NEEDED TO STORE INTERMEDIATES
     DenseMatrix H(maxInnerIter+1, maxInnerIter);
 
-
     Vector temp(N);
     Vector temp2(maxInnerIter+1);
-
 
     // MAIN LOOP
     while (j <= maxIter)
