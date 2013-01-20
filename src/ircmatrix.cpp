@@ -134,6 +134,8 @@ void IRCMatrix::clear()
    */
   delete [] rows;
   delete [] cvPairs;
+  rows = NULL;
+  cvPairs = NULL;
   numCols = 0;
   numRows = 0;
   nnz = 0;
