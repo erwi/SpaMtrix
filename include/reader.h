@@ -2,19 +2,25 @@
 #define READER_H
 #include <fstream>
 
-class FlexiMatrix;
 
 namespace SpaMtrix{
+    // Forward declarations
+    class IRCMatrix;
+
     class Reader{
         /*! This is a class containing functionality for reading matrices and/or
          * vectors from files located on disk.
          */
+        
+        static const char* FILE_OPEN_ERROR_STRING;
+        static const char* FILE_FORMAT_ERROR_STRING;
         std::fstream file;
     public:
         Reader(){};
         ~Reader(){};
-        bool readMatrixMarket(const std::string &filename,      
-                              FlexiMatrix &mat);
+        static SpaMtrix::IRCMatrix readMatrixMarket(const std::string &filename);
+                                  
+        
     };
 }// end namespace SpaMtrix
 

@@ -12,8 +12,13 @@
  */
 int main(int nargs, char* args[] )
 {
+    idx size = 9;
+    if (nargs>1)
+        size = atoi(args[1]);
+    
+    
     // 1. CREATE TEST MATRIX
-    SpaMtrix::MatrixMaker mm(25,25);
+    SpaMtrix::MatrixMaker mm(size,size);
     mm.poisson5Point();
     SpaMtrix::IRCMatrix A = mm.getIRCMatrix();
     
@@ -25,8 +30,10 @@ int main(int nargs, char* args[] )
     A.clear();
     
     // 3. READ TEST MATRIX FROM FILE
+    SpaMtrix::IRCMatrix B =
+    SpaMtrix::Reader::readMatrixMarket(filename);
     
-    
+    B.print();
     
     return 0;
 }
