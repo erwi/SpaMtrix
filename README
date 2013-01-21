@@ -1,0 +1,6 @@
+C++ sparse matrix and vector classes and some iterative/non-iterative linear solvers.
+
+Also some examples/tests are included.
+
+Build everything into a library using GNU make (first set path and compiler switched in makefile.def)
+
