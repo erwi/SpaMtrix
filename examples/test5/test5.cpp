@@ -53,8 +53,7 @@ int main( int nargs, char *args[] )
     // WRITE RESULT IN A COMMA SEPARATED TEXT FILE
     // ROWS AND COLUMNS ARE ORDERED ACCORDING TO THE
     // FD GRID USED FOR THE CALCULATION
-    Writer w;
-    w.writeCSV("out.csv", x , gridLen );
+    Writer::writeCSV("out.csv", x , gridLen );
     
     return 0;
 

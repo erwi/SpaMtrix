@@ -15,7 +15,6 @@
 */
 
 #include <iostream>
-#include <omp.h>
 // SpaMtrix HEADERS
 #include <spamtrix_matrixmaker.hpp>
 #include <spamtrix_ircmatrix.hpp>
@@ -37,14 +36,12 @@ omp_set_num_threads(0);
 
     // DEFAULT FD GRID SIDE LENGTH IS 10 POINTS
     idx gridLen =5;
-    if (nargs > 1)
-    {
+    if (nargs > 1){
         gridLen = atoi(args[1]);
     }
  
     // CREATE PERFORMANCE TIMES WITH MILLISECOND ACCURACY
     TickCounter<std::chrono::milliseconds> stopWatch;
- 
  
     // CREATE 5-POINT-POISSON TEST MATRIX
     idx numDoF = gridLen*gridLen;   // NUMBER OF DEGREES OF FREEDOM OF SYSTEM
@@ -66,11 +63,8 @@ omp_set_num_threads(0);
     
     stopWatch.reset();
     cout << "making preconditioner ...";
-    //CholIncPreconditioner M(A);
     DiagPreconditioner M(A);
-    
     cout << "OK, time elapsed " << stopWatch.getElapsed() << "ms" << endl;
-    
     cout << " solving Ax = b ..." << endl;
 
     stopWatch.reset();
@@ -78,8 +72,9 @@ omp_set_num_threads(0);
     isol.gmres(A, x, b, M);
     cout << "OK, solved in " << stopWatch.getElapsed() << "ms" << endl;
 
-    if (gridLen <= 5) // PRINT SMALL GRID ON SCREEN
+    if (gridLen <= 5){ // PRINT SMALL GRID ON SCREEN
         x.print("x");
+    }
 
     // TEST ERROR
     // PRINT NUMERICAL ERROR MAGNITUDE
@@ -90,9 +85,6 @@ omp_set_num_threads(0);
     // WRITE RESULT IN A COMMA SEPARATED TEXT FILE
     // ROWS AND COLUMNS ARE ORDERED ACCORDING TO THE
     // FD GRID USED FOR THE CALCULATION
-    Writer w;
-    w.writeCSV("out.csv", x , gridLen );
-   
+    Writer::writeCSV("out.csv", x , gridLen );
     return 0;
-
 }

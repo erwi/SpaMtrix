@@ -1,6 +1,13 @@
+#include <iostream>
+#include <stdio.h>
+#include <assert.h>
+#include <stdlib.h>
+#include <cstring>
+#include <omp.h>
+
 #include <spamtrix_ircmatrix.hpp>
-
-
+#include <spamtrix_fleximatrix.hpp>
+#include <spamtrix_vector.hpp>
 namespace SpaMtrix
 {
 IRCMatrix::IRCMatrix():rows(0), cvPairs(0), nnz(0), numRows(0), numCols(0){/*!Constructs an empty matrix*/}

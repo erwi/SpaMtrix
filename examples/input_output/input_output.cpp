@@ -10,18 +10,15 @@
     2. Write it into a file.
     3. Read the file into another matrix.
  */
-int main(int nargs, char* args[] )
-{
+int main(int nargs, char* args[] ){
     idx size = 9;
     if (nargs>1)
         size = atoi(args[1]);
-    
-    
+        
     // 1. CREATE TEST MATRIX
     SpaMtrix::MatrixMaker mm(size,size);
     mm.poisson5Point();
     SpaMtrix::IRCMatrix A = mm.getIRCMatrix();
-    
     A.spy();
     
     // 2. WRITE TEST MATRIX ONTO FILE
@@ -32,7 +29,6 @@ int main(int nargs, char* args[] )
     // 3. READ TEST MATRIX FROM FILE
     SpaMtrix::IRCMatrix B =
     SpaMtrix::Reader::readMatrixMarket(filename);
-    
     B.print();
     
     return 0;

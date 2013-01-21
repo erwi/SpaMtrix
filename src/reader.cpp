@@ -49,9 +49,7 @@ IRCMatrix Reader::readMatrixMarket(const std::string &filename){
         }
         mm.addNonZero(row-1,col-1,val); // TAKE INTO ACCOUNT 1-BASED INDEXING
     }
-   
     file.close();
     return mm.getIRCMatrix();
-    
 } // end readMatrixMarket
-}
+}// end namespace SpaMtrix

@@ -1,23 +1,18 @@
 #ifndef IRCMATRIX
 #define IRCMATRIX
-#include <iostream>
-#include <stdio.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <cstring>
-#include <omp.h>
 
 #include <spamtrix_setup.hpp>
-#include <spamtrix_vector.hpp>
-#include <spamtrix_fleximatrix.hpp>
+//#include <spamtrix_vector.hpp>
+//#include <spamtrix_fleximatrix.hpp>
 
 namespace SpaMtrix
 {
+// forward decarations
 class FlexiMatrix;
+class Vector;
 
 // Interleaved Row Compressed Matrix
-class IRCMatrix
-{
+class IRCMatrix{
   /*!
    * Sparse matrix class, using Interleaved Row Compressed storage scheme
    */
