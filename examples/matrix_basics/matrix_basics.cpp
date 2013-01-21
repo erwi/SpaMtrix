@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstdlib>
 
-//#include <setup.h>
 #include <spamtrix_matrixmaker.hpp>
 #include <spamtrix_ircmatrix.hpp>
 #include <spamtrix_vector.hpp>
