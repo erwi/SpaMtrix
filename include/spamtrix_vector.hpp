@@ -1,13 +1,15 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include <setup.h>
+
 #include <stdio.h>
 #include <iostream>
 #include <assert.h>
 #include <stdlib.h>
 #include <math.h>
 #include <vector>
+
+#include <spamtrix_setup.hpp>
 
 namespace SpaMtrix
 {

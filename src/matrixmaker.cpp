@@ -1,6 +1,6 @@
-#include <matrixmaker.h>
 #include <omp.h>
 
+#include <spamtrix_matrixmaker.hpp>
 namespace SpaMtrix
 {
   

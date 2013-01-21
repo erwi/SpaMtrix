@@ -1,6 +1,6 @@
-#include <iterativesolvers.h>
-#include <spamtrix_blas.h>
-#include <densematrix.h>
+#include <spamtrix_iterativesolvers.hpp>
+#include <spamtrix_blas.hpp>
+#include <spamtrix_densematrix.hpp>
 
 
 

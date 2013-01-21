@@ -17,15 +17,15 @@
 #include <iostream>
 #include <omp.h>
 // SpaMtrix HEADERS
-#include <matrixmaker.h>
-#include <ircmatrix.h>
-#include <vector.h>
-#include <spamtrix_blas.h>
-#include <iterativesolvers.h>
-#include <writer.h>
-#include <cholincpreconditioner.h>
-#include <diagpreconditioner.h>
-#include <tickcounter.h>	// PERFORMANCE TIMER
+#include <spamtrix_matrixmaker.hpp>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_vector.hpp>
+#include <spamtrix_blas.hpp>
+#include <spamtrix_iterativesolvers.hpp>
+#include <spamtrix_writer.hpp>
+#include <spamtrix_cholincpreconditioner.hpp>
+#include <spamtrix_diagpreconditioner.hpp>
+#include <spamtrix_tickcounter.hpp>
 using std::cout;
 using std::endl;
 using namespace SpaMtrix;

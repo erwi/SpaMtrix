@@ -10,10 +10,10 @@
 
 
 #include <iostream>
-#include <matrixmaker.h>
-#include <ircmatrix.h>
-#include <cholesky.h>
-#include <spamtrix_blas.h>
+#include <spamtrix_matrixmaker.hpp>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_cholesky.hpp>
+#include <spamtrix_blas.hpp>
 
 using namespace SpaMtrix;
 int main()

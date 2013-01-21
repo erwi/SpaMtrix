@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
 
-#include <reader.h>
-#include <writer.h>
-#include <matrixmaker.h>
-#include <ircmatrix.h>
+#include <spamtrix_reader.hpp>
+#include <spamtrix_writer.hpp>
+#include <spamtrix_matrixmaker.hpp>
+#include <spamtrix_ircmatrix.hpp>
 /*! Example that reads/writes matrices from/to files.
     1. First create a matrix. 
     2. Write it into a file.

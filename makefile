@@ -8,7 +8,8 @@ clean:
 	cd examples/test4; rm -f *.o
 	cd examples/test5; rm -f *.o
 	cd examples/test6; rm -f *.o
-	cd examples/matrix_basics; rm -f *.o
+	cd examples/matrix_basics; make clean 
+	cd examples/input_output; make clean
 all:
 	make libs
 	make test

@@ -1,10 +1,12 @@
 #ifndef DIAGPRECONDITIONER_H
 #define DIAGPRECONDITIONER_H
-#include <setup.h>
-#include <vector.h>
-#include <ircmatrix.h>
-#include <preconditioner.h>
 #include <omp.h>
+
+#include <spamtrix_setup.hpp>
+#include <spamtrix_vector.hpp>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_preconditioner.hpp>
+
 
 namespace SpaMtrix
 {

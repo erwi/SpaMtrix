@@ -2,12 +2,12 @@
 #include <math.h>
 
 // SPAMTRIX INCLUDES
-#include <ircmatrix.h>
-#include <vector.h>
-#include <matrixmaker.h>
-#include <spamtrix_blas.h>
-#include <diagpreconditioner.h>
-#include <tdmatrix.h>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_vector.hpp>
+#include <spamtrix_matrixmaker.hpp>
+#include <spamtrix_blas.hpp>
+#include <spamtrix_diagpreconditioner.hpp>
+#include <spamtrix_tdmatrix.hpp>
 
 // TEST 2. SOLVES 1D POISSON FINITE DIFFERENCES PROBLEM
 using std::cout;

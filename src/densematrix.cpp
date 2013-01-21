@@ -1,8 +1,9 @@
-#include <densematrix.h>
 #include <stdlib.h>
 #include <iostream>
 #include <stdio.h>
 #include <assert.h>
+
+#include <spamtrix_densematrix.hpp>
 DenseMatrix::DenseMatrix(const idx numRows, const idx numCols):
     numRows(numRows),
     numCols(numCols)

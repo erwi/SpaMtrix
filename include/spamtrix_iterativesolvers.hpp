@@ -1,11 +1,11 @@
 #ifndef ITERATIVESOLVERS_H
 #define ITERATIVESOLVERS_H
 
-#include <setup.h>
-#include <ircmatrix.h>
-#include <vector.h>
-#include <preconditioner.h>
-#include <densematrix.h>
+#include <spamtrix_setup.hpp>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_vector.hpp>
+#include <spamtrix_preconditioner.hpp>
+#include <spamtrix_densematrix.hpp>
 namespace SpaMtrix
 {
 

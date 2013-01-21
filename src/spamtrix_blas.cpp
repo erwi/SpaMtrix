@@ -1,5 +1,5 @@
-#include <setup.h>
-#include <spamtrix_blas.h>
+#include <spamtrix_setup.hpp>
+#include <spamtrix_blas.hpp>
 
 namespace SpaMtrix
 {

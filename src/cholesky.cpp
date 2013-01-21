@@ -1,4 +1,4 @@
-#include <cholesky.h>
+#include <spamtrix_cholesky.hpp>
 
 namespace SpaMtrix
 {

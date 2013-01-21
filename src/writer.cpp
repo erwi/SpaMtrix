@@ -1,4 +1,4 @@
-#include <writer.h>
+#include <spamtrix_writer.hpp>
 namespace SpaMtrix
 {
 Writer::Writer():

@@ -1,11 +1,11 @@
 #include <iostream>
 #include <ios>
 #include <sstream>
-
 #include <string>
-#include <reader.h>
-#include <ircmatrix.h>
-#include <matrixmaker.h>
+
+#include <spamtrix_reader.hpp>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_matrixmaker.hpp>
 
 namespace SpaMtrix{
 const char* Reader::FILE_OPEN_ERROR_STRING = "Could not open file : ";

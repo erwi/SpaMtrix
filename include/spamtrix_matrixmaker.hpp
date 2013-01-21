@@ -1,14 +1,16 @@
 #ifndef MATRIXMAKER_H
 #define MATRIXMAKER_H
-#include <setup.h>
-#include <ircmatrix.h>
-#include <fleximatrix.h>
+
 #include <vector>
 #include <iostream>
 #include <stdlib.h>
 #include <algorithm>
 #include <cstring>
 #include <cmath>
+
+#include <spamtrix_setup.hpp>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_fleximatrix.hpp>
 
 namespace SpaMtrix
 {

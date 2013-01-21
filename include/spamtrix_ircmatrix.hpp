@@ -7,9 +7,9 @@
 #include <cstring>
 #include <omp.h>
 
-#include <setup.h>
-#include <vector.h>
-#include <fleximatrix.h>
+#include <spamtrix_setup.hpp>
+#include <spamtrix_vector.hpp>
+#include <spamtrix_fleximatrix.hpp>
 
 namespace SpaMtrix
 {

@@ -7,12 +7,12 @@
 #include <iostream>
 
 // SpaMtrix headers
-#include <matrixmaker.h>
-#include <ircmatrix.h>
-#include <vector.h>
-#include <cholesky.h>
-#include <spamtrix_blas.h>
-#include <writer.h>
+#include <spamtrix_matrixmaker.hpp>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_vector.hpp>
+#include <spamtrix_cholesky.hpp>
+#include <spamtrix_blas.hpp>
+#include <spamtrix_writer.hpp>
 using std::cout;
 using std::endl;
 using namespace SpaMtrix;

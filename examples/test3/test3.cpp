@@ -9,15 +9,17 @@
 
 
 #include <iostream>
-#include <setup.h>
-#include <matrixmaker.h>
-#include <ircmatrix.h>
-#include <lu.h>
-#include <cholesky.h>
-#include <spamtrix_blas.h>
-#include <tickcounter.h>
 #include <chrono>
 #include <omp.h>
+
+#include <spamtrix_setup.hpp>
+#include <spamtrix_matrixmaker.hpp>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_lu.hpp>
+#include <spamtrix_cholesky.hpp>
+#include <spamtrix_blas.hpp>
+#include <spamtrix_tickcounter.hpp>
+
 
 using namespace SpaMtrix;
 using std::cout;

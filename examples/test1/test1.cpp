@@ -2,11 +2,11 @@
 
 
 // SpaMtrix HEADERS
-#include <matrixmaker.h>
-#include <ircmatrix.h>
-#include <vector.h>
-#include <iterativesolvers.h>
-#include <diagpreconditioner.h>
+#include <spamtrix_matrixmaker.hpp>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_vector.hpp>
+#include <spamtrix_iterativesolvers.hpp>
+#include <spamtrix_diagpreconditioner.hpp>
 
 using std::cout;
 using std::endl;

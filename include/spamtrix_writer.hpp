@@ -7,9 +7,9 @@
 #include <vector>
 
 // SpaMtrix INCLUDES
-#include <setup.h>
-#include <vector.h>
-#include <ircmatrix.h>
+#include <spamtrix_setup.hpp>
+#include <spamtrix_vector.hpp>
+#include <spamtrix_ircmatrix.hpp>
 
 namespace SpaMtrix{
 class Writer{

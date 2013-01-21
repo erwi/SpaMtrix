@@ -9,3 +9,7 @@ input_output:input_output.o $(LIBRARIES_PATH)/libspamtrix.a
 
 input_output.o:input_output.cpp
 	g++ -c input_output.cpp -I$(INCLUDE_PATH)
+
+clean:
+	rm -f *.o
+	rm -f *.txt

@@ -1,4 +1,4 @@
-#include <cg.h>
+#include <spamtrix_cg.hpp>
 //#include <spamtrix_blas.h>
 bool cg(const IRCMatrix& A,
 	const Vector& b,

@@ -1,8 +1,9 @@
 #ifndef DENSEMATRIX_H
 #define DENSEMATRIX_H
 
-#include <setup.h>
 #include <vector>
+
+#include <spamtrix_setup.hpp>
 class DenseMatrix
 {
     //real *values;

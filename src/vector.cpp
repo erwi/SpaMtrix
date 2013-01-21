@@ -1,4 +1,4 @@
-#include <vector.h>
+#include <spamtrix_vector.hpp>
 
 namespace SpaMtrix
 {

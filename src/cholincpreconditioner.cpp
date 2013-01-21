@@ -1,4 +1,4 @@
-#include <cholincpreconditioner.h>
+#include <spamtrix_cholincpreconditioner.hpp>
 namespace SpaMtrix
 {
 CholIncPreconditioner::CholIncPreconditioner(const IRCMatrix& A)

@@ -1,4 +1,4 @@
-#include <ircmatrix.h>
+#include <spamtrix_ircmatrix.hpp>
 
 
 namespace SpaMtrix

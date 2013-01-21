@@ -9,3 +9,6 @@ matrix_basics:matrix_basics.o $(LIBRARIES_PATH)/libspamtrix.a
 
 matrix_basics.o:matrix_basics.cpp
 	g++ -c matrix_basics.cpp -I$(INCLUDE_PATH)
+
+clean:
+	rm -f *.o

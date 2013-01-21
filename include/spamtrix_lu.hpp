@@ -1,11 +1,13 @@
 #ifndef LU_H
 #define LU_H
 #include <assert.h>
-#include <setup.h>
-#include <ircmatrix.h>
-#include <fleximatrix.h>
 #include <stdio.h>
 #include <omp.h>
+
+#include <spamtrix_setup.hpp>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_fleximatrix.hpp>
+
 /*!
   A class that performs (non-pivoted) LU factorisation of a sparse matrix using the Crout algorithm.
   */

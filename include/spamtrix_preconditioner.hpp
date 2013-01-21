@@ -1,6 +1,6 @@
 #ifndef PRECONDITIONER_H
 #define PRECONDITIONER_H
-#include <vector.h>
+#include <spamtrix_vector.hpp>
 
 
 namespace SpaMtrix

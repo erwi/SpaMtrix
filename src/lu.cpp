@@ -1,4 +1,4 @@
-#include <lu.h>
+#include <spamtrix_lu.hpp>
 namespace SpaMtrix
 {
 LU::LU(const IRCMatrix &A):

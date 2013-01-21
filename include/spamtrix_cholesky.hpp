@@ -1,10 +1,11 @@
 #ifndef CHOLESKY_H
 #define CHOLESKY_H
-#include <setup.h>
-#include <ircmatrix.h>
 #include <vector>
 #include <math.h>
-#include <fleximatrix.h>
+
+#include <spamtrix_setup.hpp>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_fleximatrix.hpp>
 
 
 namespace SpaMtrix

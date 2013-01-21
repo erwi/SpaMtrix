@@ -1,14 +1,14 @@
 #ifndef SPAMTRIX_BLAS_H
 #define SPAMTRIX_BLAS_H
-
-#include <setup.h>
-#include <ircmatrix.h>
-#include <tdmatrix.h>
-#include <vector.h>
 #include <assert.h>
 #include <iostream>
 #include <stdlib.h>
 #include <omp.h>
+
+#include <spamtrix_setup.hpp>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_tdmatrix.hpp>
+#include <spamtrix_vector.hpp>
 
 
 namespace SpaMtrix

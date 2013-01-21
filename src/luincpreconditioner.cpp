@@ -1,4 +1,4 @@
-#include <luincpreconditioner.h>
+#include <spamtrix_luincpreconditioner.hpp>
 namespace SpaMtrix
 {
 LUIncPreconditioner::LUIncPreconditioner(const IRCMatrix &A):

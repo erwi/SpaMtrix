@@ -1,4 +1,4 @@
-#include <fleximatrix.h>
+#include <spamtrix_fleximatrix.hpp>
 
 namespace SpaMtrix
 {

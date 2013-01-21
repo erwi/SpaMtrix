@@ -1,11 +1,12 @@
 #ifndef TDMATRIX_H
 #define TDMATRIX_H
-#include <setup.h>
+
 #include <iostream>
 #include <stdlib.h>
-#include <vector.h>
 #include <string.h>
 
+#include <spamtrix_setup.hpp>
+#include <spamtrix_vector.hpp>
 namespace SpaMtrix
 {
 /*!

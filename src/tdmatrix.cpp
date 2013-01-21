@@ -1,4 +1,4 @@
-#include <tdmatrix.h>
+#include <spamtrix_tdmatrix.hpp>
 
 
 namespace SpaMtrix

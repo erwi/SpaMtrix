@@ -1,13 +1,13 @@
 #ifndef LUINCPRECONDITIONER_H
 #define LUINCPRECONDITIONER_H
 
-#include <preconditioner.h>
-#include <fleximatrix.h>
-#include <ircmatrix.h>
-#include <vector.h>
-
 #include <iostream>
 #include <math.h>
+
+#include <spamtrix_preconditioner.hpp>
+#include <spamtrix_fleximatrix.hpp>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_vector.hpp>
 
 namespace SpaMtrix
 {

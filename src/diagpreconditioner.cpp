@@ -1,4 +1,4 @@
-#include <diagpreconditioner.h>
+#include <spamtrix_diagpreconditioner.hpp>
 namespace SpaMtrix
 {
 DiagPreconditioner::DiagPreconditioner(const IRCMatrix& A ):

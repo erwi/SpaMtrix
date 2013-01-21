@@ -1,13 +1,13 @@
 #ifndef CHOLINCPRECONDITIONER_H
 #define CHOLINCPRECONDITIONER_H
-#include <setup.h>
-#include <ircmatrix.h>
-#include <vector.h>
-#include <fleximatrix.h>
-#include <preconditioner.h>
-
 #include <iostream>
 #include <math.h>
+
+#include <spamtrix_setup.hpp>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_vector.hpp>
+#include <spamtrix_fleximatrix.hpp>
+#include <spamtrix_preconditioner.hpp>
 
 namespace SpaMtrix
 {
