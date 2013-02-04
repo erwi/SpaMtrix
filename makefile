@@ -34,9 +34,9 @@ test:
 	@echo "-------------------"
 	cd examples/input_output; make
 	@echo "-------------------"
-	@echo "      TEST 1:"
+	@echo "     PCG TEST      "
 	@echo "-------------------"
-	cd examples/test1; make test
+	cd examples/pcg_test; make
 	@echo "-------------------"
 	@echo "      TEST 2:"
 	@echo "-------------------"
