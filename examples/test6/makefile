@@ -6,6 +6,7 @@ test:test6.o $(LIBRARIES_PATH)/libspamtrix.a
 	
 
 clean:
+	rm -f *.csv
 	rm -f *.o
 	rm -f ./test6
 

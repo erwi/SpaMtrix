@@ -2,8 +2,9 @@
  * Test file for Cholesky and LU decompositions. A 5-point Poisson finite differences
  * problem is solved using both Cholesky and LU decomposition solvers.
  * 
- * Use: ./test3 gridLen numThreads, where gridLen specifies FD grid side length and 
- * numThreads the number of threads used by OpenMP.
+ * Use: ./decomposition_solvers gridLen numThreads,\n
+ * where gridLen specifies FD grid side length and \n
+ * numThreads the number of threads used by OpenMP.\n
  * 
  */
 
@@ -26,7 +27,11 @@ using std::cout;
 using std::endl;
 int main(int nargs, char* args[])
 {
-
+    if (nargs == 1){
+        cout << "arguments: \nfirst = grid size (default is 5)" << endl;
+        cout << "second = number of threads (default is 1)" << endl;
+    }
+    
     idx gridLen = 5;
     idx numThreads = 1;
     if (nargs>1)
@@ -41,13 +46,13 @@ int main(int nargs, char* args[])
 
     IRCMatrix A = mm.getIRCMatrix();
 
-
+    cout << "\nMatrix size is : " << numDoF << "x" << numDoF << endl;
     // PERFORMANCE TIMER
     TickCounter<std::chrono::milliseconds> timer;
 
     // SET NUMBER OF THREAD TO USE
     omp_set_num_threads(numThreads);
-    cout << "num theads : " << numThreads << endl;
+    cout << "num theads : " << numThreads << endl <<endl;
 
     // CREATE LU DECOMPOSITION
     timer.start();
@@ -63,8 +68,9 @@ int main(int nargs, char* args[])
     timer.stop();
     size_t tch = timer.getElapsed();
     timer.reset();
-    cout << "Cholesky decomposition time [ms] : " << tch << endl;
+    cout << "Cholesky decomposition time [ms] : " << tch << endl<< endl;
 
+    
     // SOLUTION VECTORS X FOR LU AND CHOLESKY
     Vector xlu(numDoF);
     Vector xch(numDoF);

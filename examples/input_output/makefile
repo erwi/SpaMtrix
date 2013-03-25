@@ -12,4 +12,5 @@ input_output.o:input_output.cpp
 
 clean:
 	rm -f *.o
+	rm -f ./input_output
 	rm -f *.txt

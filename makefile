@@ -2,14 +2,15 @@
 clean:
 	cd src; make clean
 	cd lib; rm -f *.*
-	cd examples/test1; rm -f *.o
-	cd examples/test2; rm -f *.o
-	cd examples/test3; rm -f *.o
-	cd examples/test4; rm -f *.o
-	cd examples/test5; rm -f *.o
-	cd examples/test6; rm -f *.o
+	
+	
+	cd examples/decomposition_solvers; make clean
+	cd examples/test4; make clean
+	cd examples/test5; make clean
+	cd examples/test6; make clean
 	cd examples/matrix_basics; make clean 
 	cd examples/input_output; make clean
+	cd examples/tridiag_solver; make clean
 all:
 	make libs
 	make test
@@ -38,13 +39,13 @@ test:
 	@echo "-------------------"
 	cd examples/pcg_test; make
 	@echo "-------------------"
-	@echo "      TEST 2:"
+	@echo "  TRIADIAG SOLVER  "
 	@echo "-------------------"
-	cd examples/test2; make test
-	@echo "-------------------"
-	@echo "      TEST 3:"
-	@echo "-------------------"
-	cd examples/test3; make test
+	cd examples/tridiag_solver; make
+	@echo "-----------------------"
+	@echo "DECOMPOSITION SOLVERS :"
+	@echo "-----------------------"
+	cd examples/decomposition_solvers; make
 	@echo "-------------------"
 	@echo "      TEST 4:"
 	@echo "-------------------"

@@ -1,7 +1,3 @@
-complete IRCMatrix::clearAllData()
-complete IRCMatrix::reallocate(FlexiMatrix &)
-complete MatrixMaker::makeSparseMatrix(IRCMatrix &);
-
 poisson5Point should check for non-square-grid sized matrices.
 
 Creation of drift-diffusion test matrices.

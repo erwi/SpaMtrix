@@ -9,3 +9,7 @@ pcg_test:pcg_test.o $(LIBRARIES_PATH)/libspamtrix.a
 
 pcg_test.o:pcg_test.cpp
 	g++ -c pcg_test.cpp -I$(INCLUDE_PATH)
+
+clean:
+	rm -f ./pcg_test
+	rm -f *.o

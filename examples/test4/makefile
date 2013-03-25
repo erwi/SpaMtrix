@@ -8,3 +8,7 @@ test:test4.o $(LIBRARIES_PATH)/libspamtrix.a
 
 test4.o:test4.cpp
 	g++ -c test4.cpp -I$(INCLUDE_PATH) 
+
+clean:
+	rm -f ./test4
+	rm -f *.o

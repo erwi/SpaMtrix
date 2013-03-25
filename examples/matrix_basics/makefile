@@ -12,3 +12,4 @@ matrix_basics.o:matrix_basics.cpp
 
 clean:
 	rm -f *.o
+	rm -f ./matrix_basics
