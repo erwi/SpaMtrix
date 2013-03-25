@@ -48,7 +48,10 @@ IRCMatrix::IRCMatrix(const IRCMatrix& m):
     memcpy(rows, m.rows, (nnz+1)*sizeof(idx));
     memcpy(cvPairs, m.cvPairs, nnz*sizeof(IndVal) );
 }
-
+IRCMatrix::IRCMatrix(const FlexiMatrix &M):rows(NULL), cvPairs(NULL), 
+                                           nnz(0), numRows(0), numCols(0){
+    copyFrom(M);
+}
 IRCMatrix& IRCMatrix::operator=(const IRCMatrix& M)
 {
     /*!
@@ -86,7 +89,10 @@ IRCMatrix& IRCMatrix::operator=(const real &s)
       }
       return *this;
 }
-
+IRCMatrix& IRCMatrix::operator=(const FlexiMatrix &M){
+    copyFrom(M);
+    return *this;
+}
 const IRCMatrix IRCMatrix::operator*(const real& s) const
 {
 /*! Matrix scalar multiplication. Returns a scaled version of self.*/  

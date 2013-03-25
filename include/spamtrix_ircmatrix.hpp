@@ -29,11 +29,11 @@ public:
     IRCMatrix(  const idx numRows, const idx numCols,
                 const idx nnz, 
                 idx * const rows, IndVal *const cvPairs);
-
     IRCMatrix(const IRCMatrix &m);
+    IRCMatrix(const FlexiMatrix &M);
     IRCMatrix& operator=(const IRCMatrix& m);
     IRCMatrix& operator=(const real &s);
-    
+    IRCMatrix& operator=(const FlexiMatrix &m);
     ~IRCMatrix();
     //================================================
     void clear();	
