@@ -13,52 +13,37 @@
 
 namespace SpaMtrix
 {
-
 class Vector{
-  
-
-    //idx length;
-    //real* values;
     std::vector<real> values;
-
 public:
-
     Vector(){} //:length(0),values(NULL){}
     Vector(const idx length);
     Vector(const Vector& v); // COPY CONSTRUCTOR
     Vector(const real *val, const idx &length);
     ~Vector();
 
-    real& operator[](const idx i)
-    {
+    real& operator[](const idx i){
 #ifdef DEBUG
         assert( i < this->getLength() );
 #endif
-
         return this->values[i];
     }
 
-    real& operator()(const idx i)
-    {
+    real& operator()(const idx i){
         return (*this)[i];
     }
-
-
-    const real& operator[](const idx i ) const
-    {
+    const real& operator[](const idx i ) const{
 #ifdef DEBUG
         assert( i < this->getLength() );
 #endif
         return this->values[i];
     }
 
-    void setAllValuesTo(const real val)
-    {
-        for (idx i = 0 ; i < getLength() ; i++)
+    void setAllValuesTo(const real val){
+        for (idx i = 0 ; i < getLength() ; i++){
             values[i] = val;
+        }
     }
-
-
 
     Vector& operator=(const Vector& v);
     Vector& operator=(const real& a);

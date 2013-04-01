@@ -12,6 +12,7 @@
 #include <iostream>
 #include <spamtrix_matrixmaker.hpp>
 #include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_vector.hpp>
 #include <spamtrix_cholesky.hpp>
 #include <spamtrix_blas.hpp>
 

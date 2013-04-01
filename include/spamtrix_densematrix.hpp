@@ -2,11 +2,13 @@
 #define DENSEMATRIX_H
 
 #include <vector>
-
 #include <spamtrix_setup.hpp>
+namespace SpaMtrix{
 class DenseMatrix
 {
-    //real *values;
+    /*!
+     * DenseMatrix is a column ordered dense matrix
+     */
     std::vector<real> values;
     idx numRows;
     idx numCols;
@@ -15,6 +17,7 @@ class DenseMatrix
     void setAllValuesTo(const real v = 0);
 public:
     DenseMatrix(const idx numRows, const idx numCols);
+    DenseMatrix(const DenseMatrix &other);
     ~DenseMatrix();
     real& operator()(const idx row, const idx col);
     real operator()(const idx row, const idx col) const;
@@ -23,5 +26,5 @@ public:
     
     void print() const;
 };
-
+} // end namespace SpaMtrix
 #endif // DENSEMATRIX_H

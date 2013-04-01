@@ -1,16 +1,15 @@
-#ifndef POWERMETHOD_H
-#define POWERMETHOD_H
-#include <spamtrix_blas.hpp>
 #include <spamtrix_setup.hpp>
+#include <spamtrix_blas.hpp>
+#include <spamtrix_powermethod.hpp>
+#include <spamtrix_vector.hpp>
+#include <spamtrix_ircmatrix.hpp>
 namespace SpaMtrix{
 idx powerMethod(const SpaMtrix::IRCMatrix &A,
                  real &eigenValue,
                  SpaMtrix::Vector &eigenVector,
                  real &toler,
-                 unsigned int maxIter = MAX_INDEX
-                );
-
-//{
+                 unsigned int maxIter
+                ){
 /*!
  * Calculates the dominant eigenvalue and corresponding eigenvector of matrix A
  * using power iterations. \n
@@ -20,8 +19,7 @@ idx powerMethod(const SpaMtrix::IRCMatrix &A,
  * calculated eigenvalue (how much the eigenvalue changes during each iteration relative to its 
  * value). \n
  * The function terminates if more than 'maxIter' iterations are used, and the total number of iterations used is returned. 
- */
-/*
+ */                        
     // MAKE SURE INITIAL GUESS IS NOT A ZERO VECTOR
     real n = eigenVector.getNorm();
     if (n == 0.0){
@@ -54,6 +52,4 @@ idx powerMethod(const SpaMtrix::IRCMatrix &A,
     eigenVector = q;
     return iter;
 }
-*/
 } // end namespace SpaMtrix
-#endif

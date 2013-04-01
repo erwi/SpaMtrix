@@ -4,6 +4,7 @@
 #include <assert.h>
 
 #include <spamtrix_densematrix.hpp>
+using namespace SpaMtrix;
 DenseMatrix::DenseMatrix(const idx numRows, const idx numCols):
     numRows(numRows),
     numCols(numCols){
@@ -13,6 +14,11 @@ DenseMatrix::DenseMatrix(const idx numRows, const idx numCols):
         exit(1);
     }
 }
+DenseMatrix::DenseMatrix(const DenseMatrix &other):
+    numRows(other.numRows),
+    numCols(other.numCols){
+    values = other.values;
+    }
 
 DenseMatrix::~DenseMatrix(){
 }

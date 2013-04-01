@@ -14,7 +14,8 @@ OBJS = spamtrix_blas.o\
 	writer.o\
 	reader.o\
 	densematrix.o\
-	iterativesolvers.o
+	iterativesolvers.o\
+	powermethod.o
 
 LIBS += -lgomp
 

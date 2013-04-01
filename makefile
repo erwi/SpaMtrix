@@ -11,6 +11,7 @@ clean:
 	cd examples/matrix_basics; make clean 
 	cd examples/input_output; make clean
 	cd examples/tridiag_solver; make clean
+	cd examples/eigenvalues; make clean
 all:
 	make libs
 	make test
@@ -58,5 +59,9 @@ test:
 	@echo "      TEST 6:"
 	@echo "-------------------"
 	cd examples/test6; make test
-
+	@echo "-------------------"
+	@echo "   EIGENVALUES:"
+	@echo "-------------------"
+	cd examples/eigenvalues; make eigenvalues
+	
 
