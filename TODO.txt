@@ -1,3 +1,5 @@
+Improve FlexiMatrix: Allow insertion of arbitrary nonzeros, filling in empty rows if needed. 
+
 poisson5Point should check for non-square-grid sized matrices.
 
 Creation of drift-diffusion test matrices.

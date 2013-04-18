@@ -40,7 +40,8 @@ public:
     
     // GET VALUE CURERNTLY USES LINEAR SEARCH. CREATE A BINARY SEARCH VERSION!
     real getValue(const idx dim1, const idx dim2) const;
-
+    idx getNumDim1() const;
+    idx getNumDim2() const;
     // SETS VALUE, IF IT DOES NOT EXIST, INSERTS IT
     void setValue(const idx dim1, const idx dim2, const real val);
     void print() const; // PRINTS TO STDOUT

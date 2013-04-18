@@ -49,18 +49,15 @@ idx FlexiMatrix::calcNumNonZeros() const
   return nnz;
 }
 
-void FlexiMatrix::addNonZero(const idx dim1, const idx dim2, const real val)
-{
+void FlexiMatrix::addNonZero(const idx dim1, const idx dim2, const real val){
     /*!
     Adds storage for a non-zero at location dim1, dim1.
     The value will be initialised to val
 */
     // CHECK DIMENSION1 VECTOR SIZE
 #ifdef DEBUG
-    if(dim1 >= (idx) nonZeros.size() )
-    {
+    if(dim1 >= (idx) nonZeros.size() ){
         std::cout << "dim1 = " << dim1 << "nonZeros.size() = " << nonZeros.size() << std::endl;
-
     }
 
     assert( dim1 < (idx) nonZeros.size() );
@@ -69,8 +66,7 @@ void FlexiMatrix::addNonZero(const idx dim1, const idx dim2, const real val)
 
 }
 
-void FlexiMatrix::addNonZero(const idx dim1, const IndVal &iv)
-{
+void FlexiMatrix::addNonZero(const idx dim1, const IndVal &iv){
     /*!
   Adds IndVal pair iv to this matrix, if the same row/column is not already allocated
 */
@@ -78,8 +74,7 @@ void FlexiMatrix::addNonZero(const idx dim1, const IndVal &iv)
 
     // IF EMPTY ROW OR NEW VALUE PLACED AT END, JUST APPEND TO ROW AND EXIT FUNCTION
     if  ( (nonZeros[dim1].size() == 0 ) ||
-          (nonZeros[dim1].back().ind < iv.ind) )
-    {
+          (nonZeros[dim1].back().ind < iv.ind) ){
         nonZeros[dim1].push_back(iv);
         return;
     }
@@ -98,24 +93,18 @@ void FlexiMatrix::addNonZero(const idx dim1, const IndVal &iv)
                              [](const IndVal &iv1, const IndVal &iv2) {return iv1.ind < iv2.ind;} // lamda column comparison
 );
 	    // IF ADDING DUPLICATE NONZER, ONLY WRITE VALUE TO EXISTING MEMORY
-	    if (itr->ind == iv.ind)
-	      itr->val = iv.ind;
+        if (itr->ind == iv.ind){
+            itr->val = iv.ind;
+        }
 	    // OTEHRWISE ADD NEW VALUE
-	    else
-	      nonZeros[dim1].insert(itr,iv);
-	    
-// CHECK WHETHER AN ENTRY FOR THIS COLUMN ALREADY EXISTS.
-// IF YES, IT IS IMMEDIATELY BEFORE THE RETURNED ITERATOR
-//idx i = itr - nonZeros[dim1].begin(); // ITERATOR IS AT i'th POSITION
+        else{
+            nonZeros[dim1].insert(itr,iv);
+        }
 
-// IF ENTRY EXISTS, UPDATE VALUE
-//if ( ( nonZeros[dim1].begin() + (i) )->ind == iv.ind ) // CHECK ( i-1 )th POSITION
-//( nonZeros[dim1].begin() + (i) )->val = iv.val;
-// OTHERWISE INSERT
-//else
-//nonZeros[dim1].insert(itr, iv); // INSERT TO LIST
-
-
+        // TODO - THIS SHOULD BE MAINTAINED INTERNALLY
+        // MAINTAIN DIMENSION SIZES
+        //this->numDim1 = numDim1 > nonZeros.size() ? numDim1 : nonZeros.size();
+        //this->numDim2 = numDim2 > (iv.ind+1) ? numDim2 : (iv.ind+1);
 }
 
 real FlexiMatrix::getValue(const idx dim1, const idx dim2) const

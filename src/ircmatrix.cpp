@@ -117,6 +117,11 @@ idx IRCMatrix::getIndex(const idx row, const idx col) const
       TERMINATES WITH ERROR IF NOT FOUND
   */
 #ifdef DEBUG
+
+    if ((row >= this->numRows) || (col >= this->numCols)){
+        std::cerr << "error in IRCMatrix::getIndex(row, col) " << "where row,col = "<< row <<","<<col<<std::endl;
+        std::cerr << "when matrix size is " << this->numRows << "," << this->numCols << std::endl;
+    }
     assert(row<this->numRows);
     assert(col<this->numCols);
 #endif

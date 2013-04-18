@@ -95,6 +95,8 @@ void MatrixMaker::expandBlocks(const idx numExp){
                 IndVal iv = nz.nonZeros[r][c];
                 iv.ind+= e*nCols;
                 nz.nonZeros[r].push_back(iv);
+                //nz.addNonZero(r,iv); // <-- SHOULD USE THIS INSTEAD
+                nz.numDim2 = nz.numDim2 > (iv.ind+1) ? nz.numDim2 : (iv.ind+1);
             }// end for c
         }//end for e
     }// end for r
@@ -112,6 +114,7 @@ void MatrixMaker::expandBlocks(const idx numExp){
         }// end for r
     }//end for e
     nRows *= (numExp+1);
+    nz.numDim1 = nz.nonZeros.size();
 }// end void expandBlocks
 
 IRCMatrix MatrixMaker::getIRCMatrix(){
