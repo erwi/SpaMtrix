@@ -34,6 +34,7 @@ clean:
 
 lib:$(OBJS)
 	ar rcs libspamtrix.a $(OBJS)
+	mkdir -p ../lib
 	mv libspamtrix.a ../lib
 
 # USE SWIG TO MAKE PYTHON BINDINGS

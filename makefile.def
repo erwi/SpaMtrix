@@ -1,4 +1,4 @@
-SPAMTRIX_PATH = /home/eero/Projects/SpaMtrix
+SPAMTRIX_PATH = c:/work/SpaMtrix
 
 
 
@@ -11,7 +11,7 @@ OPTIONS += -DDEBUG -g
 
 
 CXXFLAGS += $(OPTIONS) -Wall -std=c++0x
-CXXFLAGS += -fPIC
+#CXXFLAGS += -fPIC
 
 
 INCLUDE_PATH = $(SPAMTRIX_PATH)/include

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstdlib>
-
+#include <ctime>
 #include <spamtrix_matrixmaker.hpp>
 #include <spamtrix_ircmatrix.hpp>
 #include <spamtrix_vector.hpp>
@@ -25,10 +25,8 @@ int main(int nargs, char *args[])
     srand(time(NULL));
     // FOR EACH ROW AND COLUMN, FILL ~%50 NON_ZEROS
     for (idx r = 0 ; r < testSize ; r++)
-        for (idx c = 0 ; c < testSize ; c++)
-        {
-            if (rand() % 2 )
-            {
+        for (idx c = 0 ; c < testSize ; c++){
+            if (rand() % 2 ){
                 real val = -1.0 + ( (real) (rand() % 1000) ) / 500.0; // RANDOM VALUE IN -1 -> +1 RANGE
                 mm.addNonZero(r, c, val);
             }
