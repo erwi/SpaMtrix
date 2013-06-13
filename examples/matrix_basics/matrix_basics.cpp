@@ -31,7 +31,11 @@ int main(int nargs, char *args[])
                 mm.addNonZero(r, c, val);
             }
         }
-    SpaMtrix::IRCMatrix A = mm.getIRCMatrix();
+    SpaMtrix::IRCMatrix Atemp = mm.getIRCMatrix();
+
+    // ASSIGNMENT TEST
+    SpaMtrix::IRCMatrix A;
+    A = Atemp;
     // DISPLAY CREATED MATRIX AND ITS SPARSITY PATTERN ON SCREEN
     A.print();
     A.spy();

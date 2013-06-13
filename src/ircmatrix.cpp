@@ -63,28 +63,23 @@ IRCMatrix& IRCMatrix::operator=(const IRCMatrix& M)
     numRows = M.numRows;
     numCols = M.numCols;
     // IF OTHER MATRIX SIZE IS DIFFERENT FROM CURRENT, MUST REALLOCATE
-    if (nnz != M.nnz)
-    {
+    if (nnz != M.nnz){
+        nnz = M.nnz;
         // TODO: ADD CHECKS FOR ALLOCATION FAILS
         delete [] rows;
-        rows = new idx [nnz+1];
-
+        rows = new idx[nnz+1];
         delete [] cvPairs;
         cvPairs = new IndVal[nnz];
-
-        nnz = M.nnz;
     }
     memcpy(rows, M.rows, (nnz+1)*sizeof(idx));
     memcpy(cvPairs, M.cvPairs, nnz*sizeof(IndVal));
-
     return *this;
 }
 
 IRCMatrix& IRCMatrix::operator=(const real &s)
 {
       /*! SETS ALL NONZEROS TO SCALAR s.*/
-      for (idx i = 0 ; i < nnz ; ++i)
-      {
+      for (idx i = 0 ; i < nnz ; ++i){
           cvPairs[i].val = s;
       }
       return *this;
