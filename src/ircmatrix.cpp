@@ -67,11 +67,11 @@ IRCMatrix& IRCMatrix::operator=(const IRCMatrix& M)
         nnz = M.nnz;
         // TODO: ADD CHECKS FOR ALLOCATION FAILS
         delete [] rows;
-        rows = new idx[nnz+1];
+        rows = new idx[numRows+1];
         delete [] cvPairs;
         cvPairs = new IndVal[nnz];
     }
-    memcpy(rows, M.rows, (nnz+1)*sizeof(idx));
+    memcpy(rows, M.rows, (numRows+1)*sizeof(idx));
     memcpy(cvPairs, M.cvPairs, nnz*sizeof(IndVal));
     return *this;
 }
@@ -92,13 +92,12 @@ const IRCMatrix IRCMatrix::operator*(const real& s) const
 {
 /*! Matrix scalar multiplication. Returns a scaled version of self.*/  
 
-    idx *rows_n = new idx[nnz+1];
-    IndVal *cvPairs_n = new IndVal[nnz];
-  
-    memcpy(rows_n, rows, (nnz+1)*sizeof(idx) );
-    
-    for(idx i = 0 ; i < nnz ; ++i)
-    {
+    // CREATE NEW SPARSE MATRIX OF SAME SIZE AS SELF
+    idx *rows_n = new idx[numRows+1];    // NEW ROW INDEXES
+    IndVal *cvPairs_n = new IndVal[nnz]; // NEW COLUMNS/VALUES
+    memcpy(rows_n, rows, (numRows+1)*sizeof(idx) ); 
+
+    for(idx i = 0 ; i < nnz ; ++i){ // FILL NEW COL/VALS
       cvPairs_n[i] = cvPairs[i];
       cvPairs_n[i].val*=s;
     }
@@ -123,15 +122,14 @@ idx IRCMatrix::getIndex(const idx row, const idx col) const
 
     idx i = this->rows[row];
     idx max = this->rows[row+1];
-    while ( i < max )
-    {
-        if (this->cvPairs[i].ind == col )
+    while ( i < max ){
+        if (this->cvPairs[i].ind == col ){
             return i;
+	}
         ++i;
     }
     // IF REACHED THIS POINT, COLUMN NOT FOUND
-
-    std::cout << "error in " << __func__ << " index " << row <<","<< col <<" not found - bye!" << std::endl;
+    std::cerr << "error in " << __func__ << " index " << row <<","<< col <<" not found - bye!" << std::endl;
     exit(1);
 }
 
