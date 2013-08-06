@@ -67,12 +67,20 @@ IRCMatrix& IRCMatrix::operator=(const IRCMatrix& M)
         nnz = M.nnz;
         // TODO: ADD CHECKS FOR ALLOCATION FAILS
         delete [] rows;
-        rows = new idx[numRows+1];
+        if (numRows>0){ // CHECK FOR EMPTY MATRIX
+            rows = new idx[numRows+1];
+            memcpy(rows, M.rows, (numRows+1)*sizeof(idx));
+        }else{
+            rows = NULL;
+        }
         delete [] cvPairs;
-        cvPairs = new IndVal[nnz];
+        if (nnz>0){ // CHECK FOR EMPTY MATRIX
+            cvPairs = new IndVal[nnz];
+            memcpy(cvPairs, M.cvPairs, nnz*sizeof(IndVal));
+        }else{
+            cvPairs = NULL;
+        }
     }
-    memcpy(rows, M.rows, (numRows+1)*sizeof(idx));
-    memcpy(cvPairs, M.cvPairs, nnz*sizeof(IndVal));
     return *this;
 }
 
