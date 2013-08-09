@@ -30,23 +30,21 @@ IRCMatrix::IRCMatrix(const IRCMatrix& m):
     nnz = m.nnz;
     numRows = m.numRows;
     numCols = m.numCols;
+    if (numRows > 0){ // IF NOT EMPTY MATRIX
+        rows = new idx [numRows+1];
+        if (!rows){
+            std::cerr << "error in " << __func__ << " could not allocate rows" << std::endl;
+            exit(1);
+        }
+        cvPairs = new IndVal[nnz];
+        if (!cvPairs){
+            std::cerr << "error in " << __func__ << " could not allocate cvPairs" << std::endl;
+            exit(1);
+        }
     
-    rows = new idx [nnz+1];
-    if (!rows)
-    {
-        std::cout << "error in " << __func__ << " could not allocate rows" << std::endl;
-        exit(1);
+        memcpy(rows, m.rows, (nnz+1)*sizeof(idx));
+        memcpy(cvPairs, m.cvPairs, nnz*sizeof(IndVal) );
     }
-    
-    cvPairs = new IndVal[nnz];
-    if (!cvPairs)
-    {
-        std::cout << "error in " << __func__ << " could not allocate cvPairs" << std::endl;
-        exit(1);
-    }
-    
-    memcpy(rows, m.rows, (nnz+1)*sizeof(idx));
-    memcpy(cvPairs, m.cvPairs, nnz*sizeof(IndVal) );
 }
 IRCMatrix::IRCMatrix(const FlexiMatrix &M):rows(NULL), cvPairs(NULL), 
                                            nnz(0), numRows(0), numCols(0){
@@ -133,7 +131,7 @@ idx IRCMatrix::getIndex(const idx row, const idx col) const
     while ( i < max ){
         if (this->cvPairs[i].ind == col ){
             return i;
-	}
+        }
         ++i;
     }
     // IF REACHED THIS POINT, COLUMN NOT FOUND
@@ -165,29 +163,28 @@ void IRCMatrix::copyFrom(const FlexiMatrix &A)
 /*!
  * Makes a copy of FlexiMatrix A
  */
-    if (nnz > 0 )
-      clear();
+    if (nnz > 0 ){
+        clear();
+    }
 
     nnz = A.calcNumNonZeros();
     numRows = A.numDim1;
     numCols = A.numDim2;
-        
     cvPairs = new IndVal[nnz];
-    rows = new idx[numRows+1];
-    
-    idx nzc = 0;    // COUNTER FOR NON-ZEROS
-    // COPY DATA
-    for (idx r = 0 ; r < numRows ; ++r) // FOR EACH ROW
-    {
-      rows[r] = nzc; // INDEX TO START OF ROW r
-      std::vector<IndVal>::const_iterator citr = A.nonZeros[r].begin();
-      for (;citr!=A.nonZeros[r].end(); ++citr)
-      {
-	cvPairs[nzc] = *citr;
-	nzc++;
-      }// end column iterator
-    }// end for rows
-    rows[numRows] = nzc;  
+    if (numRows > 0){ // IF NOT EMPTY MATRIX
+        rows = new idx[numRows+1];
+        idx nzc = 0;    // COUNTER FOR NON-ZEROS
+        // COPY DATA
+        for (idx r = 0 ; r < numRows ; ++r){ // FOR EACH ROW
+            rows[r] = nzc; // INDEX TO START OF ROW r
+            std::vector<IndVal>::const_iterator citr = A.nonZeros[r].begin();
+            for (;citr!=A.nonZeros[r].end(); ++citr){
+                cvPairs[nzc] = *citr;
+                nzc++;
+            }// end column iterator
+        }// end for rows
+        rows[numRows] = nzc;
+    }
 }
 
 void IRCMatrix::sparse_set(const idx row, const idx col, const real val)
@@ -197,23 +194,19 @@ void IRCMatrix::sparse_set(const idx row, const idx col, const real val)
     #pragma omp critical
 #endif
     cvPairs[i].val = val;
-    
-    
 }
 
 void IRCMatrix::sparse_add(const idx row, const idx col, const real val)
 {
     idx i = getIndex(row, col);
 #ifdef USES_OPENMP
-    
+        #pragma omp atomic
 #endif
-    #pragma omp atomic
     this->cvPairs[i].val+= val;
 }
 
 real IRCMatrix::sparse_get(const idx row, const idx col) const
 {
-    
     idx i = getIndex(row,col);
     real val = this->cvPairs[i].val;
     return val;
@@ -231,7 +224,6 @@ real IRCMatrix::getValue(const idx row, const idx col) const
     real val;
     isNonZero(row,col,val);
     return val;
-
 }
 
 bool IRCMatrix::isNonZero(const idx row, const idx col) const
@@ -245,8 +237,6 @@ bool IRCMatrix::isNonZero(const idx row, const idx col) const
 
     IndVal *begin = &cvPairs[ rows[row]   ]; // pointer to first in row
     IndVal *end   = &cvPairs[ rows[row+1] ]; // pointer to first in row+1
-
-
     // GET POINTER TO FIRST ELEMENT IN cvPairs WHOSE INDEX IS
     // LARGER OR EQUAL TO col
     IndVal *itr =
@@ -256,15 +246,13 @@ bool IRCMatrix::isNonZero(const idx row, const idx col) const
                              [](const IndVal &iv1, const idx &colind){return iv1.ind < colind;}
                              );
 
-
-    if (itr == end) // IF REACHED END OF ROW
+    if (itr == end){ // IF REACHED END OF ROW
         return false;
-    else
-    if (itr->ind == col)    // IF FOUND
+    } else if(itr->ind == col){    // IF FOUND
         return true;
-    else
-    return false;
-
+    }else{
+        return false;
+    }
 }
 
 bool IRCMatrix::isNonZero(const idx row, const idx col, real &val) const
@@ -286,19 +274,16 @@ bool IRCMatrix::isNonZero(const idx row, const idx col, real &val) const
     IndVal *itr = std::lower_bound(begin,end,col,
                                    [](const IndVal &iv1, const idx& colind){return iv1.ind<colind;}
                                     );
-    if (itr == end) // END OF ROW REACHED
-    {
+    if (itr == end){ // END OF ROW REACHED
         return false;
     }
     else
-    if (itr->ind == col) // FOUND IT
-    {
+    if (itr->ind == col){ // FOUND IT
         val = itr->val;
         return true;
     }
     else // DID NOT FIND
         return false;
-
 }
 
 void IRCMatrix::operator*=(const real &s)
@@ -316,29 +301,22 @@ Vector IRCMatrix::operator *(const Vector& x) const
      */
 
 #ifdef DEBUG
-    if (numCols != x.getLength() )
-    {
-        std::cout << "error in " << __func__ <<" column count is :" << numCols << 
+    if (numCols != x.getLength() ) {
+        std::cerr << "error in " << __func__ <<" column count is :" << numCols <<
         ", vector length is :" << x.getLength() << std::endl;
-	exit(1);
+        exit(1);
     }
-    //assert(this->getNumCols() == x.getLength() );
 #endif
 
     Vector b( x.getLength() );
 
     // FOR EACH ROW
-//#ifdef USES_OPENMP
-//#pragma omp parallel for
-    //#endif
-    for (idx i = 0 ; i < getNumRows() ; i++)
-    {
+    for (idx i = 0 ; i < getNumRows() ; i++){
         // FOR EACH COLUMN
         real r(0);
         const idx row_start = rows[i];
         const idx row_end   = rows[i+1];
-        for (idx j = row_start ; j < row_end ; j++)
-        {
+        for (idx j = row_start ; j < row_end ; j++){
             const idx col = cvPairs[j].ind;
             r += cvPairs[j].val * x[col];
         }// end for jj
@@ -356,10 +334,8 @@ void IRCMatrix::spy() const
 {
     std::cout << std::endl;
     std::cout << "IRCMatrix size = " << this->numRows << " , " << this->numCols << " nnz = "<< this->nnz << std::endl;
-    for (idx row = 0 ; row < this->numRows ; row++)
-    {
-        for (idx col = 0 ; col < this->numCols ; col++)
-        {
+    for (idx row = 0 ; row < this->numRows ; row++){
+        for (idx col = 0 ; col < this->numCols ; col++){
             char marker;
             if ( this->isNonZero(row,col) )
                 marker = '#';
@@ -369,7 +345,6 @@ void IRCMatrix::spy() const
 
         }
         printf("\n");
-
     }
 }
 
@@ -377,10 +352,8 @@ void IRCMatrix::print() const
 {
     std::cout << std::endl;
     std::cout << "IRCMatrix size = " << this->numRows << " , " << this->numCols << " nnz = "<< this->nnz << std::endl;
-    for (idx row = 0 ; row < this->numRows ; row++)
-    {
-        for (idx col = 0 ; col < this->numCols ; col++)
-        {
+    for (idx row = 0 ; row < this->numRows ; row++){
+        for (idx col = 0 ; col < this->numCols ; col++){
             real val = this->getValue(row, col );
             printf("%1.3f\t", val );
         }
