@@ -21,22 +21,22 @@ protected:
     IndVal* cvPairs;// COLUMN-VALUE PAIRS
     idx nnz;        // NUMBER OF NON-ZEROS
     idx numRows, numCols;
-    
+
     idx getIndex(const idx row, const idx col) const;
 public:
-    
+
     IRCMatrix();
     IRCMatrix(  const idx numRows, const idx numCols,
-                const idx nnz, 
+                const idx nnz,
                 idx * const rows, IndVal *const cvPairs);
     IRCMatrix(const IRCMatrix &m);
     IRCMatrix(const FlexiMatrix &M);
     IRCMatrix& operator=(const IRCMatrix& m);
     IRCMatrix& operator=(const real &s);
     IRCMatrix& operator=(const FlexiMatrix &m);
-    ~IRCMatrix();
+    virtual ~IRCMatrix();
     //================================================
-    void clear();	
+    void clear();
     void copyFrom(const FlexiMatrix& A); // reallocates using data from fleximatrix
     idx getnnz()const;      // RETURNS NUMBER OF NONZEROS
     idx getNumRows()const;  // RETURNS MATRIX ROW COUNT
@@ -45,7 +45,7 @@ public:
     void sparse_set(const idx row, const idx col , const real val );
     void sparse_add(const idx row, const idx col , const real val );
     real sparse_get(const idx row, const idx col ) const;
-    
+
     // RETURNS VALUE AT (ROW,COL), EVEN IF IT IS ZERO
     real getValue(const idx row, const idx col)const;
 

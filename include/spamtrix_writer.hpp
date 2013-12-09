@@ -10,7 +10,7 @@ class IRCMatrix;
 class Writer{
     Writer() {}
 public:
-    ~Writer();
+    virtual ~Writer();
     static bool writeCSV(const std::string &filename,
                   const Vector &data,
                   idx numC=0);

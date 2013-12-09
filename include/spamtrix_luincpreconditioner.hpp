@@ -27,6 +27,7 @@ class LUIncPreconditioner: public Preconditioner
 
 public:
     LUIncPreconditioner(const IRCMatrix &A);
+    virtual ~LUIncPreconditioner();
     void print() const;
     void solveMxb(Vector &x, const Vector &b) const;
 };

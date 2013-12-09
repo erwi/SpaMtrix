@@ -11,16 +11,14 @@
 namespace SpaMtrix
 {
 class DiagPreconditioner: public Preconditioner {
-  
+
     Vector diagonal;
-    
+
     DiagPreconditioner();	// PRIVATE COSTRUCTOR
 public:
-  DiagPreconditioner(const IRCMatrix& A);
-   
-  //void applyToVector(Vector& v) const;
-  void solveMxb(Vector &x, const Vector &b) const;  
-  
+    DiagPreconditioner(const IRCMatrix& A);
+    virtual ~DiagPreconditioner();
+    void solveMxb(Vector &x, const Vector &b) const;
 };
 } // end namespace SpaMtrix
 

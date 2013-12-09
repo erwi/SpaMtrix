@@ -20,7 +20,7 @@ public:
     Vector(const idx length);
     Vector(const Vector& v); // COPY CONSTRUCTOR
     Vector(const real *val, const idx &length);
-    ~Vector();
+    virtual ~Vector();
 
     real& operator[](const idx i){
 #ifdef DEBUG
@@ -64,7 +64,7 @@ public:
 
     real getNorm() const;   // returns vector length
     void normalise();       // normalises to unit vector
-    
+
     //
     // FUNCTIONS REQUIRED BY PYTHON WRAPPERS
     //

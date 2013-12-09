@@ -10,7 +10,7 @@ namespace SpaMtrix
 class Preconditioner
 {
 public:
-  virtual void solveMxb(Vector &x, const Vector &b) const  = 0; // SOLVES Mx = b
+    virtual void solveMxb(Vector &x, const Vector &b) const  = 0; // SOLVES Mx = b
 
     Vector solve(const Vector &b) const
     {
@@ -18,7 +18,8 @@ public:
         solveMxb( x , b);
         return x;
     }
-  
+
+    virtual ~Preconditioner();
 };
 
 } // end namespace SpaMtrix

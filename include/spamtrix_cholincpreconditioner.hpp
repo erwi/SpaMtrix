@@ -14,15 +14,17 @@ namespace SpaMtrix
 
 class CholIncPreconditioner:public Preconditioner
 {
-  FlexiMatrix L;
-
-  CholIncPreconditioner():L(0,0){}
-  void forwardSubstitution(Vector&x, const Vector& b) const;
-  void backwardSubstitution(Vector&x, const Vector& b) const;
+    FlexiMatrix L;
+    CholIncPreconditioner():L(0,0){}
+    void forwardSubstitution(Vector&x, const Vector& b) const;
+    void backwardSubstitution(Vector&x, const Vector& b) const;
 public:
-  CholIncPreconditioner(const IRCMatrix &A);
-  void print() const;
-  void solveMxb(Vector &x, const Vector &b) const;
+    CholIncPreconditioner(const IRCMatrix &A);
+    virtual ~CholIncPreconditioner();
+    void print() const;
+    void solveMxb(Vector &x, const Vector &b) const;
+
+
 };
 } // end namespace SpaMtrix
 #endif

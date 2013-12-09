@@ -18,12 +18,12 @@ class DenseMatrix
 public:
     DenseMatrix(const idx numRows, const idx numCols);
     DenseMatrix(const DenseMatrix &other);
-    ~DenseMatrix();
+    virtual ~DenseMatrix();
     real& operator()(const idx row, const idx col);
     real operator()(const idx row, const idx col) const;
     idx getNumRows()const {return numRows;}
     idx getNumCols()const {return numCols;}
-    
+
     void print() const;
 };
 } // end namespace SpaMtrix

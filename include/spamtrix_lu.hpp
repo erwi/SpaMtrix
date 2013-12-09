@@ -15,7 +15,7 @@ class LU{
 * A class that performs:\n
 *\t1.\t(non-pivoted) LU factorisation of a sparse matrix using the Crout algorithm.\n
 *\t2.\tforward-backward bustitution to solve the Ax=b system, where A is the factorised matrix
-*/    
+*/
     idx numRows;
     FlexiMatrix L;
     FlexiMatrix U;
@@ -42,6 +42,7 @@ class LU{
     }
 public:
     LU( const IRCMatrix &A);
+    virtual ~LU();
     void print();
     void solve(Vector& x, const Vector& b) const; // SOLVES Ax = b USING FORWARD/BACKWARD SUBSTITUTION
 };

@@ -1,4 +1,5 @@
-SPAMTRIX_PATH = c:/work/SpaMtrix
+#SPAMTRIX_PATH = c:/work/SpaMtrix
+SPAMTRIX_PATH = /home/eero/Projects/SpaMtrix
 
 
 
