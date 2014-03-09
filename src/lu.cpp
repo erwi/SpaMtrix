@@ -1,10 +1,10 @@
 #include <spamtrix_lu.hpp>
 #include <spamtrix_vector.hpp>
-namespace SpaMtrix{
+namespace SpaMtrix {
 LU::LU(const IRCMatrix &A):
     numRows(A.getNumRows()),
     L(numRows, numRows ),
-    U(numRows, numRows ){
+    U(numRows, numRows ) {
 #ifdef DEBUG
     assert(A.getNumRows() == A.getNumCols() );
 #endif
@@ -24,16 +24,16 @@ LU::LU(const IRCMatrix &A):
 //==============================
 //          MAIN LOOP
 //==============================
-    for (idx j = 1; j < n ;++j){
+    for (idx j = 1; j < n ;++j) {
         // FOR ROWS i
         for (idx i = j ; i < n ; ++i){
             real sum(0.0);
 #ifdef USES_OPENMP
 #pragma omp parallel for reduction(+:sum)
 #endif
-            for (idx k = 0; k < j ; ++k){
+            for (idx k = 0; k < j ; ++k) {
                 real Lik = L.getValue(i,k);
-                if ( Lik != 0.0 ){
+                if ( Lik != 0.0 ) {
                     sum+= Lik*U.getValue(k,j);
                 }
             }//end for k
@@ -43,14 +43,14 @@ LU::LU(const IRCMatrix &A):
         // MAKE U
         U.setValue(j,j,1.0);
         real Ljj = L.getValue(j,j);
-        for (idx i = j+1; i < n ; ++i){
+        for (idx i = j+1; i < n; ++i) {
             real sum(0.0);
 #ifdef USES_OPENMP
 #pragma omp parallel for reduction(+:sum)
 #endif
-            for (idx k = 0 ; k < j ; ++k){
+            for (idx k = 0 ; k < j ; ++k) {
                 real Ljk = L.getValue(j,k);
-                if (Ljk != 0.0){
+                if (Ljk != 0.0) {
                     sum+= Ljk*U.getValue(k,i);
                 }
             }//end for k
@@ -58,6 +58,8 @@ LU::LU(const IRCMatrix &A):
         }// end for i
     }// end for j
 }// end constructor
+
+LU::~LU() { }
 
 void LU::print(){
 /*!

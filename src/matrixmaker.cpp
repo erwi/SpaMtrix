@@ -12,7 +12,7 @@ MatrixMaker::MatrixMaker(const idx nRows, const idx nCols):
     nz(nRows,nCols){
 }
 
-
+MatrixMaker::~MatrixMaker() {}
 
 void MatrixMaker::addNonZero(const idx row, const idx col, const real val){
 /*!

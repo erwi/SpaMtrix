@@ -1,27 +1,18 @@
 #include <spamtrix_cholesky.hpp>
 #include <spamtrix_vector.hpp>
-namespace SpaMtrix
-{
-Cholesky::Cholesky(const IRCMatrix &A)
-{
-/*!
-  Creates a cholesky decomposition lower diagonal of matrix A
-  */
+namespace SpaMtrix {
+Cholesky::Cholesky(const IRCMatrix &A) {
+/*!Creates a cholesky decomposition lower diagonal of matrix A*/
     L.numDim1 = A.getNumRows();
     L.numDim2 = A.getNumCols();
 
     // FOR EACH ROW
-    for (idx r = 0 ; r < A.getNumRows() ; r++)
-    {
-
-
-        L.nonZeros.push_back(std::vector<IndVal>() ); // ADD NEW EMPTY ROW
+    for (idx r = 0; r < A.getNumRows(); r++) {
+        L.nonZeros.push_back(std::vector<IndVal>()); // ADD NEW EMPTY ROW
         real Arr = A.sparse_get(r,r);
         // FOR EACH COLUMN, LOWERD DIAGONAL ONLY, i.e. c < r
-        for (idx c = 0 ; c <= r ; c++)
-        {
-            if (r==c) // DIAGONAL
-            {
+        for (idx c = 0; c <= r; c++) {
+            if (r==c){ // DIAGONAL
                 real s = 0;
                 // SUM OVER ALL VALUES SQUARED TO LEFT ON THIS ROW
                 std::vector< IndVal>::iterator itr1 = L.nonZeros[r].begin();
@@ -32,29 +23,23 @@ Cholesky::Cholesky(const IRCMatrix &A)
                 s = sqrt(Arr - s );
 
                 #ifdef DEBUG
-                  if (s <= 0.0)
-                  {
+                  if (s <= 0.0) {
                     std::cout << "error in " <<__func__ << "matrix A is not positive definite - bye!" << std::endl;
                     exit(1);
                   }
                 #endif
-
                   L.nonZeros[r].push_back(IndVal(c,s) );// std::move could be used here?
             }
-            else // OFF-DIAGONAL
-            {
+            else {// OFF-DIAGONAL
                 real s(0.0);
 #ifdef USES_OPENMP
 #pragma omp parallel for reduction (+:s)
 #endif
-                for (idx k = 0 ; k < c; k++)
-                {
+                for (idx k = 0; k < c; k++) {
                     real Lrk = L.getValue(r,k);
                     if ( Lrk != 0.0)
                         s+= Lrk*L.getValue(c,k);
                 }
-
-
                 /*
                 const vector<IndVal> &cvPairs = L.nonZeros[r]; // ref to non-zeros in row r
                 idx n = (idx) cvPairs.size() - 1;
@@ -70,8 +55,7 @@ Cholesky::Cholesky(const IRCMatrix &A)
                 A.isNonZero(r,c,a); // GETS VALUE IN A AT r,c. INCLUDING ZERO VALUES
                 s =  ( a - s );
 
-                if ( s != 0.0 ) // IF NOT ZERO, ADD TERM TO MATRIX
-                {
+                if ( s != 0.0 ) { // IF NOT ZERO, ADD TERM TO MATRIX
                     real last= L.nonZeros[c].back().val;
                     s /= last;
                     L.nonZeros[r].push_back( IndVal(c,s) );
@@ -83,17 +67,16 @@ Cholesky::Cholesky(const IRCMatrix &A)
    // this->makeUpper();
 }
 
+Cholesky::~Cholesky() { }
 
-void Cholesky::print() const
-{
+void Cholesky::print() const {
     /*!
       Prints the colesky decmoposed lower triangular matrix to stdout
       */
     L.print();
 }
 
-void Cholesky::solve(Vector &x, const Vector &b) const
-{
+void Cholesky::solve(Vector &x, const Vector &b) const {
 /*!
   Solves Ax=b using forward/backward substitution
     Ax = b
