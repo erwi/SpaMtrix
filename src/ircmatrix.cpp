@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <assert.h>
+#include <algorithm>
 #include <stdlib.h>
 #include <cstring>
 #include <omp.h>
@@ -12,10 +13,10 @@ namespace SpaMtrix
 {
 IRCMatrix::IRCMatrix():rows(0), cvPairs(0), nnz(0), numRows(0), numCols(0){/*!Constructs an empty matrix*/}
 IRCMatrix::IRCMatrix(  const idx numRows, const idx numCols,
-                const idx nnz, 
+                const idx nnz,
                 idx * const rows, IndVal *const cvPairs):
-                rows(rows), cvPairs(cvPairs), nnz(nnz), 
-                numRows(numRows) , numCols(numCols){ 
+                rows(rows), cvPairs(cvPairs), nnz(nnz),
+                numRows(numRows) , numCols(numCols){
 		  /*!Constructs a sparse matrix where sparsity pattern is
 		  defined in the arrays 'rows' and 'cvPairs'. The matrix takes ownership of these arrays and releases
 		  the memory when destructed (i.e. does not make copies).
@@ -41,12 +42,12 @@ IRCMatrix::IRCMatrix(const IRCMatrix& m):
             std::cerr << "error in " << __func__ << " could not allocate cvPairs" << std::endl;
             exit(1);
         }
-    
+
         memcpy(rows, m.rows, (nnz+1)*sizeof(idx));
         memcpy(cvPairs, m.cvPairs, nnz*sizeof(IndVal) );
     }
 }
-IRCMatrix::IRCMatrix(const FlexiMatrix &M):rows(NULL), cvPairs(NULL), 
+IRCMatrix::IRCMatrix(const FlexiMatrix &M):rows(NULL), cvPairs(NULL),
                                            nnz(0), numRows(0), numCols(0){
     copyFrom(M);
 }
@@ -96,12 +97,12 @@ IRCMatrix& IRCMatrix::operator=(const FlexiMatrix &M){
 }
 const IRCMatrix IRCMatrix::operator*(const real& s) const
 {
-/*! Matrix scalar multiplication. Returns a scaled version of self.*/  
+/*! Matrix scalar multiplication. Returns a scaled version of self.*/
 
     // CREATE NEW SPARSE MATRIX OF SAME SIZE AS SELF
     idx *rows_n = new idx[numRows+1];    // NEW ROW INDEXES
     IndVal *cvPairs_n = new IndVal[nnz]; // NEW COLUMNS/VALUES
-    memcpy(rows_n, rows, (numRows+1)*sizeof(idx) ); 
+    memcpy(rows_n, rows, (numRows+1)*sizeof(idx) );
 
     for(idx i = 0 ; i < nnz ; ++i){ // FILL NEW COL/VALS
       cvPairs_n[i] = cvPairs[i];

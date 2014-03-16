@@ -1,12 +1,6 @@
 #ifndef FLEXIMATRIX_H
 #define FLEXIMATRIX_H
-
 #include <vector>
-#include <assert.h>
-#include <algorithm>
-#include <iostream>
-#include <stdio.h>
-
 #include <spamtrix_setup.hpp>
 #include <spamtrix_ircmatrix.hpp>
 //using std::vector;

@@ -1,11 +1,11 @@
 /*!
  * Test file for Cholesky and LU decompositions. A 5-point Poisson finite differences
  * problem is solved using both Cholesky and LU decomposition solvers.
- * 
+ *
  * Use: ./decomposition_solvers gridLen numThreads,\n
  * where gridLen specifies FD grid side length and \n
  * numThreads the number of threads used by OpenMP.\n
- * 
+ *
  */
 
 
@@ -32,7 +32,7 @@ int main(int nargs, char* args[])
         cout << "arguments: \nfirst = grid size (default is 5)" << endl;
         cout << "second = number of threads (default is 1)" << endl;
     }
-    
+
     idx gridLen = 5;
     idx numThreads = 1;
     if (nargs>1)
@@ -52,7 +52,9 @@ int main(int nargs, char* args[])
     TickCounter<std::chrono::milliseconds> timer;
 
     // SET NUMBER OF THREAD TO USE
+#ifdef USES_OPENMP
     omp_set_num_threads(numThreads);
+#endif
     cout << "num theads : " << numThreads << endl <<endl;
 
     // CREATE LU DECOMPOSITION
@@ -71,7 +73,7 @@ int main(int nargs, char* args[])
     timer.reset();
     cout << "Cholesky decomposition time [ms] : " << tch << endl<< endl;
 
-    
+
     // SOLUTION VECTORS X FOR LU AND CHOLESKY
     Vector xlu(numDoF);
     Vector xch(numDoF);

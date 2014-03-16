@@ -2,9 +2,6 @@
 #define IRCMATRIX
 
 #include <spamtrix_setup.hpp>
-//#include <spamtrix_vector.hpp>
-//#include <spamtrix_fleximatrix.hpp>
-
 namespace SpaMtrix
 {
 // forward decarations

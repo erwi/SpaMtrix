@@ -5,3 +5,5 @@
 *.a
 /temp
 /lib
+/build
+.directory

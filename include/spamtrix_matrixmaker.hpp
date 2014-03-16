@@ -1,13 +1,6 @@
 #ifndef MATRIXMAKER_H
 #define MATRIXMAKER_H
-
 #include <vector>
-#include <iostream>
-#include <stdlib.h>
-#include <algorithm>
-#include <cstring>
-#include <cmath>
-
 #include <spamtrix_setup.hpp>
 #include <spamtrix_fleximatrix.hpp>
 

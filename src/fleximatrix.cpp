@@ -1,4 +1,8 @@
 #include <spamtrix_fleximatrix.hpp>
+#include <algorithm>
+#include <assert.h>
+#include <iostream>
+#include <stdio.h>
 
 namespace SpaMtrix {
 FlexiMatrix::FlexiMatrix(const idx numDim1, const idx numDim2):
@@ -29,13 +33,13 @@ idx FlexiMatrix::calcNumNonZeros() const
 {
   /*!
    * Returns number of non-zeros allocated. Does this by calculating it, so this gets
-   * linearly slower with larger matrices 
+   * linearly slower with larger matrices
    */
 
   idx nnz(0);
   for(idx i = 0 ; i < nonZeros.size() ; ++i)
     nnz+= nonZeros[i].size();
-  
+
   return nnz;
 }
 

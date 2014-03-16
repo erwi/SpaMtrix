@@ -1,10 +1,15 @@
-#include <omp.h>
-
 #include <spamtrix_matrixmaker.hpp>
 #include <spamtrix_ircmatrix.hpp>
+#include <omp.h>
+#include <assert.h>
+#include <iostream>
+#include <stdlib.h>
+#include <algorithm>
+#include <cstring>
+#include <cmath>
 namespace SpaMtrix
 {
-  
+
 
 MatrixMaker::MatrixMaker(const idx nRows, const idx nCols):
     nRows(nRows),
