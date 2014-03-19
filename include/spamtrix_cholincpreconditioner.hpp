@@ -9,13 +9,10 @@
 #include <spamtrix_fleximatrix.hpp>
 #include <spamtrix_preconditioner.hpp>
 
-namespace SpaMtrix
-{
-
-class CholIncPreconditioner:public Preconditioner
-{
+namespace SpaMtrix {
+class CholIncPreconditioner: public Preconditioner {
     FlexiMatrix L;
-    CholIncPreconditioner():L(0,0){}
+    CholIncPreconditioner(): L(0, 0) {}
     void forwardSubstitution(Vector&x, const Vector& b) const;
     void backwardSubstitution(Vector&x, const Vector& b) const;
 public:
@@ -23,8 +20,6 @@ public:
     virtual ~CholIncPreconditioner();
     void print() const;
     void solveMxb(Vector &x, const Vector &b) const;
-
-
 };
 } // end namespace SpaMtrix
 #endif
