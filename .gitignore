@@ -3,6 +3,7 @@
 *.exe
 *.csv
 *.a
+CMakeLists.txt.user
 /temp
 /lib
 /build

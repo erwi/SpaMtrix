@@ -5,7 +5,7 @@ PROJECT (SpaMtrix)
 set(CMAKE_BUILD_TYPE release)
 
 include_directories(./include)
-file(GLOB SPAMTRIX_LIB_SRC ./src/*.cpp)
+file(GLOB SPAMTRIX_LIB_SRC ./src/*.cpp ./include/*.hpp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++0x")
 
