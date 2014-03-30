@@ -5,8 +5,7 @@ namespace SpaMtrix {
 Vector::Vector(const idx length) {
     values = std::vector<real>(length, 0.0);
     if (values.size() != length) {
-        // TODO: errors to cout or cerr?
-        std::cout << "error in " << __func__ << "could not allocate "
+        std::cerr << "error in " << __func__ << "could not allocate "
                   << length << "elements" << std::endl;
         exit(1);
     }
@@ -18,8 +17,7 @@ Vector::~Vector() {
 Vector::Vector(const Vector &v) {
     values = v.values;
     if (values.size() != v.getLength()) {
-        //TODO: error to cerr
-        std::cout << "error in " << __func__ << " could not allocate "
+        std::cerr << "error in " << __func__ << " could not allocate "
                   << v.getLength() << " elements " << std::endl;
         exit(1);
     }

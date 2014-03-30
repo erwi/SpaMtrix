@@ -12,8 +12,7 @@ TDMatrix::TDMatrix(const idx size):
     diagonal = new real [size];
     lower = new real [size - 1];
     if ((!upper) || (!diagonal) || (!lower)) {
-        // TODO: errors to cerr
-        std::cout << "error in " << __func__
+        std::cerr << "error in " << __func__
                   << "could not allocate for matrix of size "
                   << size << std::endl;
         exit(1);

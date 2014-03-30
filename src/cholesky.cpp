@@ -24,7 +24,7 @@ Cholesky::Cholesky(const IRCMatrix &A) {
 
                 #ifdef DEBUG
                   if (s <= 0.0) {
-                    std::cout << "error in " <<__func__ << "matrix A is not positive definite - bye!" << std::endl;
+                    std::cerr << "error in " <<__func__ << "matrix A is not positive definite - bye!" << std::endl;
                     exit(1);
                   }
                 #endif
