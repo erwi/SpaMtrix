@@ -43,7 +43,7 @@ CholIncPreconditioner::CholIncPreconditioner(const IRCMatrix &A) {
         }//end for columns
     }// end for rows
 }
-
+CholIncPreconditioner::~CholIncPreconditioner() { }
 
 void CholIncPreconditioner::solveMxb(Vector &x, const Vector &b) const {
     Vector y(b.getLength());  // TEMPORARY VECTOR

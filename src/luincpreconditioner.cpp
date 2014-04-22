@@ -1,6 +1,8 @@
 #include <spamtrix_luincpreconditioner.hpp>
 namespace SpaMtrix
 {
+LUIncPreconditioner::~LUIncPreconditioner() {}
+
 LUIncPreconditioner::LUIncPreconditioner(const IRCMatrix &A):
     a(A)
 {
