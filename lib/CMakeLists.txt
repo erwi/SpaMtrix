@@ -1,0 +1,1 @@
+ADD_LIBRARY(spamtrix ${SPAMTRIX_LIB_SRC})
