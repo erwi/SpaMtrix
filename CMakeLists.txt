@@ -6,8 +6,11 @@ set(CMAKE_BUILD_TYPE release)
 
 include_directories(./include)
 file(GLOB SPAMTRIX_LIB_SRC ./src/*.cpp)
-
+file(GLOB SPAMTRIX_LIB_INCLUDES ./include/*.hpp)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++0x")
+
+set(CMAKE_INSTALL_PREFIX "/home/eero/testing")
+
 
 # let user define whether to compile with support for OpenMP
 # value should be ON/OFF
