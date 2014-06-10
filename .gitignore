@@ -5,4 +5,5 @@
 *.a
 CMakeLists.txt.user
 /temp
+/build
 .directory
