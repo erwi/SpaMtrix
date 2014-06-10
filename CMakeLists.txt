@@ -1,17 +1,10 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
 PROJECT (SpaMtrix)
-
-
-set(CMAKE_BUILD_TYPE release)
-
 include_directories(./include)
 file(GLOB SPAMTRIX_LIB_SRC ./src/*.cpp)
 file(GLOB SPAMTRIX_LIB_INCLUDES ./include/*.hpp)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++0x")
-
-set(CMAKE_INSTALL_PREFIX "/home/eero/testing")
-
-
+#
 # let user define whether to compile with support for OpenMP
 # value should be ON/OFF
 # the definition USES_OPENMP is added, if enabled and can be
@@ -26,7 +19,7 @@ if (OPENMP_FOUND)
     add_definitions(-DUSES_OPENMP)
 endif(OPENMP_FOUND)
 endif(USES_OPENMP)
-
+#
 # add build directories
 add_subdirectory(lib)
 add_subdirectory(examples)
