@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <cstring>
 #include <omp.h>
-
 #include <spamtrix_ircmatrix.hpp>
 #include <spamtrix_fleximatrix.hpp>
 #include <spamtrix_vector.hpp>
@@ -46,6 +45,23 @@ IRCMatrix::IRCMatrix(const IRCMatrix &m):
         memcpy(cvPairs, m.cvPairs, nnz * sizeof(IndVal));
     }
 }
+
+IRCMatrix::IRCMatrix(IRCMatrix &&m) {
+    /*!
+     * Copy constructor from rvalue refrence
+     */
+    // copy data references from m to this
+    this->rows = m.rows;
+    this->cvPairs = m.cvPairs;
+    this->nnz = m.nnz;
+    this->numCols = m.numCols;
+    this->numRows = m.numRows;
+    // Clear m data
+    m.rows = nullptr;
+    m.cvPairs = nullptr;
+}
+
+
 IRCMatrix::IRCMatrix(const FlexiMatrix &M): rows(NULL), cvPairs(NULL),
     nnz(0), numRows(0), numCols(0) {
     copyFrom(M);

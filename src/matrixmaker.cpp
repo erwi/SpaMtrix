@@ -113,7 +113,7 @@ IRCMatrix MatrixMaker::getIRCMatrix() {
     * Converts sparsity pattern to IRCMatrix \n
     * Use makeSparseMatrix instead!
     */
-    return IRCMatrix(nz);
+    return std::move(IRCMatrix(nz));
 }// end getIRCMatrix
 
 void MatrixMaker::makeSparseMatrix(IRCMatrix &A) {

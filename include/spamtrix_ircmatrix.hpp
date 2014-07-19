@@ -27,7 +27,8 @@ public:
                 const idx nnz,
                 idx * const rows, IndVal *const cvPairs);
     IRCMatrix(const IRCMatrix &m);
-    IRCMatrix(const FlexiMatrix &M);
+    IRCMatrix(IRCMatrix &&m);
+    IRCMatrix(const FlexiMatrix &M); // copy constructor with move semantics
     IRCMatrix& operator=(const IRCMatrix& m);
     IRCMatrix& operator=(const real &s);
     IRCMatrix& operator=(const FlexiMatrix &m);
