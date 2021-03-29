@@ -1,5 +1,6 @@
 #include <spamtrix_cholesky.hpp>
 #include <spamtrix_vector.hpp>
+
 namespace SpaMtrix {
 Cholesky::Cholesky(const IRCMatrix &A) {
 /*!Creates a cholesky decomposition lower diagonal of matrix A*/
