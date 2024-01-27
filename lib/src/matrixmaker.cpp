@@ -1,6 +1,5 @@
 #include <spamtrix_matrixmaker.hpp>
 #include <spamtrix_ircmatrix.hpp>
-#include <algorithm>
 #include <cassert>
 #include <cmath>
 
@@ -114,6 +113,10 @@ namespace SpaMtrix {
         */
         return std::move(IRCMatrix(nz));
     }// end getIRCMatrix
+
+    IRCMatrix* MatrixMaker::newIRCMatrix() {
+      return new IRCMatrix(nz);
+    }
 
     void MatrixMaker::makeSparseMatrix(IRCMatrix &A) {
         /*!

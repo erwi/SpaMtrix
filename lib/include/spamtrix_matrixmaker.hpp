@@ -23,6 +23,10 @@ public:
     void expandBlocks(const idx numExp = 1);
     void poisson5Point(); // CREATES A 5 POINT POISSON FINITE DIFFERENCES TEST MATRIX
     IRCMatrix getIRCMatrix();
+    /** Creates a new new IRCMatrix on the heap and returns pointer to it.
+     * Caller is responsible of deleting the pointer
+     */
+    IRCMatrix* newIRCMatrix();
     void makeSparseMatrix(IRCMatrix &A); //CONVERTS A SPARSITY PATTERN TO A SPARSE MATRIX
 };// end class MatrixMaker
 } // end namespace SpaMtrix
