@@ -21,6 +21,16 @@ public:
     idx calcNumNonZeros() const;
     void addNonZero(const idx row, const idx col, const real val = 0.0);
     void expandBlocks(const idx numExp = 1);
+    /**
+     * Expands non-zeroes along matrix diagonal to size numExp.
+     * For example the N-by-N block on non-zeroes # expanded with numExp=3 becomes
+     * a 3N-by-3N <br>
+     *     #.. <br>
+     *     .#. <br>
+     *     ..# <br>
+     *
+     */
+    void expandDiagonal(idx numExp);
     void poisson5Point(); // CREATES A 5 POINT POISSON FINITE DIFFERENCES TEST MATRIX
     IRCMatrix getIRCMatrix();
     /** Creates a new new IRCMatrix on the heap and returns pointer to it.

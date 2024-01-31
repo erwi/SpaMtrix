@@ -17,7 +17,7 @@ typedef double real;		// VALUES
 
 struct IndVal{
 /*!
-  The IndVal struct represents a non-zero position in a sparse matrix at column or row postion ind.
+  The IndVal struct represents a non-zero position in a sparse matrix at column or row position ind.
   The nonzero is on row/col IndVal::ind, and its value is IndVal::val
 */
     idx  ind;	// POSITION INDEX, CAN BE EITHER ROW OR COLUMN INDEX

@@ -4,8 +4,6 @@ CholIncPreconditioner::CholIncPreconditioner(const IRCMatrix &A) {
     /*!
     * Incoplete cholesky matrix constructor.
     */
-    L.numDim1 = A.getNumRows();
-    L.numDim2 = A.getNumCols();
     // FOR EACH ROW
     for (idx r = 0 ; r < A.getNumRows() ; r++) {
         L.nonZeros.push_back(std::vector<IndVal>());  // ADD NEW EMPTY ROW

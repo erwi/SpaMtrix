@@ -125,12 +125,12 @@ idx IRCMatrix::getIndex(const idx row, const idx col) const {
       TERMINATES WITH ERROR IF NOT FOUND
     */
 #ifdef DEBUG
-    if ((row >= this->numRows) || (col >= this->numCols)) {
+    if ((row >= this->numRows) || (col >= this->numCols_)) {
         std::cerr << "error in IRCMatrix::getIndex(row, col) " << "where row,col = " << row << "," << col << std::endl;
-        std::cerr << "when matrix size is " << this->numRows << "," << this->numCols << std::endl;
+        std::cerr << "when matrix size is " << this->numRows << "," << this->numCols_ << std::endl;
     }
     assert(row < this->numRows);
-    assert(col < this->numCols);
+    assert(col < this->numCols_);
 #endif
     idx i = this->rows[row];
     idx max = this->rows[row + 1];
@@ -170,8 +170,8 @@ void IRCMatrix::copyFrom(const FlexiMatrix &A) {
         clear();
     }
     nnz = A.calcNumNonZeros();
-    numRows = A.numDim1;
-    numCols = A.numDim2;
+    numRows = A.getNumRows();
+    numCols = A.getNumCols();
     cvPairs = new IndVal[nnz];
     if (numRows > 0) { // IF NOT EMPTY MATRIX
         rows = new idx[numRows + 1];
@@ -229,7 +229,7 @@ bool IRCMatrix::isNonZero(const idx row, const idx col) const {
     */
 #ifdef DEBUG
     assert(row < this->numRows);
-    assert(col < this->numCols);
+    assert(col < this->numCols_);
 #endif
     IndVal *begin = &cvPairs[ rows[row]   ]; // pointer to first in row
     IndVal *end   = &cvPairs[ rows[row + 1] ]; // pointer to first in row+1
@@ -259,7 +259,7 @@ bool IRCMatrix::isNonZero(const idx row, const idx col, real &val) const {
     */
 #ifdef DEBUG
     assert(row < this->numRows);
-    assert(col < this->numCols);
+    assert(col < this->numCols_);
 #endif
     val = 0.0;
     IndVal *begin = &cvPairs[ rows[row]  ]; // pointer to first in row
@@ -292,8 +292,8 @@ Vector IRCMatrix::operator *(const Vector &x) const {
      * reference to b is returned
      */
 #ifdef DEBUG
-    if (numCols != x.getLength()) {
-        std::cerr << "error in " << __func__ << " column count is :" << numCols <<
+    if (numCols_ != x.getLength()) {
+        std::cerr << "error in " << __func__ << " column count is :" << numCols_ <<
                   ", vector length is :" << x.getLength() << std::endl;
         exit(1);
     }

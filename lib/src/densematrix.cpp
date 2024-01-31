@@ -40,7 +40,7 @@ real &DenseMatrix::operator()(const idx row, const idx col) {
       */
 #ifdef DEBUG
     assert(row < numRows);
-    assert(col < numCols);
+    assert(col < numCols_);
 #endif
     const idx ind = col * numRows + row;
     return values[ind];
@@ -52,7 +52,7 @@ real DenseMatrix::operator()(const idx row, const idx col) const {
       */
 #ifdef DEBUG
     assert(row < numRows);
-    assert(col < numCols);
+    assert(col < numCols_);
 #endif
     const idx ind = col * numRows + row;
     return values[ind];

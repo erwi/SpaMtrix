@@ -3,45 +3,41 @@
 #include <vector>
 #include <spamtrix_setup.hpp>
 #include <spamtrix_ircmatrix.hpp>
-//using std::vector;
 
-namespace SpaMtrix
-{
-class IRCMatrix;
+namespace SpaMtrix {
+  class IRCMatrix;
 
-class FlexiMatrix
-{
-/*!
-  FlexiMatrix is a Flexible sparse matrix storage scheme consisting of rows of IndVal pairs
-  stored using std::vectors of std::vectors of IndVals.
+  /*!
+    FlexiMatrix is a Flexible sparse matrix storage scheme consisting of rows of IndVal pairs
+    stored using std::vectors of std::vectors of IndVals.
   */
+  class FlexiMatrix {
+      size_t numCols_ = 0;
+    public:
 
-
-
-public:
-    idx numDim1, numDim2;   // MATRIX DIMENSIONS.
     // IN CASE OF ROW COMPRESSED MATRIX numDim1 IS NUMBER OF ROWS, numDim2 IS NUMBER OF COLUMNS
     // IN CASE OF COLUMN COMPRESSED MATRIX numDim1 IS NUMBER OF COLUMNS, numDim2 IS NUMBER OF ROWS
-    std::vector<std::vector<IndVal> > nonZeros;
-    FlexiMatrix():numDim1(0),numDim2(0){}
-    FlexiMatrix(const idx numDim1, const idx numDim2);
+    std::vector<std::vector<IndVal> > nonZeros; // todo make private
+    FlexiMatrix(): numCols_(0) {}
+    //FlexiMatrix(const idx numDim1, const idx numDim2);
     FlexiMatrix(const IRCMatrix &A);
     virtual ~FlexiMatrix();
 
-    void addNonZero(const idx dim1, const idx dim2, const real val = 0.0 );
-    void addNonZero(const idx dim1, const IndVal &iv);
+    /** Add storage for non-zero at (row, col) */
+    void addNonZero(size_t row, size_t col, real value = 0.0);
+    void addNonZero(size_t row, const IndVal &iv);
     idx calcNumNonZeros() const;
-    // GET VALUE CURERNTLY USES LINEAR SEARCH. CREATE A BINARY SEARCH VERSION!
-    real getValue(const idx dim1, const idx dim2) const;
-    idx getNumDim1() const;
-    idx getNumDim2() const;
+
+    /** Return the value at (row,col) or 0 by default */
+    [[nodiscard]] real getValue(size_t row, size_t col) const;
+    [[nodiscard]] size_t getNumRows() const { return nonZeros.size(); };
+    [[nodiscard]] size_t getNumCols() const { return numCols_; };
     // SETS VALUE, IF IT DOES NOT EXIST, INSERTS IT
     void setValue(const idx dim1, const idx dim2, const real val);
     void print() const; // PRINTS TO STDOUT
 
     bool isNonZero(const idx dim1, const idx dim2, real *&val);
-
-};
+  };
 } // end namespace SpaMtrix
 
 

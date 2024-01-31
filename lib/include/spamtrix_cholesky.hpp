@@ -14,7 +14,7 @@ class Cholesky
 {
 
   FlexiMatrix L;    // LOWER DIAGONAL
-  Cholesky():L(0,0){}
+  Cholesky():L(){}
   void forwardSubstitution(Vector&x, const Vector& b) const;
   void backwardSubstitution(Vector&x, const Vector& b) const;
 

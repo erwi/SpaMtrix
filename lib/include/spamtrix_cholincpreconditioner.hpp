@@ -12,7 +12,7 @@
 namespace SpaMtrix {
 class CholIncPreconditioner: public Preconditioner {
     FlexiMatrix L;
-    CholIncPreconditioner(): L(0, 0) {}
+    CholIncPreconditioner(): L() {}
     void forwardSubstitution(Vector&x, const Vector& b) const;
     void backwardSubstitution(Vector&x, const Vector& b) const;
 public:

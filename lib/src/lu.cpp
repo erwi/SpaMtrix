@@ -2,9 +2,7 @@
 #include <spamtrix_vector.hpp>
 namespace SpaMtrix {
 LU::LU(const IRCMatrix &A):
-    numRows(A.getNumRows()),
-    L(numRows, numRows),
-    U(numRows, numRows) {
+    numRows(A.getNumRows()) {
 #ifdef DEBUG
     assert(A.getNumRows() == A.getNumCols());
 #endif

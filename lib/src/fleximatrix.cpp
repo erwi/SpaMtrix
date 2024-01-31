@@ -5,22 +5,10 @@
 #include <stdio.h>
 
 namespace SpaMtrix {
-FlexiMatrix::FlexiMatrix(const idx numDim1, const idx numDim2):
-    numDim1(numDim1),
-    numDim2(numDim2),
-    nonZeros(numDim1) { }
 
-FlexiMatrix::FlexiMatrix(const IRCMatrix &A):
-    numDim1(A.getNumRows()),
-    numDim2(A.getNumCols()) {
-    /*!
-    Constructor that makes a copy of an IRCMatrix.
-    If USES_OMP is defined, uses OpenMP to parallelise construction.*/
-    nonZeros = std::vector<std::vector<IndVal> >(numDim1);
-#ifdef USES_OMP
-    #pragma omp parallel for
-#endif
-    for (idx r = 0; r < numDim1; r++) {
+FlexiMatrix::FlexiMatrix(const IRCMatrix &A) {
+    nonZeros = std::vector<std::vector<IndVal> >(A.getNumRows());
+    for (idx r = 0; r < A.getNumRows(); r++) {
         idx rowStart = A.rows[r];
         idx rowEnd   = A.rows[r + 1];
         nonZeros[r] = std::vector<IndVal>(&A.cvPairs[rowStart] , &A.cvPairs[rowEnd]);
@@ -40,29 +28,30 @@ idx FlexiMatrix::calcNumNonZeros() const {
     return nnz;
 }
 
-void FlexiMatrix::addNonZero(const idx dim1, const idx dim2, const real val) {
+void FlexiMatrix::addNonZero(size_t row, size_t col, real value) {
     /*!
     Adds storage for a non-zero at location dim1, dim1.
     The value will be initialised to val
     */
     // CHECK DIMENSION1 VECTOR SIZE
 #ifdef DEBUG
-    if (dim1 >= (idx) nonZeros.size())
-        std::cerr << "dim1 = " << dim1 << "nonZeros.size() = " << nonZeros.size() << std::endl;
-    assert(dim1 < (idx) nonZeros.size());
+    if (row >= getNumRows())
+        std::cerr << "row = " << row << "num rows = " << getNumRows() << std::endl;
+    assert(row < getNumRows());
 #endif
-    this->addNonZero(dim1, IndVal(dim2, val));
+    this->addNonZero(row, IndVal(col, value));
 }
 
-void FlexiMatrix::addNonZero(const idx dim1, const IndVal &iv) {
-    /*!
-    Adds IndVal pair iv to this matrix, if the same row/column is not already allocated
-    */
-    assert(dim1 < (idx) nonZeros.size());
+void FlexiMatrix::addNonZero(size_t row, const IndVal &iv) {
+    // Append empty rows if needed
+    while (getNumRows() <= row) {
+        nonZeros.emplace_back();
+    }
     // IF EMPTY ROW OR NEW VALUE PLACED AT END, JUST APPEND TO ROW AND EXIT FUNCTION
-    if ((nonZeros[dim1].size() == 0) ||
-            (nonZeros[dim1].back().ind < iv.ind)) {
-        nonZeros[dim1].push_back(iv);
+    if ((nonZeros[row].size() == 0) ||
+        (nonZeros[row].back().ind < iv.ind)) {
+        nonZeros[row].push_back(iv);
+        numCols_ = std::max(numCols_, (size_t) iv.ind + 1);
         return;
     }
     // FIND CORRECT POSITION BY SEARCHING FOR COLUMN POSITIONS.
@@ -70,61 +59,35 @@ void FlexiMatrix::addNonZero(const idx dim1, const IndVal &iv) {
     // SORTED VECTOR OF NON-ZERO COLUMNS
     // LOWER BOUND RETURNS ITERATOR TO FIRST ELEMENT THAT DOES NOT
     // COMPARE TO LESS THAN dim2
-    std::vector<IndVal>::iterator itr =
-        std::lower_bound(nonZeros[dim1].begin(),
-                         nonZeros[dim1].end(),
+    auto itr = std::lower_bound(nonZeros[row].begin(),
+                         nonZeros[row].end(),
                          iv,
-    [](const IndVal & iv1, const IndVal & iv2) {
-        return iv1.ind < iv2.ind;   // lamda column comparison
-    }
+    [](const IndVal & iv1, const IndVal & iv2) { return iv1.ind < iv2.ind; }
                         );
-    // IF ADDING DUPLICATE NONZER, ONLY WRITE VALUE TO EXISTING MEMORY
+    // IF ADDING DUPLICATE NONZERO, ONLY WRITE VALUE TO EXISTING MEMORY
     if (itr->ind == iv.ind) {
         itr->val = iv.ind;
     }
-    // OTEHRWISE ADD NEW VALUE
+    // OTHERWISE ADD NEW VALUE
     else {
-        nonZeros[dim1].insert(itr, iv);
+        nonZeros[row].insert(itr, iv);
     }
-    // TODO - THIS SHOULD BE MAINTAINED INTERNALLY
-    // MAINTAIN DIMENSION SIZES
-    //this->numDim1 = numDim1 > nonZeros.size() ? numDim1 : nonZeros.size();
-    //this->numDim2 = numDim2 > (iv.ind+1) ? numDim2 : (iv.ind+1);
+
+    numCols_ = std::max(numCols_, (size_t) iv.ind + 1);
 }
 
-real FlexiMatrix::getValue(const idx dim1, const idx dim2) const {
-    /*!
-    returns the value held at row, col. If id does not exist, return 0.0 by default
-    */
-    //if (nonZeros[dim1].empty() )
-    IndVal temp(dim2, 0.0);
+real FlexiMatrix::getValue(size_t row, size_t col) const {
+    IndVal temp(col, 0.0);
     // GET ITERATOR TO FIRST ELEMENT THAT DOES NOT COMPARE TO
-    // LESS THAN dim2
-    std::vector<IndVal>::const_iterator itr =
-        std::lower_bound(nonZeros[dim1].begin() ,
-                         nonZeros[dim1].end(),
+    // LESS THAN col
+    auto itr =
+        std::lower_bound(nonZeros[row].begin() ,
+                         nonZeros[row].end(),
                          temp,
-    [](const IndVal & iv1, const IndVal & iv2) {
-        return iv1.ind < iv2.ind;   // lamda column comparison
-    }
-                        );
-    if (itr == nonZeros[dim1].end())
-        return 0.0;
-    else if (itr->ind == dim2)
-        return itr->val;
-    else
-        return 0.0;
-// LINEAR SEARCH.
-    /*
-        std::vector<IndVal>::const_iterator itr1 = nonZeros[dim1].begin();
-        std::vector<IndVal>::const_iterator itr2 = nonZeros[dim1].end();
-        for ( ; itr1 != itr2 ; itr1++)
-        {
-            if (itr1->ind == dim2)
-                return itr1->val;
-        }
-        */
-    return 0.0;
+    [](const IndVal & iv1, const IndVal & iv2) { return iv1.ind < iv2.ind; }
+                            );
+
+    return itr->ind == col ? itr->val : 0.;
 }
 
 void FlexiMatrix::setValue(const idx dim1, const idx dim2, const real val) {
@@ -148,9 +111,9 @@ void FlexiMatrix::print() const {
     /*!
     Prints the values held in the matrix to stdout
     */
-    std::cout << "FlexiMatrix " << numDim1 << ", " << numDim2 << std::endl;
+    std::cout << "FlexiMatrix " << getNumRows() << ", " << getNumCols() << std::endl;
     for (idx r = 0 ; r < nonZeros.size() ; r++) {
-        for (idx c = 0 ; c < numDim2 ; c++) {
+        for (idx c = 0 ; c < getNumCols() ; c++) {
             real val = this->getValue(r, c);
             printf("%1.3f\t", val);
         }

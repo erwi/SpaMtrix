@@ -7,9 +7,7 @@ namespace SpaMtrix {
 
     MatrixMaker::MatrixMaker(const idx nRows, const idx nCols) :
             nRows(nRows),
-            nCols(nCols),
-            nz(nRows, nCols) {
-    }
+            nCols(nCols)  { }
 
     MatrixMaker::~MatrixMaker() = default;
 
@@ -87,7 +85,7 @@ namespace SpaMtrix {
                     iv.ind += e * nCols;
                     nz.nonZeros[r].push_back(iv);
                     //nz.addNonZero(r,iv); // <-- SHOULD USE THIS INSTEAD
-                    nz.numDim2 = nz.numDim2 > (iv.ind + 1) ? nz.numDim2 : (iv.ind + 1);
+                    //nz.numDim2 = nz.numDim2 > (iv.ind + 1) ? nz.numDim2 : (iv.ind + 1);
                 }// end for c
             }//end for e
         }// end for r
@@ -103,8 +101,7 @@ namespace SpaMtrix {
             }// end for r
         }//end for e
         nRows *= (numExp + 1);
-        nz.numDim1 = nz.nonZeros.size();
-    }// end void expandBlocks
+    }
 
     IRCMatrix MatrixMaker::getIRCMatrix() {
         /*!
@@ -123,5 +120,24 @@ namespace SpaMtrix {
          * converts a sparsity pattern to a Sparse matrix
          */
         A.copyFrom(nz);
-    }// end makeSparseMatrix
-} // end namespace SpaMtrix
+    }
+
+    void MatrixMaker::expandDiagonal(idx numExp) {
+        if (numExp <= 1) {
+            return;
+        }
+        const size_t numRowsInitial = nz.getNumRows();
+        const size_t numColsInitial = nz.getNumCols();
+        for (idx i = 1; i < numExp; i++) {
+            for (size_t row = 0; row < numRowsInitial; row++) {
+                const size_t newRowIdx = (i * numRowsInitial) + row;
+                for (const IndVal &nonZero : nz.nonZeros[row]) {
+                    const size_t newColIdx = (i * numColsInitial) + nonZero.ind;
+                    nz.addNonZero(newRowIdx, newColIdx, nonZero.val);
+                }
+            }
+        }
+        nRows = nz.getNumRows();
+        nCols = nz.getNumCols();
+    }
+}
