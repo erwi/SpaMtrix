@@ -13,13 +13,14 @@ namespace SpaMtrix {
   */
   class FlexiMatrix {
       size_t numCols_ = 0;
+      //std::vector<std::vector<IndVal> > nonZeros; // todo make private
     public:
-
+      std::vector<std::vector<IndVal> > nonZeros; // todo make private
     // IN CASE OF ROW COMPRESSED MATRIX numDim1 IS NUMBER OF ROWS, numDim2 IS NUMBER OF COLUMNS
     // IN CASE OF COLUMN COMPRESSED MATRIX numDim1 IS NUMBER OF COLUMNS, numDim2 IS NUMBER OF ROWS
-    std::vector<std::vector<IndVal> > nonZeros; // todo make private
+
     FlexiMatrix(): numCols_(0) {}
-    //FlexiMatrix(const idx numDim1, const idx numDim2);
+
     FlexiMatrix(const IRCMatrix &A);
     virtual ~FlexiMatrix();
 

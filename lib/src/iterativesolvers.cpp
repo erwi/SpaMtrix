@@ -27,13 +27,17 @@ IterativeSolvers::IterativeSolvers(const idx maxIter,
     toler(toler) {
 }
 
+/**
+  Solves Ax=b using the preconditioned conjugate gradient method.
+*/
 bool IterativeSolvers::pcg(const IRCMatrix &A,
                            Vector &x,
                            const Vector &b,
                            const Preconditioner &M) {
-    /*!
-      Solves Ax=b using the preconditioned conjugate gradient method.
-      */
+    assert(x.getLength() == b.getLength());
+    assert(A.getNumRows() == A.getNumCols());
+    assert(A.getNumRows() == x.getLength());
+
     const idx N = x.getLength();
     real resid(100.0);
     Vector p(N), z(N), q(N);

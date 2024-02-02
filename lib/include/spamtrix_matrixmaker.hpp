@@ -4,13 +4,13 @@
 #include <spamtrix_setup.hpp>
 #include <spamtrix_fleximatrix.hpp>
 
-namespace SpaMtrix{
+namespace SpaMtrix {
 class IRCMatrix;
 
-class MatrixMaker{
 /*!
 * Class for specifying matrix sparsity pattern and creating the corresponding sparse matrix data structure.
 */
+class MatrixMaker {
     idx nRows;          // NUMBER OF ROWS
     idx nCols;          // NUMBER OF COLUMSN
     FlexiMatrix nz;     // TEMPORARY "FLEXIBLE" SPARSE MATRIX DATASTUCTURE
@@ -38,8 +38,8 @@ public:
      */
     IRCMatrix* newIRCMatrix();
     void makeSparseMatrix(IRCMatrix &A); //CONVERTS A SPARSITY PATTERN TO A SPARSE MATRIX
-};// end class MatrixMaker
-} // end namespace SpaMtrix
+};
+}
 
 #endif
 

@@ -3,9 +3,7 @@
 namespace SpaMtrix {
 LU::LU(const IRCMatrix &A):
     numRows(A.getNumRows()) {
-#ifdef DEBUG
     assert(A.getNumRows() == A.getNumCols());
-#endif
     idx n = A.getNumRows();
 #ifdef USES_OPENMP
     #pragma omp sections
@@ -26,34 +24,32 @@ LU::LU(const IRCMatrix &A):
         // FOR ROWS i
         for (idx i = j ; i < n ; ++i) {
             real sum(0.0);
-#ifdef USES_OPENMP
-            #pragma omp parallel for reduction(+:sum)
-#endif
+
             for (idx k = 0; k < j ; ++k) {
                 real Lik = L.getValue(i, k);
                 if (Lik != 0.0) {
                     sum += Lik * U.getValue(k, j);
                 }
-            }//end for k
+            }
             L.setValue(i, j, A.getValue(i, j) - sum);
         }// end for i
         // MAKE U
+
         U.setValue(j, j, 1.0);
         real Ljj = L.getValue(j, j);
         for (idx i = j + 1; i < n; ++i) {
             real sum(0.0);
-#ifdef USES_OPENMP
-            #pragma omp parallel for reduction(+:sum)
-#endif
+
             for (idx k = 0 ; k < j ; ++k) {
                 real Ljk = L.getValue(j, k);
                 if (Ljk != 0.0) {
                     sum += Ljk * U.getValue(k, i);
                 }
-            }//end for k
+            }
             U.setValue(j, i, (A.getValue(j, i) - sum) / Ljj);
-        }// end for i
-    }// end for j
+        }
+    }
+
 }// end constructor
 
 LU::~LU() { }
@@ -75,6 +71,9 @@ void LU::solve(Vector &x, const Vector &b) const {
     * L(Uy) = b \n
     * Lx = y \n
     */
+    assert(x.getLength() == b.getLength());
+    assert(this->numRows == x.getLength());
+
     Vector y(b.getLength());
     forwardSubstitution(y, b);
     backwardSubstitution(x, y);

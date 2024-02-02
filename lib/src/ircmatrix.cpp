@@ -340,7 +340,7 @@ void IRCMatrix::print() const {
     for (idx row = 0 ; row < this->numRows ; row++) {
         for (idx col = 0 ; col < this->numCols ; col++) {
             real val = this->getValue(row, col);
-            printf("%1.3f\t", val);
+            printf("%1.6f\t", val);
         }
         printf("\n");
     }

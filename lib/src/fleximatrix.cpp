@@ -77,6 +77,9 @@ void FlexiMatrix::addNonZero(size_t row, const IndVal &iv) {
 }
 
 real FlexiMatrix::getValue(size_t row, size_t col) const {
+    if (row >= getNumRows()) {
+        return 0.;
+    }
     IndVal temp(col, 0.0);
     // GET ITERATOR TO FIRST ELEMENT THAT DOES NOT COMPARE TO
     // LESS THAN col
@@ -87,7 +90,11 @@ real FlexiMatrix::getValue(size_t row, size_t col) const {
     [](const IndVal & iv1, const IndVal & iv2) { return iv1.ind < iv2.ind; }
                             );
 
-    return itr->ind == col ? itr->val : 0.;
+    if (itr == nonZeros[row].end() || itr->ind != col) {
+        return 0.;
+    } else {
+        return itr->val;
+    }
 }
 
 void FlexiMatrix::setValue(const idx dim1, const idx dim2, const real val) {
