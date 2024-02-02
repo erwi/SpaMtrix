@@ -1,6 +1,0 @@
-C++ sparse matrix and vector classes and some iterative/non-iterative linear solvers.
-
-Also some examples/tests are included.
-
-Everything is built using CMake.
-
