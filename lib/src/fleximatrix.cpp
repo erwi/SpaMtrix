@@ -29,29 +29,21 @@ idx FlexiMatrix::calcNumNonZeros() const {
 }
 
 void FlexiMatrix::addNonZero(size_t row, size_t col, real value) {
-    /*!
-    Adds storage for a non-zero at location dim1, dim1.
-    The value will be initialised to val
-    */
     // CHECK DIMENSION1 VECTOR SIZE
 #ifdef DEBUG
     if (row >= getNumRows())
         std::cerr << "row = " << row << "num rows = " << getNumRows() << std::endl;
     assert(row < getNumRows());
 #endif
-    this->addNonZero(row, IndVal(col, value));
-}
-
-void FlexiMatrix::addNonZero(size_t row, const IndVal &iv) {
     // Append empty rows if needed
     while (getNumRows() <= row) {
         nonZeros.emplace_back();
     }
     // IF EMPTY ROW OR NEW VALUE PLACED AT END, JUST APPEND TO ROW AND EXIT FUNCTION
     if ((nonZeros[row].size() == 0) ||
-        (nonZeros[row].back().ind < iv.ind)) {
-        nonZeros[row].push_back(iv);
-        numCols_ = std::max(numCols_, (size_t) iv.ind + 1);
+        (nonZeros[row].back().ind < col)) {
+        nonZeros[row].emplace_back(col, value);
+        numCols_ = std::max(numCols_, (size_t) col + 1);
         return;
     }
     // FIND CORRECT POSITION BY SEARCHING FOR COLUMN POSITIONS.
@@ -59,21 +51,22 @@ void FlexiMatrix::addNonZero(size_t row, const IndVal &iv) {
     // SORTED VECTOR OF NON-ZERO COLUMNS
     // LOWER BOUND RETURNS ITERATOR TO FIRST ELEMENT THAT DOES NOT
     // COMPARE TO LESS THAN dim2
+    IndVal temp(col, value);
     auto itr = std::lower_bound(nonZeros[row].begin(),
-                         nonZeros[row].end(),
-                         iv,
-    [](const IndVal & iv1, const IndVal & iv2) { return iv1.ind < iv2.ind; }
+                            nonZeros[row].end(),
+                            temp,
+                          [](const IndVal & iv1, const IndVal & iv2) { return iv1.ind < iv2.ind; }
                         );
     // IF ADDING DUPLICATE NONZERO, ONLY WRITE VALUE TO EXISTING MEMORY
-    if (itr->ind == iv.ind) {
-        itr->val = iv.ind;
+    if (itr->ind == temp.ind) {
+        itr->val = temp.val;
     }
     // OTHERWISE ADD NEW VALUE
     else {
-        nonZeros[row].insert(itr, iv);
+        nonZeros[row].insert(itr, temp);
     }
 
-    numCols_ = std::max(numCols_, (size_t) iv.ind + 1);
+    numCols_ = std::max(numCols_, (size_t) temp.ind + 1);
 }
 
 real FlexiMatrix::getValue(size_t row, size_t col) const {
@@ -81,20 +74,25 @@ real FlexiMatrix::getValue(size_t row, size_t col) const {
         return 0.;
     }
     IndVal temp(col, 0.0);
-    // GET ITERATOR TO FIRST ELEMENT THAT DOES NOT COMPARE TO
-    // LESS THAN col
-    auto itr =
-        std::lower_bound(nonZeros[row].begin() ,
-                         nonZeros[row].end(),
-                         temp,
-    [](const IndVal & iv1, const IndVal & iv2) { return iv1.ind < iv2.ind; }
-                            );
+    // Find iterator to first element that is not less than col (i.e. is equal or greater)
+    auto itr = std::lower_bound(nonZeros[row].begin(), nonZeros[row].end(), temp,
+                [](const IndVal & iv1, const IndVal & iv2) { return iv1.ind < iv2.ind; });
 
     if (itr == nonZeros[row].end() || itr->ind != col) {
         return 0.;
     } else {
         return itr->val;
     }
+}
+
+std::vector<IndVal>& FlexiMatrix::row(size_t row) {
+  assert(row < nonZeros.size());
+  return nonZeros[row];
+}
+
+const std::vector<IndVal>& FlexiMatrix::row(size_t row) const {
+  assert(row < nonZeros.size());
+  return nonZeros[row];
 }
 
 void FlexiMatrix::setValue(const idx dim1, const idx dim2, const real val) {
@@ -108,6 +106,7 @@ void FlexiMatrix::setValue(const idx dim1, const idx dim2, const real val) {
 #endif
     real *nnzval;
     if (isNonZero(dim1, dim2, nnzval)) {    // IF NON-ZERO STORAGE ALREADY EXISTS, SET ITS VALUE
+        printf("update(%d,%d)=%e\n", dim1, dim2, val);
         *nnzval = val;
     } else                                  // OTHERWISE INSERT NEW NONZERO LOCATION
         addNonZero(dim1, dim2, val);
@@ -118,7 +117,7 @@ void FlexiMatrix::print() const {
     /*!
     Prints the values held in the matrix to stdout
     */
-    std::cout << "FlexiMatrix " << getNumRows() << ", " << getNumCols() << std::endl;
+    printf("FlexiMatrix %zu, %zu\n", getNumRows(), getNumCols());
     for (idx r = 0 ; r < nonZeros.size() ; r++) {
         for (idx c = 0 ; c < getNumCols() ; c++) {
             real val = this->getValue(r, c);
@@ -126,6 +125,7 @@ void FlexiMatrix::print() const {
         }
         printf("\n");
     }
+    fflush(stdout);
 }
 
 bool FlexiMatrix::isNonZero(const idx dim1, const idx dim2, real *&val) {

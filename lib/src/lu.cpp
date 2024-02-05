@@ -3,10 +3,10 @@
 namespace SpaMtrix {
 LU::LU(const IRCMatrix &A):
     numRows(A.getNumRows()) {
-    assert(A.getNumRows() == A.getNumCols());
-    idx n = A.getNumRows();
+  assert(A.getNumRows() == A.getNumCols());
+  idx n = A.getNumRows();
 #ifdef USES_OPENMP
-    #pragma omp sections
+  #pragma omp sections
     {
         #pragma omp section
         fillFirstColumnL(A, L, n);
@@ -14,43 +14,43 @@ LU::LU(const IRCMatrix &A):
         fillFirstRowU(A, U, n);
     }
 #else
-    fillFirstColumnL(A, L, n);
-    fillFirstRowU(A, U, n);
+  fillFirstColumnL(A, L, n);
+  fillFirstRowU(A, U, n);
 #endif
 //==============================
 //          MAIN LOOP
 //==============================
-    for (idx j = 1; j < n ; ++j) {
-        // FOR ROWS i
-        for (idx i = j ; i < n ; ++i) {
-            real sum(0.0);
-
-            for (idx k = 0; k < j ; ++k) {
-                real Lik = L.getValue(i, k);
-                if (Lik != 0.0) {
-                    sum += Lik * U.getValue(k, j);
-                }
-            }
-            L.setValue(i, j, A.getValue(i, j) - sum);
-        }// end for i
-        // MAKE U
-
-        U.setValue(j, j, 1.0);
-        real Ljj = L.getValue(j, j);
-        for (idx i = j + 1; i < n; ++i) {
-            real sum(0.0);
-
-            for (idx k = 0 ; k < j ; ++k) {
-                real Ljk = L.getValue(j, k);
-                if (Ljk != 0.0) {
-                    sum += Ljk * U.getValue(k, i);
-                }
-            }
-            U.setValue(j, i, (A.getValue(j, i) - sum) / Ljj);
+  for (idx j = 1; j < n; ++j) {
+    // MAKE L
+    for (idx i = j ; i < n; ++i) {
+      real sum(0.0);
+      // accumulate sum = L(i, k) * U(k, j) for k in range 0 to j
+      // avoiding multiplying terms that are known to be zero
+      if (i < L.getNumRows()) {
+        for (const auto &nonZero: L.row(i)) {
+          const idx k = nonZero.ind;
+          if (k >= j) { break; }
+          sum += nonZero.val * U.getValue(k, j);
         }
+      }
+      L.setValue(i, j, A.getValue(i, j) - sum);
     }
 
-}// end constructor
+    // MAKE U
+    U.setValue(j, j, 1.0);
+    real Ljj = L.getValue(j, j);
+    for (idx i = j + 1; i < n; ++i) {
+      real sum(0.0);
+
+      for (const auto &nnz : L.row(j)) {
+        idx k = nnz.ind;
+        if (k >= j) { break; }
+        sum += nnz.val * U.getValue(k, i);
+      }
+      U.setValue(j, i, (A.getValue(j, i) - sum) / Ljj);
+    }
+  }
+}
 
 LU::~LU() { }
 
@@ -65,53 +65,40 @@ void LU::print() {
 }// end void print()
 
 void LU::solve(Vector &x, const Vector &b) const {
-    /*!
-    * Solves Ax=b using forward/backward substitution. \n
-    * Ax  = b \n
-    * L(Uy) = b \n
-    * Lx = y \n
-    */
     assert(x.getLength() == b.getLength());
     assert(this->numRows == x.getLength());
-
     Vector y(b.getLength());
     forwardSubstitution(y, b);
     backwardSubstitution(x, y);
-}// end void solve
+}
 
 void LU::forwardSubstitution(Vector &x, const Vector &b) const {
     // FOR EACH ROW
     for (idx i = 0 ; i < x.getLength() ; ++i) {
-        // FORM SUM
+        // vector product between non-zeros in row i and vector x
         real sum(0.0);
-        // REFERENCE TO ALL NON-ZEROS IN ROW i
-        const std::vector<IndVal> &cvPairs = L.nonZeros[i];
-        idx n = (idx) cvPairs.size() - 1; // ROW LENGTH, NOT INCLUDING DIAGONAL
-#ifdef USES_OPENMP
-        #pragma omp parallel for reduction(+:sum)
-#endif
-        for (idx j = 0 ; j < n ; ++j) {
-            const idx col = cvPairs[j].ind;
-            const real val = cvPairs[j].val;
-            sum += x[col] * val;
+        for (const auto &nonZero : L.row(i)) {
+            sum += nonZero.val * x[nonZero.ind];
         }
-        x[i] = (b[i] - sum) / cvPairs[n].val; // DIVIDE BY DIAGONAL VALUE
+        const real diag = L.row(i).back().val; // diagonal value is in last position of row in L-matrix
+        x[i] = (b[i] - sum) / diag;
     }
-}// end void forwardSubstitution
+}
 
 void LU::backwardSubstitution(Vector &x, const Vector &b) const {
     idx n = b.getLength();
     for (idx i = n - 1 ; i < n ; --i) {
         x[i] = b[i];
         real xi = x[i];
-        const std::vector<IndVal> &cvPairs = U.nonZeros[i];
-        const idx n = cvPairs.size();
-        for (idx j = 1 ; j < n ; ++j) {
-            const idx col = cvPairs[j].ind;
-            const real val = cvPairs[j].val;
-            xi -= val * x[col];
+        real diag = 0;
+        for (const auto &nonZero : U.row(i)) {
+            if (nonZero.ind == i) {
+                diag = nonZero.val;
+            } else {
+                xi -= nonZero.val * x[nonZero.ind];
+            }
         }
-        x[i] = xi / cvPairs[0].val;
-    }// end for i
-}// end void backwardSubstitution
-} // end namespace SpaMtrix
+        x[i] = xi / diag;
+    }
+}
+}

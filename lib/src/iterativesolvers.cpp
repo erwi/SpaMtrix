@@ -183,14 +183,14 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
             #pragma omp parallel for
 #endif
             for (k = 0; k <= i ; ++k) {
-                register real dp(0);
+                real dp(0);
                 for (idx id = 0 ; id < N ; ++id)
                     dp += w[id] * v[k][id];
                 H(k, i) = dp; //dot(w,v[k]);
             }
             for (k = 0; k <= i; ++k) {
                 // w -= v[k]*H(k,i) without temporaries
-                register real tempr = H(k, i);
+                real tempr = H(k, i);
 #ifdef USES_OPENMP
                 #pragma omp parallel for // why is this loop so critical??
 #endif

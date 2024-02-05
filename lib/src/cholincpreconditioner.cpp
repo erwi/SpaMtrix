@@ -1,45 +1,39 @@
 #include <spamtrix_cholincpreconditioner.hpp>
 namespace SpaMtrix {
 CholIncPreconditioner::CholIncPreconditioner(const IRCMatrix &A) {
-    /*!
-    * Incoplete cholesky matrix constructor.
-    */
-    // FOR EACH ROW
-    for (idx r = 0 ; r < A.getNumRows() ; r++) {
-        L.nonZeros.push_back(std::vector<IndVal>());  // ADD NEW EMPTY ROW
-        // FOR EACH COLUMN, LOWERD DIAGONAL ONLY, i.e. c < r
-        for (idx c = 0 ; c <= r ; c++) {
-            if (r == c) { // DIAGONAL
-                real s = 0;
-                // SUM OVER ALL VALUES SQUARED TO LEFT ON THIS ROW
-                std::vector< IndVal>::iterator itr1 = L.nonZeros[r].begin();
-                std::vector< IndVal>::iterator itr2 = L.nonZeros[r].end();
-                for (; itr1 != itr2 ; itr1++)
-                    s += itr1->val * itr1->val;
-                s = sqrt(A.sparse_get(r, r) - s);
-#ifdef DEBUG
-                if (s <= 0.0) {
-                    std::cerr << "error in " << __func__ << "matrix A is not positive definite - bye!" << std::endl;
-                    exit(1);
-                }
-#endif
-                L.nonZeros[r].push_back(IndVal(c, s));// std::move could be used here?
-            } else { // OFF-DIAGONAL
-                real a(0.0);
-                if (!A.isNonZero(r, c, a))
-                    continue;
-                real s = 0;
-                for (idx k = 0 ; k < c; k++)
-                    s += L.getValue(r, k) * L.getValue(c, k); // OPTIMISE ITERATION OVER NONZEROS IN ROW r
-                s = (a - s);
-                if (s != 0.0) { // IF NOT ZERO, ADD TERM TO MATRIX
-                    real last = L.nonZeros[c].back().val;
-                    s /= last;
-                    L.nonZeros[r].push_back(IndVal(c, s));
-                }
-            }
-        }//end for columns
-    }// end for rows
+  for (idx r = 0 ; r < A.getNumRows() ; r++) {
+    // for each column, lower diagonal only, i.e. c < r
+    for (idx c = 0 ; c <= r ; c++) {
+      if (r == c) { // DIAGONAL
+        real s = 0;
+        // Sum of squared row values
+        if (r != 0) {
+          for (auto &nonZero: L.row(r)) {
+            s += nonZero.val * nonZero.val;
+          }
+        }
+
+        s = sqrt(A.sparse_get(r, r) - s);
+        if (s <= 0.0) {
+          std::cerr << "error in " << __func__ << "matrix A is not positive definite." << std::endl;
+          exit(1);
+        }
+
+        L.addNonZero(r, c, s);
+      } else { // OFF-DIAGONAL
+        real a(0.0);
+        if (!A.isNonZero(r, c, a)) {
+          continue;
+        }
+        real s = (a - s);
+        if (s != 0.0) { // IF NOT ZERO, ADD TERM TO MATRIX
+          real last = L.row(c).back().val;
+          s /= last;
+          L.addNonZero(r, c, s);
+        }
+      }
+    }
+  }
 }
 CholIncPreconditioner::~CholIncPreconditioner() { }
 
@@ -56,7 +50,7 @@ void CholIncPreconditioner::forwardSubstitution(Vector &x, const Vector &b) cons
     for (idx i = 0 ; i < x.getLength() ; ++i) {
         // FORM SUM OVER ALL LOWER DIAGONAL MATRIX VALUES
         real sum(0.0);
-        std::vector<IndVal>::const_iterator itr1 = L.nonZeros[i].begin();
+        auto itr1 = L.row(i).begin();
         idx col = itr1->ind;
         // WHILE LOWER DIAGONAL NONZEROS ONLY
         // UPPER DIAGONAL VALUES TAKEN CARE OF IN back-substitution
