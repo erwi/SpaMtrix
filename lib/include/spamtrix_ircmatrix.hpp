@@ -35,7 +35,8 @@ public:
     virtual ~IRCMatrix();
     //================================================
     void clear();
-    void copyFrom(const FlexiMatrix& A); // reallocates using data from fleximatrix
+    /** Makes a copy of FlexiMatrix A */
+    void copyFrom(const FlexiMatrix& A);
     idx getnnz()const;      // RETURNS NUMBER OF NONZEROS
     idx getNumRows()const;  // RETURNS MATRIX ROW COUNT
     idx getNumCols() const; // RETURNS MATRIX COLUMN COUNT

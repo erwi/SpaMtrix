@@ -20,7 +20,14 @@ public:
     virtual ~MatrixMaker();
     idx calcNumNonZeros() const;
     void addNonZero(const idx row, const idx col, const real val = 0.0);
-    void expandBlocks(const idx numExp = 1);
+
+  /**
+   * Expands existing sparsity pattern by a factor of numExp+1. E.g., if numExp is 2, the resulting matrix size
+   * will be 3 times the original: [a] -> |aaa|
+   *                                      |aaa|
+   *                                      |aaa|
+   */
+  void expandBlocks(const idx numExp = 1);
     /**
      * Expands non-zeroes along matrix diagonal to size numExp.
      * For example the N-by-N block on non-zeroes # expanded with numExp=3 becomes

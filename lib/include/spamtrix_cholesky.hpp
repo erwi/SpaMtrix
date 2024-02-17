@@ -8,19 +8,25 @@
 #include <spamtrix_fleximatrix.hpp>
 
 
-namespace SpaMtrix
-{
-class Cholesky
-{
+namespace SpaMtrix {
+class Cholesky {
+  FlexiMatrix L;    // Lower diagonal matrix
 
-  FlexiMatrix L;    // LOWER DIAGONAL
   Cholesky():L(){}
   void forwardSubstitution(Vector&x, const Vector& b) const;
   void backwardSubstitution(Vector&x, const Vector& b) const;
 
 public:
-    Cholesky(const IRCMatrix& A);
+    /** Creates a cholesky decomposition lower diagonal of matrix A*/
+    explicit Cholesky(const IRCMatrix& A);
     void print()const;
+
+    /**
+        Solves Ax=b using forward/backward substitution. <br>
+        Ax = b <br>
+        L'(Ly) = b <br>
+        L'x = y <br>
+    */
     void solve(Vector& x, const Vector& b) const; // SOLVES Ax=b USING FORWARD/BACKWARD SUBSTITUTION
     virtual ~Cholesky();
 };

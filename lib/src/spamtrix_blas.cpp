@@ -26,7 +26,7 @@ void multiply(const IRCMatrix &A,
 #endif
     for (idx i = 0; i < n; ++i) {
         // FOR EACH COLUMN
-        register real r(0);
+        real r(0);
         const idx row_start = A.rows[i];
         const idx row_end   = A.rows[i + 1];
         for (idx j = row_start; j < row_end; ++j) {
@@ -79,7 +79,7 @@ real multiply_dot(const IRCMatrix &A,
 #endif
     for (idx i = 0; i < n; ++i) {
         // FOR EACH COLUMN
-        register real r(0);
+        real r(0);
         const idx row_start = A.rows[i];
         const idx row_end   = A.rows[i + 1];
         for (idx j = row_start; j < row_end; ++j) {
@@ -106,7 +106,7 @@ real dot(const Vector &v1, const Vector &v2) {
 #ifdef DEBUG
     assert(v1.getLength() == v2.getLength());
 #endif
-    register real d(0.0);
+    real d(0.0);
     const idx n = v1.getLength();
     for (idx i = 0; i < n; ++i)
         d += v1[i] * v2[i];

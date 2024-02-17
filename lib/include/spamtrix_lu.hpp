@@ -22,11 +22,12 @@ class LU{
     LU(){} //
     void forwardSubstitution(Vector& x, const Vector &b) const;
     void backwardSubstitution(Vector &x, const Vector &b) const;
-    inline void fillFirstColumnL(const IRCMatrix& A, FlexiMatrix &L, const idx &n){
+    inline void fillFirstColumnL(const IRCMatrix& A, FlexiMatrix &L, const idx &n) {
         for (idx i = 0 ; i < n ; ++i){
             real val;
-            if ( A.isNonZero(i,0,val) )
-                L.addNonZero(i,0,val);
+            if (A.isNonZero(i,0,val)) {
+              L.addNonZero(i, 0, val);
+            }
         }
     }
 
@@ -44,7 +45,13 @@ public:
     LU( const IRCMatrix &A);
     virtual ~LU();
     void print();
-    void solve(Vector& x, const Vector& b) const; // SOLVES Ax = b USING FORWARD/BACKWARD SUBSTITUTION
+    /**
+    * Solves Ax=b using forward/backward substitution. <br>
+    * Ax  = b <br>
+    * L(Uy) = b <br>
+    * Lx = y <br>
+    */
+    void solve(Vector& x, const Vector& b) const;
 };
 } // end namespace SpaMtrix
 #endif // LU_H

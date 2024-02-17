@@ -163,30 +163,27 @@ void IRCMatrix::clear() {
 }
 
 void IRCMatrix::copyFrom(const FlexiMatrix &A) {
-    /*!
-     * Makes a copy of FlexiMatrix A
-     */
-    if (nnz > 0) {
-        clear();
+  if (nnz > 0) {
+    clear();
+  }
+  nnz = A.calcNumNonZeros();
+  numRows = A.getNumRows();
+  numCols = A.getNumCols();
+  cvPairs = new IndVal[nnz];
+  if (numRows > 0) { // IF NOT EMPTY MATRIX
+    rows = new idx[numRows + 1];
+    idx numNonZero = 0;
+
+    // copy data from A to this
+    for (idx r = 0; r < numRows; ++r) {
+      rows[r] = numNonZero; // index to start of row
+      for (auto nz : A.row(r)) { // for each non-zero in row r
+        cvPairs[numNonZero] = nz;
+        numNonZero++;
+      }
     }
-    nnz = A.calcNumNonZeros();
-    numRows = A.getNumRows();
-    numCols = A.getNumCols();
-    cvPairs = new IndVal[nnz];
-    if (numRows > 0) { // IF NOT EMPTY MATRIX
-        rows = new idx[numRows + 1];
-        idx nzc = 0;    // COUNTER FOR NON-ZEROS
-        // COPY DATA
-        for (idx r = 0 ; r < numRows ; ++r) { // FOR EACH ROW
-            rows[r] = nzc; // INDEX TO START OF ROW r
-            std::vector<IndVal>::const_iterator citr = A.nonZeros[r].begin();
-            for (; citr != A.nonZeros[r].end(); ++citr) {
-                cvPairs[nzc] = *citr;
-                nzc++;
-            }// end column iterator
-        }// end for rows
-        rows[numRows] = nzc;
-    }
+    rows[numRows] = numNonZero;
+  }
 }
 
 void IRCMatrix::sparse_set(const idx row, const idx col, const real val) {
@@ -220,8 +217,7 @@ real IRCMatrix::getValue(const idx row, const idx col) const {
       is important to know wheteher position (row,col) is a non-zero
       */
     real val;
-    isNonZero(row, col, val);
-    return val;
+    return isNonZero(row, col, val) ? val : 0;
 }
 
 bool IRCMatrix::isNonZero(const idx row, const idx col) const {

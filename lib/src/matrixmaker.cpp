@@ -67,40 +67,41 @@ namespace SpaMtrix {
     }// end void poisson5Point
 
     void MatrixMaker::expandBlocks(const idx numExp) {
-        /*!
-          Expands existing sparsity pattern by a factor of numExp+1. E.g., if numExp is 2, the resulting matrix size
-          will be 3 times the original: [a] -> |aaa|
-                                               |aaa|
-                                               |aaa|
-        */
-        if (!numExp)
-            return;
-        // EXPAND TO RIGHT: a -> aa...a
-        // FOR EACH ROW
-        for (idx r = 0; r < nRows; ++r) {
-            idx numC = nz.nonZeros[r].size();
-            for (idx e = 1; e <= numExp; ++e) { // for number of expansions
-                for (idx c = 0; c < numC; ++c) {
-                    IndVal iv = nz.nonZeros[r][c];
-                    iv.ind += e * nCols;
-                    nz.nonZeros[r].push_back(iv);
-                    //nz.addNonZero(r,iv); // <-- SHOULD USE THIS INSTEAD
-                    //nz.numDim2 = nz.numDim2 > (iv.ind + 1) ? nz.numDim2 : (iv.ind + 1);
-                }// end for c
-            }//end for e
-        }// end for r
-        nCols *= (numExp + 1);
-        // EXPAND DOWN: aaa -> aaa
-        //                     aaa
-        //                     aaa
-        for (idx e = 1; e <= numExp; ++e) {
-            for (idx r = 0; r < nRows; ++r) {
-                std::vector<IndVal>::iterator rb = nz.nonZeros[r].begin();
-                std::vector<IndVal>::iterator re = nz.nonZeros[r].end();
-                nz.nonZeros.push_back(std::vector<IndVal>(rb, re));
-            }// end for r
+
+      if (!numExp)
+        return;
+      // Expand each row to right: a -> aa...a
+      for (idx r = 0; r < nRows; ++r) {
+        auto &rowNonZeros = nz.row(r);
+        const idx numC = rowNonZeros.size(); //nonZeros[r].size();
+        for (idx e = 1; e <= numExp; ++e) { // for number of expansions
+          for (idx c = 0; c < numC; ++c) {
+            real val = rowNonZeros[c].val;
+            idx col = rowNonZeros[c].ind;
+
+            nz.addNonZero(r, col + e * nCols, val);
+            //IndVal iv = nz.nonZeros[r][c];
+            //iv.ind += e * nCols;
+            //nz.nonZeros[r].push_back(iv);
+            //nz.addNonZero(r,iv); // <-- SHOULD USE THIS INSTEAD
+            //nz.numDim2 = nz.numDim2 > (iv.ind + 1) ? nz.numDim2 : (iv.ind + 1);
+          }// end for c
         }//end for e
-        nRows *= (numExp + 1);
+      }// end for r
+      nCols *= (numExp + 1);
+      // Expand rows down: aaa -> aaa
+      //                     aaa
+      //                     aaa
+      for (idx e = 1; e <= numExp; ++e) {
+        for (idx r = 0; r < nRows; ++r) {
+          for (auto &nonZero : nz.row(r)) {
+            idx col = nonZero.ind;
+            real val = nonZero.val;
+            nz.addNonZero(r + e * nRows, col, val);
+          }
+        }
+      }
+      nRows *= (numExp + 1);
     }
 
     IRCMatrix MatrixMaker::getIRCMatrix() {
@@ -131,7 +132,7 @@ namespace SpaMtrix {
         for (idx i = 1; i < numExp; i++) {
             for (size_t row = 0; row < numRowsInitial; row++) {
                 const size_t newRowIdx = (i * numRowsInitial) + row;
-                for (const IndVal &nonZero : nz.nonZeros[row]) {
+                for (const IndVal &nonZero : nz.row(row)) {
                     const size_t newColIdx = (i * numColsInitial) + nonZero.ind;
                     nz.addNonZero(newRowIdx, newColIdx, nonZero.val);
                 }
