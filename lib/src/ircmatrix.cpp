@@ -41,7 +41,7 @@ IRCMatrix::IRCMatrix(const IRCMatrix &m):
             std::cerr << "error in " << __func__ << " could not allocate cvPairs" << std::endl;
             exit(1);
         }
-        memcpy(rows, m.rows, (nnz + 1)*sizeof(idx));
+        memcpy(rows, m.rows, (numRows + 1) * sizeof(idx));
         memcpy(cvPairs, m.cvPairs, nnz * sizeof(IndVal));
     }
 }

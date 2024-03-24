@@ -7,7 +7,7 @@ namespace SpaMtrix {
 
     MatrixMaker::MatrixMaker(const idx nRows, const idx nCols) :
             nRows(nRows),
-            nCols(nCols)  { }
+            nCols(nCols), nz()  { }
 
     MatrixMaker::~MatrixMaker() = default;
 
@@ -16,7 +16,9 @@ namespace SpaMtrix {
       known, it is added too, otherwise zero is assumed.
     */
     void MatrixMaker::addNonZero(const idx row, const idx col, const real val) {
-        nz.addNonZero(row, col, val);
+      assert(row < nRows);
+      assert(col < nCols);
+      nz.addNonZero(row, col, val);
     }
 
     /*!Returns total number of nonzeros allocated so far.*/
@@ -24,47 +26,39 @@ namespace SpaMtrix {
         return nz.calcNumNonZeros();
     }
 
-    /*!
-    * Makes a 5 point finite differences (2D) poisson test matrix.
-    * The grid spacing is assumed to be unity, resulting in a main
-    * diagonal with value 4, and all off-diagonals with values -1.
-    *
-    * The FD grid is assumed to have an equal number of rows and columns n,
-    * where n = sqrt( side length ) of the built matrix A.
-    *
-    * Example:
-    *          To build matrix that corresponds to a 10 x 10 FD grid,
-    *          create a MatrixMake object:
-    *             1. MatrixMaker mm(100, 100).
-    *             2. mm.poisson5Point().
-    *             3. IRCMatrix A = mm.getIRCMatrix();
-    */
     void MatrixMaker::poisson5Point() {
 
         // MAKE SURE MATRIX IS SQUARE AND NON-ZERO SIZED
         assert(nRows == nCols);
         assert(nRows);
-        idx n = sqrt(nRows); // FINITE DIFFERENCES GRID SIDE LENGTH
-        // SET MAIN DIAGONALS TO 4
-        for (idx i = 0; i < nRows; i++)
-            addNonZero(i, i, 4);
-        // SET OFF-DIAGONALS
+        idx n = sqrt(nRows); // FD grid side length
+        assert(n * n == nRows); // verify that a valid grid length is provided
+
+        // Set main diagonals to 4
+        for (idx i = 0; i < nRows; i++) {
+          addNonZero(i, i, 4);
+        }
+        // Set off-diagonal terms to -1
         for (idx i = 0; i < nRows; i++) {
             idx row = i / n; // ROW OF i'th NODE
             idx col = i % n; // COLUMN OF i'th NODE
             // RIGHT DERIVATIVE
-            if (col < n - 1)
-                addNonZero(i, i + 1, -1);
+            if (col < n - 1) {
+              addNonZero(i, i + 1, -1);
+            }
             // LEFT DERIVATIVE
-            if (col > 0)
-                addNonZero(i, i - 1, -1);
+            if (col > 0) {
+              addNonZero(i, i - 1, -1);
+            }
             // UP DERIVATIVE
-            if (row > 0)
-                addNonZero(i - n, i, -1);
-            if (row < n - 1)
-                addNonZero(i + n, i, -1);
-        }// end off-diagonals
-    }// end void poisson5Point
+            if (row > 0) {
+              addNonZero(i - n, i, -1);
+            }
+            if (row < n - 1) {
+              addNonZero(i + n, i, -1);
+            }
+        }
+    }
 
     void MatrixMaker::expandBlocks(const idx numExp) {
 

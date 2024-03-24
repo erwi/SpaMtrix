@@ -1,6 +1,6 @@
 #include <spamtrix_cholincpreconditioner.hpp>
 namespace SpaMtrix {
-CholIncPreconditioner::CholIncPreconditioner(const IRCMatrix &A) {
+CholIncPreconditioner::CholIncPreconditioner(const IRCMatrix &A) : L() {
   for (idx r = 0 ; r < A.getNumRows() ; r++) {
     // for each column, lower diagonal only, i.e. c < r
     for (idx c = 0 ; c <= r ; c++) {

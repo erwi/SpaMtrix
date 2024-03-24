@@ -38,6 +38,22 @@ public:
      *
      */
     void expandDiagonal(idx numExp);
+
+    /*!
+    * Makes a 5 point finite differences (2D) poisson test matrix.
+    * The grid spacing is assumed to be unity, resulting in a main
+    * diagonal with value 4, and all off-diagonals with values -1.
+    *
+    * The FD grid is assumed to have an equal number of rows and columns n,
+    * where n = sqrt( side length ) of the built matrix A.
+    *
+    * Example:
+    *          To build matrix that corresponds to a 10 x 10 FD grid,
+    *          create a MatrixMake object:
+    *             1. MatrixMaker mm(100, 100).
+    *             2. mm.poisson5Point().
+    *             3. IRCMatrix A = mm.getIRCMatrix();
+    */
     void poisson5Point(); // CREATES A 5 POINT POISSON FINITE DIFFERENCES TEST MATRIX
     IRCMatrix getIRCMatrix();
     /** Creates a new new IRCMatrix on the heap and returns pointer to it.
