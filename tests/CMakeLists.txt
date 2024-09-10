@@ -1,6 +1,7 @@
 add_executable(SpaMtrixTests
         test.cpp
-        solver_test.cpp)
+        solver_test.cpp
+        ircmatrix_test.cpp)
 target_include_directories(SpaMtrixTests
         PRIVATE
             ../extern/catch)

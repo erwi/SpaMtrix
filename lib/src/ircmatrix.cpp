@@ -120,29 +120,59 @@ const IRCMatrix IRCMatrix::operator*(const real &s) const {
     return IRCMatrix(numRows, numCols, nnz, rows_n, cvPairs_n);
 }
 
-idx IRCMatrix::getIndex(const idx row, const idx col) const {
-    /*! FINDS INDEX TO ColVal CORRESPONDING INPUT TO ROW AND COLUMN
-      TERMINATES WITH ERROR IF NOT FOUND
-    */
+void IRCMatrix::add(const IRCMatrix &other, const real &scalar) {
 #ifdef DEBUG
-    if ((row >= this->numRows) || (col >= this->numCols_)) {
-        std::cerr << "error in IRCMatrix::getIndex(row, col) " << "where row,col = " << row << "," << col << std::endl;
-        std::cerr << "when matrix size is " << this->numRows << "," << this->numCols_ << std::endl;
-    }
-    assert(row < this->numRows);
-    assert(col < this->numCols_);
+    assert(numRows >= other.numRows);
+    assert(numCols >= other.numCols);
 #endif
-    idx i = this->rows[row];
-    idx max = this->rows[row + 1];
-    while (i < max) {
-        if (this->cvPairs[i].ind == col) {
-            return i;
+
+    // for each row in other matrix
+    for (idx i = 0 ; i < other.numRows ; i++) {
+        // for each column in other matrix
+        const idx row_start = other.rows[i];
+        const idx row_end   = other.rows[i + 1];
+        if (row_start == row_end) { // this row is empty, i.e. no non-zeros exist on this row
+          continue;
         }
-        ++i;
+
+        for (idx j = row_start ; j < row_end ; j++) {
+            const idx col = other.cvPairs[j].ind;
+            const real val = other.cvPairs[j].val;
+            sparse_add(i, col, scalar * val);
+        }
     }
-    // IF REACHED THIS POINT, COLUMN NOT FOUND
-    std::cerr << "error in " << __func__ << " index " << row << "," << col << " not found - bye!" << std::endl;
-    exit(1);
+}
+
+IndVal & IRCMatrix::find(const idx row, const idx col) {
+  idx rowStart = this->rows[row];
+  idx rowEnd = this->rows[row + 1];
+
+  // binary search between rowStart and rowEnd to find cvPair with column index col
+  IndVal *itr = std::lower_bound(&this->cvPairs[rowStart], &this->cvPairs[rowEnd], col,
+                                 [](const IndVal &iv, const idx &col) { return iv.ind < col; });
+
+  // return a ref to the found element if it exists
+  if (itr != &this->cvPairs[rowEnd] && itr->ind == col) {
+    return *itr;
+  } else {
+    throw std::runtime_error("Index not found (row, col)=(" + std::to_string(row) + ", " + std::to_string(col) + ")");
+  }
+}
+
+const IndVal& IRCMatrix::find(const idx row, const idx col) const {
+  idx rowStart = this->rows[row];
+  idx rowEnd = this->rows[row + 1];
+
+  // binary search between rowStart and rowEnd to find cvPair with column index col
+  IndVal *itr = std::lower_bound(&this->cvPairs[rowStart], &this->cvPairs[rowEnd], col,
+                                 [](const IndVal &iv, const idx &col) { return iv.ind < col; });
+
+  // return a ref to the found element if it exists
+  if (itr != &this->cvPairs[rowEnd] && itr->ind == col) {
+    return *itr;
+  } else {
+    throw std::runtime_error("Index not found (row, col)=(" + std::to_string(row) + ", " + std::to_string(col) + ")");
+  }
 }
 
 IRCMatrix::~IRCMatrix() {
@@ -187,25 +217,23 @@ void IRCMatrix::copyFrom(const FlexiMatrix &A) {
 }
 
 void IRCMatrix::sparse_set(const idx row, const idx col, const real val) {
-    idx i = getIndex(row, col);
+  IndVal &iv = find(row, col);
 #ifdef USES_OPENMP
     #pragma omp critical
 #endif
-    cvPairs[i].val = val;
+  iv.val = val;
 }
 
 void IRCMatrix::sparse_add(const idx row, const idx col, const real val) {
-    idx i = getIndex(row, col);
+  IndVal &iv = find(row, col);
 #ifdef USES_OPENMP
     #pragma omp atomic
 #endif
-    this->cvPairs[i].val += val;
+  iv.val += val;
 }
 
 real IRCMatrix::sparse_get(const idx row, const idx col) const {
-    idx i = getIndex(row, col);
-    real val = this->cvPairs[i].val;
-    return val;
+  return find(row, col).val;
 }
 
 real IRCMatrix::getValue(const idx row, const idx col) const {

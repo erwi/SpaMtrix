@@ -55,6 +55,12 @@ public:
     *             3. IRCMatrix A = mm.getIRCMatrix();
     */
     void poisson5Point(); // CREATES A 5 POINT POISSON FINITE DIFFERENCES TEST MATRIX
+
+    /**
+     * Creates an identity matrix of the previously defined size. Note that the matrix must be square.
+     */
+    void identity();
+
     IRCMatrix getIRCMatrix();
     /** Creates a new new IRCMatrix on the heap and returns pointer to it.
      * Caller is responsible of deleting the pointer
