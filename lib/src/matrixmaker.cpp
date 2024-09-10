@@ -60,6 +60,13 @@ namespace SpaMtrix {
         }
     }
 
+    void MatrixMaker::identity() {
+        assert(nRows == nCols);
+        for (idx i = 0; i < nRows; i++) {
+            addNonZero(i, i, 1);
+        }
+    }
+
     void MatrixMaker::expandBlocks(const idx numExp) {
 
       if (!numExp)

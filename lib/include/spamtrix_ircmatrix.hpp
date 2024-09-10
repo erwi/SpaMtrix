@@ -19,7 +19,8 @@ protected:
     idx nnz;        // NUMBER OF NON-ZEROS
     idx numRows, numCols;
 
-    idx getIndex(const idx row, const idx col) const;
+    IndVal & find(const idx row, const idx col);
+    [[nodiscard]] const IndVal& find(const idx row, const idx col) const;
 public:
 
     IRCMatrix();
@@ -51,7 +52,14 @@ public:
     // MATHS OPERATORS
     Vector operator*(const Vector& x) const;    // MATRIX VECTOR MULTIPLICATION
     void operator*=(const real &s);             // IN-PLACE MULTIPLICATION BY A SCALAR COEFFICIENT
-    const IRCMatrix operator*(const real &s)const;  // RETURNS A SCALED VERSION OF THE MATRIX
+    const IRCMatrix operator*(const real &s) const;  // RETURNS A SCALED VERSION OF THE MATRIX
+
+    /**
+     * Adds the other matrix, scaled by a scalar, to this matrix. Note that the sparsity patterns must match so that
+     * the other matrix can not contain any non-zeros at locations that are zero in this matrix.
+     */
+    void add(const IRCMatrix& other, const real& scalar = 1.0);
+
     // RETURNS TRUE IS ROW,COL ENTRY EXISTS AS A NON-ZERO. ACTUAL VALUE IS RETURNED IN val
     [[nodiscard]] bool isNonZero(const idx row, const idx col) const;
     [[nodiscard]] bool isNonZero(const idx row, const idx col, real& val) const;
