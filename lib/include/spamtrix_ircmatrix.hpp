@@ -49,6 +49,12 @@ public:
     /** Returns value at (row, col), even if it is zero */
     real getValue(const idx row, const idx col) const;
 
+    /** Returns a pointer to the value at (row, col)if it exists, or nullptr otherwise */
+    [[nodiscard]] real* getValuePtr(const idx row, const idx col);
+
+    /** Returns a pointer to the value at (row, col)if it exists, or nullptr otherwise */
+    [[nodiscard]] real* getValuePtr(const idx row, const idx col) const;
+
     // MATHS OPERATORS
     Vector operator*(const Vector& x) const;    // MATRIX VECTOR MULTIPLICATION
     void operator*=(const real &s);             // IN-PLACE MULTIPLICATION BY A SCALAR COEFFICIENT
@@ -60,8 +66,9 @@ public:
      */
     void add(const IRCMatrix& other, const real& scalar = 1.0);
 
-    // RETURNS TRUE IS ROW,COL ENTRY EXISTS AS A NON-ZERO. ACTUAL VALUE IS RETURNED IN val
+    /** return true if storage exists at given row, col */
     [[nodiscard]] bool isNonZero(const idx row, const idx col) const;
+    /** return true if storage exists at given row, col and the value is copied to val */
     [[nodiscard]] bool isNonZero(const idx row, const idx col, real& val) const;
     //===============================================
     // FRIEND FUNCTIONS THAT REQUIRE ACCESS TO PRIVATE

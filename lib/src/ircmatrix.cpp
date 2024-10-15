@@ -248,60 +248,63 @@ real IRCMatrix::getValue(const idx row, const idx col) const {
     return isNonZero(row, col, val) ? val : 0;
 }
 
-bool IRCMatrix::isNonZero(const idx row, const idx col) const {
-    /*! Returns true if this matrix contains storage at location row, col, otherwise false
-    */
-#ifdef DEBUG
+real* IRCMatrix::getValuePtr(const idx row, const idx col) {
+#ifndef NDEBUG
     assert(row < this->numRows);
-    assert(col < this->numCols_);
+    assert(col < this->numCols);
 #endif
-    IndVal *begin = &cvPairs[ rows[row]   ]; // pointer to first in row
-    IndVal *end   = &cvPairs[ rows[row + 1] ]; // pointer to first in row+1
-    // GET POINTER TO FIRST ELEMENT IN cvPairs WHOSE INDEX IS
-    // LARGER OR EQUAL TO col
-    IndVal *itr =
-        std::lower_bound(begin,
-                         end,
-                         col,
-    [](const IndVal & iv1, const idx & colind) {
-        return iv1.ind < colind;
-    }
-                        );
-    if (itr == end) { // IF REACHED END OF ROW
-        return false;
-    } else if (itr->ind == col) {  // IF FOUND
-        return true;
+
+    IndVal *begin = &cvPairs[rows[row]]; // pointer to first in row
+    IndVal *end = &cvPairs[rows[row + 1]]; // pointer to first in row+1
+    IndVal *itr = std::lower_bound(begin, end, col,
+                           [](const IndVal & iv1, const idx& colind) { return iv1.ind < colind; });
+
+    if (itr->ind == col) {
+        return &itr->val;
     } else {
-        return false;
+        return nullptr;
     }
 }
 
-bool IRCMatrix::isNonZero(const idx row, const idx col, real &val) const {
-    /*!
-     Returns true if this matrix contains storage at location row, col, otherwise false.
-     The actual value of location row,col is returned in val
-    */
+  real* IRCMatrix::getValuePtr(const idx row, const idx col) const {
+#ifndef NDEBUG
+    assert(row < this->numRows);
+    assert(col < this->numCols);
+#endif
+
+    IndVal *begin = &cvPairs[rows[row]]; // pointer to first in row
+    IndVal *end = &cvPairs[rows[row + 1]]; // pointer to first in row+1
+    IndVal *itr = std::lower_bound(begin, end, col,
+                                   [](const IndVal & iv1, const idx& colind) { return iv1.ind < colind; });
+
+    if (itr->ind == col) {
+      return &itr->val;
+    } else {
+      return nullptr;
+    }
+  }
+
+bool IRCMatrix::isNonZero(const idx row, const idx col) const {
 #ifdef DEBUG
     assert(row < this->numRows);
     assert(col < this->numCols_);
 #endif
-    val = 0.0;
-    IndVal *begin = &cvPairs[ rows[row]  ]; // pointer to first in row
-    IndVal *end   = &cvPairs[ rows[row + 1]]; // pointer to first in row+1
-    // GET POINTER TO FIRST ELEMENT IN cvPairs WHOSE
-    // INDEX IS EQUAL OR LARGER THAN col
-    IndVal *itr = std::lower_bound(begin, end, col,
-    [](const IndVal & iv1, const idx & colind) {
-        return iv1.ind < colind;
-    }
-                                  );
-    if (itr == end) { // END OF ROW REACHED
-        return false;
-    } else if (itr->ind == col) { // FOUND IT
-        val = itr->val;
-        return true;
-    } else // DID NOT FIND
-        return false;
+    return getValuePtr(row, col) != nullptr;
+}
+
+bool IRCMatrix::isNonZero(const idx row, const idx col, real &val) const {
+#ifdef DEBUG
+    assert(row < this->numRows);
+    assert(col < this->numCols_);
+#endif
+
+  auto ptr = getValuePtr(row, col);
+  if (ptr != nullptr) {
+    val = *ptr;
+    return true;
+  } else {
+    return false;
+  }
 }
 
 void IRCMatrix::operator*=(const real &s) {
