@@ -46,5 +46,19 @@ TEST_CASE("Add sparse matrix to other - different sparsity patterns") {
   REQUIRE(I1.getValue(2, 2) == 1);
 }
 
+TEST_CASE("Access matrix values by pointer") {
+  using namespace SpaMtrix;
 
+  MatrixMaker mm(3, 3);
+  mm.identity();
+  auto I = mm.getIRCMatrix();
+
+  REQUIRE(I.getValuePtr(0, 0) != nullptr);
+  REQUIRE(*I.getValuePtr(1, 1) == 1.);
+
+  // Modify the matrix value
+
+  *I.getValuePtr(2, 2) = 2;
+  REQUIRE(*I.getValuePtr(2, 2) == 2);
+}
 
