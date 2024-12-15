@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <cstring>
-#include <omp.h>
 #include <spamtrix_ircmatrix.hpp>
 #include <spamtrix_fleximatrix.hpp>
 #include <spamtrix_vector.hpp>
@@ -160,15 +159,15 @@ IndVal & IRCMatrix::find(const idx row, const idx col) {
 }
 
 const IndVal& IRCMatrix::find(const idx row, const idx col) const {
-  idx rowStart = this->rows[row];
-  idx rowEnd = this->rows[row + 1];
+  IndVal *begin = &cvPairs[rows[row]]; // pointer to first in row
+  IndVal *end = &cvPairs[rows[row + 1]]; // pointer to first in row+1
 
   // binary search between rowStart and rowEnd to find cvPair with column index col
-  IndVal *itr = std::lower_bound(&this->cvPairs[rowStart], &this->cvPairs[rowEnd], col,
+  IndVal *itr = std::lower_bound(begin, end, col,
                                  [](const IndVal &iv, const idx &col) { return iv.ind < col; });
 
   // return a ref to the found element if it exists
-  if (itr != &this->cvPairs[rowEnd] && itr->ind == col) {
+  if (itr->ind == col && itr != end) {
     return *itr;
   } else {
     throw std::runtime_error("Index not found (row, col)=(" + std::to_string(row) + ", " + std::to_string(col) + ")");
@@ -259,7 +258,7 @@ real* IRCMatrix::getValuePtr(const idx row, const idx col) {
     IndVal *itr = std::lower_bound(begin, end, col,
                            [](const IndVal & iv1, const idx& colind) { return iv1.ind < colind; });
 
-    if (itr->ind == col) {
+    if (itr->ind == col && itr != end) {
         return &itr->val;
     } else {
         return nullptr;
@@ -277,7 +276,7 @@ real* IRCMatrix::getValuePtr(const idx row, const idx col) {
     IndVal *itr = std::lower_bound(begin, end, col,
                                    [](const IndVal & iv1, const idx& colind) { return iv1.ind < colind; });
 
-    if (itr->ind == col) {
+    if (itr->ind == col && itr != end) {
       return &itr->val;
     } else {
       return nullptr;

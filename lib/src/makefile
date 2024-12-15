@@ -19,10 +19,6 @@ OBJS = spamtrix_blas.o\
 
 LIBS += -lgomp
 
-		  
-	          
-
-
 all:$(OBJS)
 .cpp.o:
 	g++ -c -g $< $(CXXFLAGS) -I$(INCLUDE_PATH) 
