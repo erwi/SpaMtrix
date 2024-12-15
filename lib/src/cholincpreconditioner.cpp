@@ -1,4 +1,6 @@
 #include <spamtrix_cholincpreconditioner.hpp>
+#include <spamtrix_exception.hpp>
+
 namespace SpaMtrix {
 CholIncPreconditioner::CholIncPreconditioner(const IRCMatrix &A) : L() {
   for (idx r = 0 ; r < A.getNumRows() ; r++) {
@@ -15,8 +17,7 @@ CholIncPreconditioner::CholIncPreconditioner(const IRCMatrix &A) : L() {
 
         s = sqrt(A.sparse_get(r, r) - s);
         if (s <= 0.0) {
-          std::cerr << "error in " << __func__ << "matrix A is not positive definite." << std::endl;
-          exit(1);
+          throw SpaMtrixException("error in " + std::string(ERROR_LOCATION) + "matrix A is not positive definite.");
         }
 
         L.addNonZero(r, c, s);
@@ -25,7 +26,7 @@ CholIncPreconditioner::CholIncPreconditioner(const IRCMatrix &A) : L() {
         if (!A.isNonZero(r, c, a)) {
           continue;
         }
-        real s = (a - s);
+        real s = (a - s); // TODO: Check this, s appears to be uninitialised here!!
         if (s != 0.0) { // IF NOT ZERO, ADD TERM TO MATRIX
           real last = L.row(c).back().val;
           s /= last;
@@ -35,7 +36,8 @@ CholIncPreconditioner::CholIncPreconditioner(const IRCMatrix &A) : L() {
     }
   }
 }
-CholIncPreconditioner::~CholIncPreconditioner() { }
+
+CholIncPreconditioner::~CholIncPreconditioner() = default;
 
 void CholIncPreconditioner::solveMxb(Vector &x, const Vector &b) const {
     Vector y(b.getLength());  // TEMPORARY VECTOR

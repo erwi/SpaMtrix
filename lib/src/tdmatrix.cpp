@@ -1,32 +1,30 @@
 #include <spamtrix_tdmatrix.hpp>
-
+#include <spamtrix_exception.hpp>
 
 namespace SpaMtrix {
 
 TDMatrix::TDMatrix(const idx size):
-    upper(NULL),
-    diagonal(NULL),
-    lower(NULL),
+    upper(nullptr),
+    diagonal(nullptr),
+    lower(nullptr),
     size(size) {
     upper = new real [size - 1];
     diagonal = new real [size];
     lower = new real [size - 1];
-    if ((!upper) || (!diagonal) || (!lower)) {
-        std::cerr << "error in " << __func__
-                  << "could not allocate for matrix of size "
-                  << size << std::endl;
-        exit(1);
+    if (upper == nullptr || diagonal == nullptr || lower == nullptr) {
+      throw SpaMtrixException("error in " + std::string(ERROR_LOCATION) +
+                              "could not allocate for matrix of size " + std::to_string(size));
     }
 }
 
 TDMatrix::~TDMatrix() {
     size = 0;
     delete [] upper;
-    upper = NULL;
+    upper = nullptr;
     delete [] lower;
-    lower = NULL;
+    lower = nullptr;
     delete [] diagonal;
-    diagonal = NULL;
+    diagonal = nullptr;
 }
 
 bool TDMatrix::isValidIndex(const idx row, const idx col) const {

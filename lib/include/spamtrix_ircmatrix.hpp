@@ -56,6 +56,9 @@ public:
     [[nodiscard]] real* getValuePtr(const idx row, const idx col) const;
 
     // MATHS OPERATORS
+    /*! MATRIX VECTOR MULTIPLICATION Ax=b.
+    * reference to b is returned
+    */
     Vector operator*(const Vector& x) const;    // MATRIX VECTOR MULTIPLICATION
     void operator*=(const real &s);             // IN-PLACE MULTIPLICATION BY A SCALAR COEFFICIENT
     const IRCMatrix operator*(const real &s) const;  // RETURNS A SCALED VERSION OF THE MATRIX

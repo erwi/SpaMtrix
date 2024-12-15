@@ -18,6 +18,7 @@ add_library(SpaMtrix
         src/tdmatrix.cpp
         src/vector.cpp
         src/writer.cpp
+        include/spamtrix_exception.hpp
 )
 # public headers that should be automatically added to the includes search path
 # of any other project that includes this as a sub-project

@@ -3,14 +3,15 @@
 #include <stdio.h>
 
 #include <spamtrix_densematrix.hpp>
+#include <spamtrix_exception.hpp>
+
 using namespace SpaMtrix;
 DenseMatrix::DenseMatrix(idx numRows, idx numCols):
         numRows(numRows),
         numCols(numCols) {
   values = std::vector<real>(numRows * numCols, 0.0);
   if (values.size() !=  numRows * numCols) {
-    std::cerr << "error in " << __func__ << " could not allocate dense matrix" << std::endl;
-    exit(1);
+    throw SpaMtrixException("error in " + std::string(ERROR_LOCATION) + " could not allocate dense matrix");
   }
 }
 DenseMatrix::DenseMatrix(const DenseMatrix &other):
@@ -19,9 +20,7 @@ DenseMatrix::DenseMatrix(const DenseMatrix &other):
   values = other.values;
 }
 
-DenseMatrix::~DenseMatrix() {
-}
-
+DenseMatrix::~DenseMatrix() = default;
 
 void DenseMatrix::setAllValuesTo(const real v) {
   for (auto &value : values) {

@@ -1,12 +1,13 @@
 #include <iostream>
-#include <stdio.h>
-#include <assert.h>
+#include <cstdio>
+#include <cassert>
 #include <algorithm>
-#include <stdlib.h>
 #include <cstring>
 #include <spamtrix_ircmatrix.hpp>
 #include <spamtrix_fleximatrix.hpp>
 #include <spamtrix_vector.hpp>
+#include <spamtrix_exception.hpp>
+
 namespace SpaMtrix {
 IRCMatrix::IRCMatrix(): rows(0), cvPairs(0), nnz(0), numRows(0), numCols(0) {
     /*!Constructs an empty matrix*/
@@ -32,13 +33,11 @@ IRCMatrix::IRCMatrix(const IRCMatrix &m):
     if (numRows > 0) { // IF NOT EMPTY MATRIX
         rows = new idx [numRows + 1];
         if (!rows) {
-            std::cerr << "error in " << __func__ << " could not allocate rows" << std::endl;
-            exit(1);
+          throw SpaMtrixException("Could not allocate rows in " + std::string(ERROR_LOCATION));
         }
         cvPairs = new IndVal[nnz];
         if (!cvPairs) {
-            std::cerr << "error in " << __func__ << " could not allocate cvPairs" << std::endl;
-            exit(1);
+          throw SpaMtrixException("Could not allocate cvPairs in " + std::string(ERROR_LOCATION));
         }
         memcpy(rows, m.rows, (numRows + 1) * sizeof(idx));
         memcpy(cvPairs, m.cvPairs, nnz * sizeof(IndVal));
@@ -154,7 +153,7 @@ IndVal & IRCMatrix::find(const idx row, const idx col) {
   if (itr != &this->cvPairs[rowEnd] && itr->ind == col) {
     return *itr;
   } else {
-    throw std::runtime_error("Index not found (row, col)=(" + std::to_string(row) + ", " + std::to_string(col) + ")");
+    throw SpaMtrixException("Index not found (row, col)=(" + std::to_string(row) + ", " + std::to_string(col) + ") at " + std::string(ERROR_LOCATION));
   }
 }
 
@@ -170,7 +169,7 @@ const IndVal& IRCMatrix::find(const idx row, const idx col) const {
   if (itr->ind == col && itr != end) {
     return *itr;
   } else {
-    throw std::runtime_error("Index not found (row, col)=(" + std::to_string(row) + ", " + std::to_string(col) + ")");
+    throw SpaMtrixException("Index not found (row, col)=(" + std::to_string(row) + ", " + std::to_string(col) + ") at " + std::string(ERROR_LOCATION));
   }
 }
 
@@ -284,9 +283,9 @@ real* IRCMatrix::getValuePtr(const idx row, const idx col) {
   }
 
 bool IRCMatrix::isNonZero(const idx row, const idx col) const {
-#ifdef DEBUG
+#ifndef NDEBUG
     assert(row < this->numRows);
-    assert(col < this->numCols_);
+    assert(col < this->numCols);
 #endif
     return getValuePtr(row, col) != nullptr;
 }
@@ -317,11 +316,10 @@ Vector IRCMatrix::operator *(const Vector &x) const {
      * MATRIX VECTOR MULTIPLICATION Ax=b.
      * reference to b is returned
      */
-#ifdef DEBUG
-    if (numCols_ != x.getLength()) {
-        std::cerr << "error in " << __func__ << " column count is :" << numCols_ <<
-                  ", vector length is :" << x.getLength() << std::endl;
-        exit(1);
+#ifndef NDEBUG
+    if (numCols != x.getLength()) {
+      throw SpaMtrixException("error in " + std::string(ERROR_LOCATION) + " column count is :" + std::to_string(numCols) +
+                              ", vector length is :" + std::to_string(x.getLength()));
     }
 #endif
     Vector b(x.getLength());

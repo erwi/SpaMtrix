@@ -1,13 +1,12 @@
 #include <spamtrix_vector.hpp>
+#include <spamtrix_exception.hpp>
 
 namespace SpaMtrix {
 
 Vector::Vector(const idx length) {
     values = std::vector<real>(length, 0.0);
     if (values.size() != length) {
-        std::cerr << "error in " << __func__ << "could not allocate "
-                  << length << "elements" << std::endl;
-        exit(1);
+      throw SpaMtrixException("error in " + std::string(ERROR_LOCATION) + "could not allocate " + std::to_string(length) + "elements");
     }
 }
 
@@ -17,9 +16,7 @@ Vector::~Vector() {
 Vector::Vector(const Vector &v) {
     values = v.values;
     if (values.size() != v.getLength()) {
-        std::cerr << "error in " << __func__ << " could not allocate "
-                  << v.getLength() << " elements " << std::endl;
-        exit(1);
+      throw SpaMtrixException("error in " + std::string(ERROR_LOCATION) + "could not allocate " + std::to_string(v.getLength()) + "elements");
     }
 }
 

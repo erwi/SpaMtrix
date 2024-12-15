@@ -6,6 +6,7 @@
 #include <spamtrix_reader.hpp>
 #include <spamtrix_ircmatrix.hpp>
 #include <spamtrix_matrixmaker.hpp>
+#include <spamtrix_exception.hpp>
 
 namespace SpaMtrix {
 const char *Reader::FILE_OPEN_ERROR_STRING = "Could not open file : ";
@@ -22,7 +23,7 @@ IRCMatrix Reader::readMatrixMarket(const std::string &filename) {
     std::ifstream file;
     file.open(filename);
     if (!file.is_open()) {
-        throw std::ios_base::failure(FILE_OPEN_ERROR_STRING + filename);
+        throw SpaMtrixException(FILE_OPEN_ERROR_STRING + filename + " at " + std::string(ERROR_LOCATION));
     }
     // FILE MAY START WITH LINES OF COMMENTS.
     // COMMENTED LINES BEGIN WITH THE '%'-CHARACTER
@@ -33,7 +34,7 @@ IRCMatrix Reader::readMatrixMarket(const std::string &filename) {
     // THE VARIABLE 'line' NOW CONTAINS NUMBER OF ROWS, COLUMNS AND NONZEROS
     idx numRows = 0, numCols = 0, numNZ = 0;
     if (!(std::stringstream(line) >> numRows >> numCols >> numNZ)) {
-        throw (std::ios_base::failure(FILE_FORMAT_ERROR_STRING + filename));
+        throw (SpaMtrixException(FILE_FORMAT_ERROR_STRING + filename + " at " + std::string(ERROR_LOCATION)));
     }
     MatrixMaker mm(numRows, numCols);
     // READ ALL NONZERO ENTRIES AND ADD TO MATRIXMAKER
@@ -42,7 +43,7 @@ IRCMatrix Reader::readMatrixMarket(const std::string &filename) {
         idx row, col;
         real val;
         if (!(std::stringstream(line) >> row >> col >> val)) {
-            throw (std::ios_base::failure(FILE_FORMAT_ERROR_STRING + filename));
+            throw (SpaMtrixException(FILE_FORMAT_ERROR_STRING + filename + " at " + std::string(ERROR_LOCATION)));
         }
         mm.addNonZero(row - 1, col - 1, val); // TAKE INTO ACCOUNT 1-BASED INDEXING
     }
