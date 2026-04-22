@@ -24,12 +24,12 @@ int main(int nargs, char* args[]){
     mm.poisson5Point();
     SpaMtrix::IRCMatrix A = mm.getIRCMatrix();
   
-    // INITIAL GUESS VECTOR
+    // Initial guess vector.
     SpaMtrix::Vector x(m);
     x(0) = 1.0;
           
     
-    // LARGEST EIGENVALUES AND EIGENVECTORS USING POWER ITERATIONS
+    // Compute the dominant eigenvalue and eigenvector using power iterations.
     double L(0.0);
     double toler = 1e-12;
     idx iters = powerMethod(A,L,x, toler);
@@ -38,7 +38,7 @@ int main(int nargs, char* args[]){
     
     cout << iters << " iterations used " << endl;
     cout << "eigenValue : "<< L << endl;
-    // PRINT ON SCREEN IF SMALL ENOUGH
+    // Print the eigenvector if the problem is small enough.
     if (m <= 25){
         cout << "eigenVector e: " << endl;
         x.print("e");

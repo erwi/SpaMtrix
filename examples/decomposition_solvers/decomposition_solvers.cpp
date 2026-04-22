@@ -1,14 +1,3 @@
-/*!
- * Test file for Cholesky and LU decompositions. A 5-point Poisson finite differences
- * problem is solved using both Cholesky and LU decomposition solvers.
- *
- * Use: ./decomposition_solvers gridLen numThreads,\n
- * where gridLen specifies FD grid side length and \n
- * numThreads the number of threads used by OpenMP.\n
- *
- */
-
-
 #include <iostream>
 #include <chrono>
 #include <omp.h>
@@ -48,16 +37,16 @@ int main(int nargs, char* args[])
     IRCMatrix A = mm.getIRCMatrix();
 
     cout << "\nMatrix size is : " << numDoF << "x" << numDoF << endl;
-    // PERFORMANCE TIMER
+    // Performance timer.
     TickCounter<std::chrono::milliseconds> timer;
 
-    // SET NUMBER OF THREAD TO USE
+    // Set the number of threads to use.
 #ifdef USES_OPENMP
     omp_set_num_threads(numThreads);
 #endif
     cout << "num theads : " << numThreads << endl <<endl;
 
-    // CREATE LU DECOMPOSITION
+    // Create the LU decomposition.
     timer.start();
     LU lu(A);
     timer.stop();
@@ -65,7 +54,7 @@ int main(int nargs, char* args[])
     cout << "LU decomposition time [ms] : " << t << endl;
     timer.reset();
 
-    // CREATE CHOLESKY DECOMPOSITION
+    // Create the Cholesky decomposition.
     timer.start();
     Cholesky C(A);
     timer.stop();
@@ -74,15 +63,15 @@ int main(int nargs, char* args[])
     cout << "Cholesky decomposition time [ms] : " << tch << endl<< endl;
 
 
-    // SOLUTION VECTORS X FOR LU AND CHOLESKY
+    // Solution vectors for LU and Cholesky.
     Vector xlu(numDoF);
     Vector xch(numDoF);
     Vector b(numDoF);
 
-    // RHS, Ax = 1
+    // Right-hand side, Ax = 1.
     b.setAllValuesTo(1.0);
 
-    // SOLVE LU
+    // Solve LU.
     timer.start();
     lu.solve(xlu,b);
     timer.stop();
@@ -91,7 +80,7 @@ int main(int nargs, char* args[])
     cout << "LU solution time [ms] : " << tlus << endl;
 
 
-    // SOLVE CHOLESKY
+    // Solve Cholesky.
     timer.start();
     C.solve(xch,b);
     timer.stop();
@@ -99,7 +88,7 @@ int main(int nargs, char* args[])
     cout << "Cholseky solution time [ms] : " << tcs << endl;
 
 
-    // MAKE SURE BOTH METHODS GIVE SAME(ISH) ANSWER
+    // Make sure both methods give roughly the same answer.
     real diff = norm(xlu-xch);
     cout << "solution difference : " << diff << endl;
     return 0;

@@ -28,9 +28,6 @@ TDMatrix::~TDMatrix() {
 }
 
 bool TDMatrix::isValidIndex(const idx row, const idx col) const {
-    /*!
-     * Checks for out of bounds indexing. TODO
-     */
     if ((row >= size) || (col >= size))
         return false;
     if (row == col) return true;      // diagonal
@@ -40,7 +37,6 @@ bool TDMatrix::isValidIndex(const idx row, const idx col) const {
 }
 
 void TDMatrix::sparse_set(const idx row, const idx col, const real val) {
-    /*!Set value at row,col to val*/
 #ifdef DEBUG
     assert(isValidIndex(row, col));
 #endif
@@ -55,7 +51,6 @@ void TDMatrix::sparse_set(const idx row, const idx col, const real val) {
 }
 
 void TDMatrix::sparse_add(const idx row, const idx col, const real val) {
-    /*!Add val to value at row, col*/
 #ifdef DEBUG
     assert(isValidIndex(row, col));
 #endif
@@ -70,7 +65,6 @@ void TDMatrix::sparse_add(const idx row, const idx col, const real val) {
 }
 
 real TDMatrix::sparse_get(const idx row, const idx col) const {
-    /*!get value at row,col*/
 #ifdef DEBUG
     assert(isValidIndex(row, col));
 #endif
@@ -83,19 +77,13 @@ real TDMatrix::sparse_get(const idx row, const idx col) const {
 }
 
 void TDMatrix::solveAxb(Vector &x, const Vector &b) const {
-    /*!
-     * Solves Ax=b using Tridiagonal Matrix Algorithm (TDMA) a.k.a. Thomas algorithm.
-     * See wikipedia http://en.wikipedia.org/wiki/Tridiagonal_matrix_algorithm
-     * WARNING: Currently this modified the matrix!!
-     */
     idx N = this->size;   // LENGTH OF VECTOR
     real *b_temp = new real[N]; // TEMPORARY R.H.S VECTOR
     real *u_temp = new real[N]; // TEMPORARY SUP-DIAGONAL VALUES
-    // COPY RHS TO TEMP
+    // Copy the right-hand side to temporary storage.
     for (idx i = 0; i < N; i++)
         b_temp [i] = b[i];
-    // FORWARD LOOP - ELIMINATE SUB-DIAGONAL
-    // MODIFY FIRST-ROW COEFFS
+    // Forward sweep to eliminate the sub-diagonal.
     u_temp[0] = upper[0] / diagonal[0];
     b_temp[0] = b[0] / diagonal[0];
     for (idx i = 1; i < N - 1; ++i) {
@@ -105,7 +93,7 @@ void TDMatrix::solveAxb(Vector &x, const Vector &b) const {
     }
     b_temp[N - 1] = (b_temp[N - 1] - lower[N - 2] * b_temp[N - 2]) /
                     (diagonal[N - 1] - lower[N - 2] * u_temp[N - 2]);
-    // BACKWARD SUBSTITUTION
+    // Backward substitution.
     x[N - 1] =  b_temp[N - 1];
     for (idx i = N - 1; i > 0; i--)
         x[i - 1] = (b_temp[i - 1] - u_temp[i - 1] * x[i]);

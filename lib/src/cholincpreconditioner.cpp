@@ -8,7 +8,7 @@ CholIncPreconditioner::CholIncPreconditioner(const IRCMatrix &A) : L() {
     for (idx c = 0 ; c <= r ; c++) {
       if (r == c) { // DIAGONAL
         real s = 0;
-        // Sum of squared row values
+        // Sum of squared row values.
         if (r != 0) {
           for (auto &nonZero: L.row(r)) {
             s += nonZero.val * nonZero.val;
@@ -45,17 +45,13 @@ void CholIncPreconditioner::solveMxb(Vector &x, const Vector &b) const {
     backwardSubstitution(x, y);
 }
 void CholIncPreconditioner::forwardSubstitution(Vector &x, const Vector &b) const {
-    /*!
-         x[i] =  ( b[i] - sum( A[i,j]x[j] ) ) / A[i,i]
-     */
-    // FOR EACH ROW, STARTING FROM FIRST
+    // Iterate over each row from the beginning.
     for (idx i = 0 ; i < x.getLength() ; ++i) {
-        // FORM SUM OVER ALL LOWER DIAGONAL MATRIX VALUES
+      // Form the sum over all lower-diagonal matrix values.
         real sum(0.0);
         auto itr1 = L.row(i).begin();
         idx col = itr1->ind;
-        // WHILE LOWER DIAGONAL NONZEROS ONLY
-        // UPPER DIAGONAL VALUES TAKEN CARE OF IN back-substitution
+        // Stop at the diagonal; upper-diagonal values are handled in back substitution.
         while (col < i) {
             sum += x[col] * (itr1->val);
             itr1++;
@@ -66,19 +62,11 @@ void CholIncPreconditioner::forwardSubstitution(Vector &x, const Vector &b) cons
 }
 
 void CholIncPreconditioner::backwardSubstitution(Vector &x, const Vector &b) const {
-    /*!
-      Performs back substitution of transposed lower triangular matrix.
-
-      x[i] = ( b[i] - sum(L'x[i+1:end]) ) / L(i,i)
-    */
     idx n = b.getLength();
-    // FOR EACH ROW, STARTING FROM LAST, COUNTING BACKWARDS
-    // NOTE: i < n FOR UNSIGNED INTS IS EQUIVALENT TO
-    // i >= 0 FOR SIGNED INTS
+    // Iterate backward over the rows.
     for (idx i = n - 1 ; i < n ; --i) {
         x[i] = b[i];
-        // PERFORM SUM OF L'x, WHERE L' IS TRANSPOSE OF L
-        // THIS USES MATRIX SEARCH AND SHOULD BE OPTIMISED
+      // Perform the sum of L'x, where L' is the transpose of L.
         for (idx j = n - 1 ; j > i ; --j) {
             x[i] -= L.getValue(j, i) * x[j];
         }

@@ -10,17 +10,12 @@
 
 namespace SpaMtrix {
 IRCMatrix::IRCMatrix(): rows(0), cvPairs(0), nnz(0), numRows(0), numCols(0) {
-    /*!Constructs an empty matrix*/
 }
 IRCMatrix::IRCMatrix(const idx numRows, const idx numCols,
                      const idx nnz,
                      idx *const rows, IndVal *const cvPairs):
     rows(rows), cvPairs(cvPairs), nnz(nnz),
     numRows(numRows) , numCols(numCols) {
-    /*!Constructs a sparse matrix where sparsity pattern is
-    defined in the arrays 'rows' and 'cvPairs'. The matrix takes ownership of these arrays and releases
-    the memory when destructed (i.e. does not make copies).
-    */
 }
 IRCMatrix::IRCMatrix(const IRCMatrix &m):
     rows(NULL),
@@ -45,16 +40,13 @@ IRCMatrix::IRCMatrix(const IRCMatrix &m):
 }
 
 IRCMatrix::IRCMatrix(IRCMatrix &&m) {
-    /*!
-     * Copy constructor from rvalue refrence
-     */
-    // copy data references from m to this
+    // Copy data references from m to this.
     this->rows = m.rows;
     this->cvPairs = m.cvPairs;
     this->nnz = m.nnz;
     this->numCols = m.numCols;
     this->numRows = m.numRows;
-    // Clear m data
+    // Clear the moved-from matrix.
     m.rows = nullptr;
     m.cvPairs = nullptr;
     m.nnz = 0;
@@ -68,14 +60,11 @@ IRCMatrix::IRCMatrix(const FlexiMatrix &M): rows(NULL), cvPairs(NULL),
     copyFrom(M);
 }
 IRCMatrix &IRCMatrix::operator=(const IRCMatrix &M) {
-    /*!
-      Asigment operator. Sets this matrix equal to matrix M. Reallocates memory if necessary
-    */
     if (&M == this)
         return *this;
     numRows = M.numRows;
     numCols = M.numCols;
-    // IF OTHER MATRIX SIZE IS DIFFERENT FROM CURRENT, MUST REALLOCATE
+    // Reallocate if the non-zero count changes.
     if (nnz != M.nnz) {
         nnz = M.nnz;
         // TODO: ADD CHECKS FOR ALLOCATION FAILS
@@ -121,7 +110,6 @@ IRCMatrix &IRCMatrix::operator=(const IRCMatrix &M) {
   }
 
 IRCMatrix &IRCMatrix::operator=(const real &s) {
-    /*! SETS ALL NONZEROS TO SCALAR s.*/
     for (idx i = 0 ; i < nnz ; ++i) {
         cvPairs[i].val = s;
     }
@@ -132,12 +120,11 @@ IRCMatrix &IRCMatrix::operator=(const FlexiMatrix &M) {
     return *this;
 }
 const IRCMatrix IRCMatrix::operator*(const real &s) const {
-    /*! Matrix scalar multiplication. Returns a scaled version of self.*/
-    // CREATE NEW SPARSE MATRIX OF SAME SIZE AS SELF
-    idx *rows_n = new idx[numRows + 1];  // NEW ROW INDEXES
-    IndVal *cvPairs_n = new IndVal[nnz]; // NEW COLUMNS/VALUES
+    // Create a new sparse matrix of the same size as this one.
+    idx *rows_n = new idx[numRows + 1];
+    IndVal *cvPairs_n = new IndVal[nnz];
     memcpy(rows_n, rows, (numRows + 1)*sizeof(idx));
-    for (idx i = 0 ; i < nnz ; ++i) { // FILL NEW COL/VALS
+    for (idx i = 0 ; i < nnz ; ++i) {
         cvPairs_n[i] = cvPairs[i];
         cvPairs_n[i].val *= s;
     }
@@ -150,9 +137,9 @@ void IRCMatrix::add(const IRCMatrix &other, const real &scalar) {
     assert(numCols >= other.numCols);
 #endif
 
-    // for each row in other matrix
+    // Iterate over each row in the other matrix.
     for (idx i = 0 ; i < other.numRows ; i++) {
-        // for each column in other matrix
+      // Iterate over each column in the other matrix.
         const idx row_start = other.rows[i];
         const idx row_end   = other.rows[i + 1];
         if (row_start == row_end) { // this row is empty, i.e. no non-zeros exist on this row
@@ -171,11 +158,11 @@ IndVal & IRCMatrix::find(const idx row, const idx col) {
   idx rowStart = this->rows[row];
   idx rowEnd = this->rows[row + 1];
 
-  // binary search between rowStart and rowEnd to find cvPair with column index col
+  // Binary search for the value with column index col.
   IndVal *itr = std::lower_bound(&this->cvPairs[rowStart], &this->cvPairs[rowEnd], col,
                                  [](const IndVal &iv, const idx &col) { return iv.ind < col; });
 
-  // return a ref to the found element if it exists
+  // Return a reference to the found element if it exists.
   if (itr != &this->cvPairs[rowEnd] && itr->ind == col) {
     return *itr;
   } else {
@@ -187,11 +174,11 @@ const IndVal& IRCMatrix::find(const idx row, const idx col) const {
   IndVal *begin = &cvPairs[rows[row]]; // pointer to first in row
   IndVal *end = &cvPairs[rows[row + 1]]; // pointer to first in row+1
 
-  // binary search between rowStart and rowEnd to find cvPair with column index col
+  // Binary search for the value with column index col.
   IndVal *itr = std::lower_bound(begin, end, col,
                                  [](const IndVal &iv, const idx &col) { return iv.ind < col; });
 
-  // return a ref to the found element if it exists
+  // Return a reference to the found element if it exists.
   if (itr->ind == col && itr != end) {
     return *itr;
   } else {
@@ -204,9 +191,6 @@ IRCMatrix::~IRCMatrix() {
 }
 
 void IRCMatrix::clear() {
-    /*!
-     * Clears all data and deallocates memory.
-     */
     delete [] rows;
     delete [] cvPairs;
     rows = NULL;
@@ -228,10 +212,10 @@ void IRCMatrix::copyFrom(const FlexiMatrix &A) {
     rows = new idx[numRows + 1];
     idx numNonZero = 0;
 
-    // copy data from A to this
+    // Copy data from A to this.
     for (idx r = 0; r < numRows; ++r) {
-      rows[r] = numNonZero; // index to start of row
-      for (auto nz : A.row(r)) { // for each non-zero in row r
+      rows[r] = numNonZero; // Index to the start of the row.
+      for (auto nz : A.row(r)) {
         cvPairs[numNonZero] = nz;
         numNonZero++;
       }
@@ -261,13 +245,6 @@ real IRCMatrix::sparse_get(const idx row, const idx col) const {
 }
 
 real IRCMatrix::getValue(const idx row, const idx col) const {
-    /*!
-      Returns value at (row,col). If a non-zero does not exist at
-      (row,col), a zero is returned. \n\n
-      Note:\n
-      Use bool IRCMatrix::isNonZero(row, col, val) instead if it
-      is important to know wheteher position (row,col) is a non-zero
-      */
     real val;
     return isNonZero(row, col, val) ? val : 0;
 }
@@ -332,16 +309,11 @@ bool IRCMatrix::isNonZero(const idx row, const idx col, real &val) const {
 }
 
 void IRCMatrix::operator*=(const real &s) {
-    /*! Modifies matrix by multiplying all values by scalar coefficient s.*/
     for (idx i = 0 ; i < nnz ; i++)
         cvPairs[i].val *= s;
 }
 
 Vector IRCMatrix::operator *(const Vector &x) const {
-    /*!
-     * MATRIX VECTOR MULTIPLICATION Ax=b.
-     * reference to b is returned
-     */
 #ifndef NDEBUG
     if (numCols != x.getLength()) {
       throw SpaMtrixException("error in " + std::string(ERROR_LOCATION) + " column count is :" + std::to_string(numCols) +
@@ -349,18 +321,18 @@ Vector IRCMatrix::operator *(const Vector &x) const {
     }
 #endif
     Vector b(x.getLength());
-    // FOR EACH ROW
+    // Iterate over each row.
     for (idx i = 0 ; i < getNumRows() ; i++) {
-        // FOR EACH COLUMN
+      // Sum the non-zeros in the row.
         real r(0);
         const idx row_start = rows[i];
         const idx row_end   = rows[i + 1];
         for (idx j = row_start ; j < row_end ; j++) {
             const idx col = cvPairs[j].ind;
             r += cvPairs[j].val * x[col];
-        }// end for jj
+        }
         b[i] = r;
-    }//
+      }
     return b;
 }
 

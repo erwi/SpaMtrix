@@ -130,8 +130,7 @@ TEST_CASE("Solve symmetric positive definite 5-point Poisson finite difference s
         assertEqual(xpected, x, 10 * eps);
     }
 
-        // TODO: Re-enable GMRES + incomplete Cholesky once the solver/preconditioner
-        // path is fixed and produces a meaningful result for this system.
+        // Re-enable GMRES plus incomplete Cholesky once the solver path is fixed.
 
     SECTION("Solve using GMRES and incomplete LU preconditioner") {
         IterativeSolvers solver(numDoF, 100, eps);

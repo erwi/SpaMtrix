@@ -15,7 +15,7 @@ TEST_CASE("MatrixMaker creates IRCMatrix", "[MatrixMaker]") {
     idx numCols = 6;
     int numAdded = 0;
     MatrixMaker matrixMaker(numRows, numCols);
-    // Create sparse matrix with non-zeros in upper diagonal only
+    // Create a sparse matrix with non-zeros in the upper diagonal only.
     for (idx r = 0; r < numRows; r++) {
         for (idx col = 0; col < numCols; col++) {
             if (r <= col) {
@@ -58,7 +58,7 @@ TEST_CASE("Expand block along matrix diagonal", "[MatrixMaker]") {
     mm.addNonZero(2, 2, c);
     mm.addNonZero(0, 2, d);
 
-    // Expand the sparsity pattern along diagonal to the 9x9 matrix
+    // Expand the sparsity pattern along the diagonal to the 9x9 matrix.
     // a.d......
     // .b.......
     // ..c......
@@ -80,14 +80,14 @@ TEST_CASE("Expand block along matrix diagonal", "[MatrixMaker]") {
     for (int r = 0; r < 9; r++) {
         for (int c = 0; c < 9; c++) {
             if (r == c) {
-                // diagonal positions
+                // Diagonal positions.
                 REQUIRE(M.getValue(r, c) == r % 3 + 1);
             }
             else if ((r == 0 && c == 2) || (r == 3 && c == 5) || (r == 6 && c == 8)) {
-                // off-diagonal non-zero
+                // Off-diagonal non-zero.
                 REQUIRE(M.getValue(r, c) == d);
             } else {
-                // everything else should be zero sparse
+                // Everything else should be sparse zero.
                 REQUIRE(M.isNonZero(r, c) == false);
             }
         }
@@ -109,7 +109,7 @@ TEST_CASE("Expand block rows and columns", "[MatrixMaker]") {
         mm.addNonZero(1, 0, c);
         mm.addNonZero(1, 1, d);
 
-        // Expand the sparsity pattern 3x along rows and columns to the 6x6 matrix
+        // Expand the sparsity pattern three times along rows and columns to the 6x6 matrix.
         // a b a b a b
         // c d c d c d
         // a b a b a b
@@ -118,7 +118,7 @@ TEST_CASE("Expand block rows and columns", "[MatrixMaker]") {
         // c d c d c d
         mm.expandBlocks(3);
 
-        // Check the resulting sparse matrix values
+        // Check the resulting sparse matrix values.
         auto M = mm.getIRCMatrix();
 
         std::vector<double> row0 = {a, b, a, b, a, b};

@@ -8,15 +8,15 @@ LUIncPreconditioner::LUIncPreconditioner(const IRCMatrix &A) : M(A) {
     for (idx i = 1 ; i < n ; ++i) {
         auto k_itr = M.row(i).begin();
         auto rowEnd = M.row(i).end();
-        // k-index loop over all non-zeros in row i with column index < i, constructs L-part of LU
-        while (k_itr->ind < i ) { // loop a[i,k]
+        // Iterate over the lower-triangular entries in row i.
+        while (k_itr->ind < i ) { // a[i, k]
             const idx k = k_itr->ind;
             k_itr->val /= M.getValue(k,k);
-            // j-loop over non-zeros in row i with col index > k
+            // Iterate over the entries to the right of k.
             auto j_itr = k_itr + 1;
-            while ( j_itr != rowEnd ) { // loop a[i,j]
+            while ( j_itr != rowEnd ) { // a[i, j]
                 const idx j = j_itr->ind;
-                j_itr->val -= k_itr->val * M.getValue(k,j); // todo: optimise row access of all non-zeros
+                j_itr->val -= k_itr->val * M.getValue(k,j); // TODO: Optimise row access for non-zeros.
                 j_itr++;
             }
             k_itr ++;
@@ -33,9 +33,9 @@ void LUIncPreconditioner::solveMxb(Vector &x, const Vector &b) const {
 
 void LUIncPreconditioner::forwardSubstitution(Vector &x, const Vector &b) const {
     const idx n = x.getLength();
-    // for each row
+    // Iterate over each row.
     for(idx i = 0 ; i < n ; ++i) {
-        // calculate sum of all lower diagonal values
+        // Calculate the sum of all lower-diagonal values.
         real sum(0.0);
         auto col_itr = M.row(i).begin();
         while (col_itr->ind < i) {

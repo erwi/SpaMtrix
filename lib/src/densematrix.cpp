@@ -29,9 +29,6 @@ void DenseMatrix::setAllValuesTo(const real v) {
 }
 
 real &DenseMatrix::operator()(const idx row, const idx col) {
-  /*!
-    Row/column access operator
-    */
 #ifdef DEBUG
   assert(row < numRows);
     assert(col < numCols_);
@@ -41,9 +38,6 @@ real &DenseMatrix::operator()(const idx row, const idx col) {
 }
 
 real DenseMatrix::operator()(const idx row, const idx col) const {
-  /*!
-    Row/column access operator
-    */
 #ifdef DEBUG
   assert(row < numRows);
     assert(col < numCols_);

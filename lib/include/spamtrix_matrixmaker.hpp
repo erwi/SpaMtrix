@@ -7,66 +7,82 @@
 namespace SpaMtrix {
 class IRCMatrix;
 
-/*!
-* Class for specifying matrix sparsity pattern and creating the corresponding sparse matrix data structure.
-*/
+/**
+ * @brief Helper for building sparse matrix sparsity patterns.
+ */
 class MatrixMaker {
     idx nRows;          // NUMBER OF ROWS
     idx nCols;          // NUMBER OF COLUMSN
     FlexiMatrix nz;     // TEMPORARY "FLEXIBLE" SPARSE MATRIX DATASTUCTURE
     MatrixMaker(){}
 public:
+    /**
+     * @brief Construct a matrix maker for the requested size.
+     *
+     * @param nRows Number of rows.
+     * @param nCols Number of columns.
+     */
     MatrixMaker(const idx nRows, const idx nCols);
+    /** @brief Destroy the helper. */
     virtual ~MatrixMaker();
+    /** @brief Count the currently stored non-zero entries. */
     idx calcNumNonZeros() const;
+    /**
+     * @brief Add a non-zero position to the sparsity pattern.
+     *
+     * @param row Row index.
+     * @param col Column index.
+     * @param val Initial value.
+     */
     void addNonZero(const idx row, const idx col, const real val = 0.0);
 
   /**
-   * Expands existing sparsity pattern by a factor of numExp+1. E.g., if numExp is 2, the resulting matrix size
-   * will be 3 times the original: [a] -> |aaa|
-   *                                      |aaa|
-   *                                      |aaa|
+   * @brief Expand each stored entry into a square block pattern.
+   *
+   * If @p numExp is 2, each entry becomes a $3\times 3$ block.
+   *
+   * @param numExp Expansion factor.
    */
   void expandBlocks(const idx numExp = 1);
     /**
-     * Expands non-zeroes along matrix diagonal to size numExp.
-     * For example the N-by-N block on non-zeroes # expanded with numExp=3 becomes
-     * a 3N-by-3N <br>
-     *     #.. <br>
-     *     .#. <br>
-     *     ..# <br>
+     * @brief Expand the diagonal pattern to a larger diagonal block matrix.
      *
+     * @param numExp Expansion factor.
      */
     void expandDiagonal(idx numExp);
 
-    /*!
-    * Makes a 5 point finite differences (2D) poisson test matrix.
-    * The grid spacing is assumed to be unity, resulting in a main
-    * diagonal with value 4, and all off-diagonals with values -1.
-    *
-    * The FD grid is assumed to have an equal number of rows and columns n,
-    * where n = sqrt( side length ) of the built matrix A.
-    *
-    * Example:
-    *          To build matrix that corresponds to a 10 x 10 FD grid,
-    *          create a MatrixMake object:
-    *             1. MatrixMaker mm(100, 100).
-    *             2. mm.poisson5Point().
-    *             3. IRCMatrix A = mm.getIRCMatrix();
-    */
-    void poisson5Point(); // CREATES A 5 POINT POISSON FINITE DIFFERENCES TEST MATRIX
+    /**
+     * @brief Build a 5-point finite-difference Poisson test matrix.
+     *
+     * The grid spacing is assumed to be unity.
+     */
+    void poisson5Point();
 
     /**
-     * Creates an identity matrix of the previously defined size. Note that the matrix must be square.
+     * @brief Create an identity matrix sparsity pattern.
+     *
+     * The matrix must be square.
      */
     void identity();
 
+    /**
+     * @brief Materialize the current sparsity pattern as an IRC matrix.
+     *
+     * @return The constructed sparse matrix.
+     */
     IRCMatrix getIRCMatrix();
-    /** Creates a new new IRCMatrix on the heap and returns pointer to it.
-     * Caller is responsible of deleting the pointer
+    /**
+     * @brief Allocate a new IRC matrix on the heap.
+     *
+     * @return Newly allocated matrix.
      */
     IRCMatrix* newIRCMatrix();
-    void makeSparseMatrix(IRCMatrix &A); //CONVERTS A SPARSITY PATTERN TO A SPARSE MATRIX
+    /**
+     * @brief Populate an existing IRC matrix from the current pattern.
+     *
+     * @param A Matrix to populate.
+     */
+    void makeSparseMatrix(IRCMatrix &A);
 };
 }
 

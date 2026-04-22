@@ -1,7 +1,7 @@
 #include <iostream>
 #include <math.h>
 
-// SPAMTRIX INCLUDES
+// SpaMtrix includes.
 #include <spamtrix_ircmatrix.hpp>
 #include <spamtrix_vector.hpp>
 #include <spamtrix_matrixmaker.hpp>
@@ -9,13 +9,13 @@
 #include <spamtrix_diagpreconditioner.hpp>
 #include <spamtrix_tdmatrix.hpp>
 
-// TEST 2. SOLVES 1D POISSON FINITE DIFFERENCES PROBLEM
+// Solve a 1D Poisson finite-difference problem.
 using std::cout;
 using std::endl;
 using namespace SpaMtrix;
 int main(int nargs, char* args[])
 {
-  // CONSTRUCT 1D FINITE DIFFERENCES MATRIX
+  // Construct the 1D finite-difference matrix.
   unsigned int np = 10;
   
   if (nargs > 1){
@@ -27,50 +27,48 @@ int main(int nargs, char* args[])
   cout << "creating tridiagonal matrix of size:" << np <<"x" <<np<<"...";
   
 
-  // FILL IN MATRIX VALUES
+  // Fill in the matrix values.
   //		    | 2  -1     |
   // A = 1/(h^2) *  | -1  2  -1 |
   //		    |    -1   2 |		  
   //
-  // USING h = 1:
+  // Using h = 1.
   
-  TDMatrix tdm(np); // MAKE TRIDIAGONAL MATRIX
+  TDMatrix tdm(np); // Create the tridiagonal matrix.
 
   for (unsigned int i = 0 ; i < np ; i++ ){
-    tdm.sparse_set(i,i,2.0);  // DIAGONAL
+    tdm.sparse_set(i,i,2.0);  // Diagonal.
     if ( i > 0 ){
-      tdm.sparse_set(i,i-1, -1.0); // SUB-DIAGONAL
+      tdm.sparse_set(i,i-1, -1.0); // Sub-diagonal.
     }
     if ( i < np - 1){
-      tdm.sparse_set(i, i+1 , -1); // SUP-DIAGONAL
+      tdm.sparse_set(i, i+1 , -1); // Super-diagonal.
     }
   }
   cout<<"OK"<<endl;  
-  // CREATE UNKNOWN VECTOR x, WITH FIXED VALUES 1, -1 AT BOTH ENDS
+  // Create the unknown vector x with fixed values 1 and -1 at both ends.
   Vector x(np);
   x[0] = 1.0;
   x[np-1] = -1.0;
    
-  // R.H.S VECTOR b
+  // Right-hand-side vector b.
   Vector b(np);
-  // ===================================== 
-  // APPLY BOUNDARY CONDITIONS
-  // =====================================
+  // Apply boundary conditions.
   multiply(tdm,x,b); 	// b = Ax;
  
   scale(-1.0, b); // WANT TO SOLVE Ax = -b, SO MULTIPLY BY -1 HERE
   
-  // MODIFY MATRIX COLUMNS/ROWS FOR KNOWN NODES
-  // FIRST NODE
+  // Modify matrix rows and columns for known nodes.
+  // First node.
   tdm.sparse_set(0, 0, 1.0);
   tdm.sparse_set(0, 1, 0.0);
   tdm.sparse_set(1, 0, 0.0);
-  // LAST NODE
+  // Last node.
   tdm.sparse_set(np-1, np-1, 1.0);
   tdm.sparse_set(np-2, np-1, 0.0);
   tdm.sparse_set(np-1, np-2, 0.0);
   
- // PRINT IF SMALL PROBLEM
+ // Print the vectors if the problem is small.
   if (np <= 10){
     cout << "R.H.S. vector b:"<<endl;
     b.print("b");
@@ -82,11 +80,11 @@ int main(int nargs, char* args[])
    
   cout << "error after TDM solver : "<< sqrt(errorNorm2(tdm,x,b)) << endl;
   
-  // RESTORE FIXED BOUNDARY NODE VALUES
+  // Restore fixed boundary node values.
   x[0] = 1.0;
   x[np-1] = -1.0;
   
-  // PRINT RESULT IF SMALL PROBLEM
+  // Print the result if the problem is small.
   if (np <= 10){
     cout << "solution vector x:"<< endl;
     x.print("x");

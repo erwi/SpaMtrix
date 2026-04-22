@@ -193,7 +193,7 @@ TEST_CASE("IRCMatrix getValuePtr and multiply helper remain consistent", "[IRCMa
 
 TEST_CASE("Add sparse matrix to other - different sparsity patterns", "[IRCMatrix]") {
   using namespace SpaMtrix;
-  // ARRANGE
+  // Arrange.
   MatrixMaker mm1(3, 3);
   mm1.identity();
   auto I1 = mm1.getIRCMatrix();
@@ -202,10 +202,10 @@ TEST_CASE("Add sparse matrix to other - different sparsity patterns", "[IRCMatri
   mm2.addNonZero(1, 1, 1);
   auto M = mm2.getIRCMatrix();
 
-  // ACT
+  // Act.
   I1.add(M);
 
-  // ASSERT
+  // Assert.
   REQUIRE(I1.getValue(0, 0) == 1);
   REQUIRE(I1.getValue(1, 1) == 2);
   REQUIRE(I1.getValue(2, 2) == 1);

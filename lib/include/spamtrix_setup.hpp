@@ -1,48 +1,37 @@
 #ifndef SETUP_H
 #define SETUP_H
-#include <limits>
+
 #include <cmath>
-typedef unsigned int idx;	// INDEX
-typedef double real;		// VALUES
+#include <limits>
 
+/** @brief Integer type used for indices and dimensions. */
+typedef unsigned int idx;
 
-//inline real abs(const real& a)
-//{
-//  /*! 
-//    Oevrloads abs(real) to handle absolute values of floating point numbers without
-//    truncating to integer.
-//  */
-//  return fabs(a); 
-//} 
+/** @brief Floating-point type used for matrix and vector values. */
+typedef double real;
 
-struct IndVal{
-/*!
-  The IndVal struct represents a non-zero position in a sparse matrix at column or row position ind.
-  The nonzero is on row/col IndVal::ind, and its value is IndVal::val
-*/
-    idx  ind;	// POSITION INDEX, CAN BE EITHER ROW OR COLUMN INDEX
-    real val;	// VALUE
-    IndVal(const idx ind, const real val):ind(ind), val(val){}
-    IndVal():ind(0),val(0){}
+/**
+ * @brief Sparse matrix entry storing an index-value pair.
+ */
+struct IndVal {
+    /** @brief Column or row index. */
+    idx ind;
+    /** @brief Stored value. */
+    real val;
+
+    /**
+     * @brief Construct an index-value pair.
+     *
+     * @param ind Index position.
+     * @param val Stored value.
+     */
+    IndVal(const idx ind, const real val) : ind(ind), val(val) {}
+
+    /** @brief Construct a zero-valued entry at index 0. */
+    IndVal() : ind(0), val(0) {}
 };
 
-
-//inline bool compare_columns(const IndVal &iv1, const IndVal &iv2)
-//{
-//    /*!
-//      Implements the < operation between a IndVal and a position index.
-//      Returns iv.ind < ind
-//      */
-//    return (iv1.ind < iv2.ind); // IF FIRST INDEX IS SMALLER THAN SECOND
-//}
-
-
-
-
-
-
-
-static const idx MAX_INDEX= std::numeric_limits<idx>::max();
+/** @brief Maximum representable index value. */
+static const idx MAX_INDEX = std::numeric_limits<idx>::max();
 
 #endif
-

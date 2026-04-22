@@ -10,17 +10,7 @@ idx powerMethod(const SpaMtrix::IRCMatrix &A,
                 real &toler,
                 unsigned int maxIter
                ) {
-    /*!
-     * Calculates the dominant eigenvalue and corresponding eigenvector of matrix A
-     * using power iterations. \n
-     * The eigenvalue and aigenvector are returned in parameters 'eigenValue' and
-     * 'eigenVector', respectively.
-     * 'toler' specifies the required accuracy of the method, as a percentage of the
-     * calculated eigenvalue (how much the eigenvalue changes during each iteration relative to its
-     * value). \n
-     * The function terminates if more than 'maxIter' iterations are used, and the total number of iterations used is returned.
-     */
-    // MAKE SURE INITIAL GUESS IS NOT A ZERO VECTOR
+    // Ensure the initial guess is not a zero vector.
     real n = eigenVector.getNorm();
     if (n == 0.0) {
         eigenVector(0) = 1.0;
@@ -31,14 +21,14 @@ idx powerMethod(const SpaMtrix::IRCMatrix &A,
     SpaMtrix::Vector q(eigenVector);
     SpaMtrix::Vector z = A * eigenVector;
     idx iter(0);
-    // DO WHILE RELATIVE CHANGE IS LESS THAN toler
+    // Continue until the relative change falls below the tolerance.
     while (dL > toler) {
         z.normalise();
         q = z;
         z = A * q;
-        // UPDATE EIGENVALUE AND CALCULATE RELATIVE CHANGE
-        real Lo = eigenValue;    // OLD
-        eigenValue = dot(q, z);  // eigenValue = xAx
+        // Update the eigenvalue estimate and its relative change.
+        real Lo = eigenValue;
+        eigenValue = dot(q, z);
         dL = fabs(Lo - eigenValue) / eigenValue;
         iter++;
         if (iter >= maxIter) {

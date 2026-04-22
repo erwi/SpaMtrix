@@ -1,12 +1,6 @@
-/*!
-  Creating a 5 point poisson (2D finite differences) test matrix.
-  The FD grid is assumed square, with equal side lengths n, and
-  grid spacing of unity.
-*/
-
 #include <iostream>
 
-// SpaMtrix headers
+// SpaMtrix headers.
 #include <spamtrix_matrixmaker.hpp>
 #include <spamtrix_ircmatrix.hpp>
 #include <spamtrix_vector.hpp>
@@ -19,20 +13,20 @@ using namespace SpaMtrix;
 int main( int nargs, char *args[] )
 {
 
-    // DEFAULT FD DRID SIDE LENGTH IS 10 POINTS
+    // Default finite-difference grid side length is 10 points.
     idx gridLen =10;
     if (nargs > 1)
     {
         gridLen = atoi(args[1]);
     }
     cout << "Creating 5-point poisson test matrix A..." << endl;
-    // CREATE 5-POINT-POISSON TEST MATRIX
-    idx numDoF = gridLen*gridLen;   // NUMBER OF DEGREES OF FREEDOM OF SYSTEM
+    // Create the 5-point Poisson test matrix.
+    idx numDoF = gridLen*gridLen;   // Number of degrees of freedom.
     MatrixMaker mm(numDoF,numDoF);
-    mm.poisson5Point();             // SETS SPARSITY PATTERN
+    mm.poisson5Point();             // Set the sparsity pattern.
     IRCMatrix A = mm.getIRCMatrix();
     cout << "Matrix size is : " << numDoF << "x" << numDoF << endl;
-    // CREATE VECTORS FOR SYSTEM OF EQUATIONS Ax = b
+    // Create vectors for the system of equations Ax = b.
     Vector x(numDoF);
     Vector b(numDoF);
     b[0] = 1.0;
@@ -42,17 +36,14 @@ int main( int nargs, char *args[] )
     solver.solve(x,b);
     cout << "OK" << endl;
 
-    if (gridLen <= 5) // PRINT SMALL GRID ON SCREEN
+    if (gridLen <= 5) // Print a small grid on screen.
         x.print("x");
 
-    // TEST ERROR
-    // PRINT NUMERICAL ERROR MAGNITUDE
+    // Print the numerical error magnitude.
     real e = sqrt(errorNorm2(A,x,b));
     cout<< "error is " << e << endl;
     
-    // WRITE RESULT IN A COMMA SEPARATED TEXT FILE
-    // ROWS AND COLUMNS ARE ORDERED ACCORDING TO THE
-    // FD GRID USED FOR THE CALCULATION
+    // Write the result to a comma-separated text file.
     Writer::writeCSV("out.csv", x , gridLen );
     
     return 0;

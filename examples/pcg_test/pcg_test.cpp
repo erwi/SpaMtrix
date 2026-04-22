@@ -1,7 +1,7 @@
 #include <iostream>
 
 
-// SpaMtrix HEADERS
+// SpaMtrix headers.
 #include <spamtrix_matrixmaker.hpp>
 #include <spamtrix_ircmatrix.hpp>
 #include <spamtrix_vector.hpp>
@@ -13,18 +13,9 @@ using std::endl;
 using namespace SpaMtrix;
 int main ()
 {
-/*!
- * Example/test showing how to create a sparse matrix using the MatrixMaker.
- * 
- * A small 2x2 matrix problem Ax=b is constructed and solver using the 
- * preconditioned conjugate gradient method.
- * 
- * A = [[3,2];[2,6]] , b = [2,-8] is used.
- * 
- */	
-    // CREATE SPARSE MATRIX    
-    //      A = |3,2|
-    //          |2,6|
+  // Example that builds a small sparse matrix and solves it with PCG.
+  // A = |3,2|
+  //     |2,6|
     
     MatrixMaker mm(2,2);
     mm.addNonZero(0,0,3); 
@@ -36,14 +27,14 @@ int main ()
     A.print();
     
     cout << "b is : "<< endl;
-    // MAKE VECTORS b AND x
+    // Make vectors b and x.
     Vector b(2); b[0] = 2; b[1] = -8;
     Vector x(2);      
     b.print("b");
     
-    // CREATE DIAGONAL PRECONDITIONER MATRIX
+    // Create a diagonal preconditioner.
     DiagPreconditioner M(A);
-     // SOLVE
+     // Solve.
     IterativeSolvers isol = IterativeSolvers(10,1e-7);
     bool conv = isol.pcg(A, x, b, M);
     

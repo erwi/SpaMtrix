@@ -21,7 +21,6 @@ Vector::Vector(const Vector &v) {
 }
 
 Vector::Vector(const real *val, const idx &length) {
-    /*!Constructor that copies values from an existing array of reals*/
     values = std::vector<real>(val, val + length);
 }
 
@@ -33,7 +32,6 @@ Vector &Vector::operator=(const Vector &v) {
 }
 
 Vector &Vector::operator=(const real &a) {
-    /*!Sets all values to the scalar a*/
     idx len = this->getLength();
     for (idx i = 0; i < len; ++i)
         values[i] = a;
@@ -41,14 +39,10 @@ Vector &Vector::operator=(const real &a) {
 }
 
 void Vector::resize(const idx length) {
-    /*! Resizes to specief length. Existing values are preserved up to the
-      new length, and any new entries are initialised to 0.0. */
     values.resize(length, 0.0);
 }
 
 Vector &Vector::operator+=(const Vector &v) {
-    /*!Increments all values by those in v. Both vectors must be
-    of equal length*/
 #ifdef DEBUG
     assert(this->getLength() == v.getLength());
 #endif
@@ -104,12 +98,10 @@ const Vector Vector::operator-(const Vector &rhs) const {
 }
 
 const Vector Vector::operator*(const real a) const {
-    /*!Scales by scalar*/
     return Vector(*this) *= a;
 }
 
 real Vector::getNorm() const {
-    /*!Returns scalar length of this vector*/
     real sum(0);
     for (idx i = 0; i < this->getLength(); i++)
         sum += values[i] * values[i];
@@ -117,9 +109,6 @@ real Vector::getNorm() const {
 }
 
 void Vector::normalise() {
-    /*! scales each component to make this a unit vector.
-      If length is intially zero, returns without doing anything
-     */
     real norm = this->getNorm();
     if (norm == 0.0) // do nothing is zero-vector
         return;
@@ -127,11 +116,8 @@ void Vector::normalise() {
     for (idx i = 0; i < this->getLength(); i++)
         values[i] *= k;
 }
-//============================================
-//  DEBUG FUNCTIONS
-//============================================
+// Debug output.
 void Vector::print(const char *name) const {
-    /*! Prints vector values to stdout.*/
     std::cout << "Vector length " << this->getLength() << std::endl;
     for (idx i = 0; i < getLength(); i++) {
         if (name) {

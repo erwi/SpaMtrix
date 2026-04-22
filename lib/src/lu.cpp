@@ -17,15 +17,12 @@ LU::LU(const IRCMatrix &A):
   fillFirstColumnL(A, L, n);
   fillFirstRowU(A, U, n);
 #endif
-//==============================
-//          MAIN LOOP
-//==============================
+// Main loop.
   for (idx j = 1; j < n; ++j) {
-    // MAKE L
+    // Build L.
     for (idx i = j ; i < n; ++i) {
       real sum(0.0);
-      // accumulate sum = L(i, k) * U(k, j) for k in range 0 to j
-      // avoiding multiplying terms that are known to be zero
+      // Accumulate sum = L(i, k) * U(k, j) for k in range 0 to j.
       if (i < L.getNumRows()) {
         for (const auto &nonZero: L.row(i)) {
           const idx k = nonZero.ind;
@@ -36,7 +33,7 @@ LU::LU(const IRCMatrix &A):
       L.setValue(i, j, A.getValue(i, j) - sum);
     }
 
-    // MAKE U
+    // Build U.
     U.setValue(j, j, 1.0);
     real Ljj = L.getValue(j, j);
     for (idx i = j + 1; i < n; ++i) {
@@ -55,9 +52,6 @@ LU::LU(const IRCMatrix &A):
 LU::~LU() { }
 
 void LU::print() {
-    /*!
-    * Debug printout to stdout of L and U Matrices.
-    */
     std::cout << "L:" << std::endl;
     L.print();
     std::cout << "U:" << std::endl;
@@ -73,14 +67,14 @@ void LU::solve(Vector &x, const Vector &b) const {
 }
 
 void LU::forwardSubstitution(Vector &x, const Vector &b) const {
-    // FOR EACH ROW
+    // Iterate over each row.
     for (idx i = 0 ; i < x.getLength() ; ++i) {
-        // vector product between non-zeros in row i and vector x
+      // Compute the row dot product.
         real sum(0.0);
         for (const auto &nonZero : L.row(i)) {
             sum += nonZero.val * x[nonZero.ind];
         }
-        const real diag = L.row(i).back().val; // diagonal value is in last position of row in L-matrix
+        const real diag = L.row(i).back().val; // The diagonal value is the last entry in the row.
         x[i] = (b[i] - sum) / diag;
     }
 }

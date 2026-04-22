@@ -21,10 +21,6 @@ FlexiMatrix::FlexiMatrix(const IRCMatrix &A) {
 FlexiMatrix::~FlexiMatrix() { }
 
 idx FlexiMatrix::calcNumNonZeros() const {
-    /*!
-     * Returns number of non-zeros allocated. Does this by calculating it, so this gets
-     * linearly slower with larger matrices
-     */
     idx nnz(0);
     for (idx i = 0 ; i < nonZeros.size() ; ++i)
         nnz += nonZeros[i].size();
@@ -32,39 +28,35 @@ idx FlexiMatrix::calcNumNonZeros() const {
 }
 
 void FlexiMatrix::addNonZero(size_t row, size_t col, real value) {
-    // CHECK DIMENSION1 VECTOR SIZE
+    // Check the row index.
 #ifdef DEBUG
     if (row >= getNumRows())
         std::cerr << "row = " << row << "num rows = " << getNumRows() << std::endl;
     assert(row < getNumRows());
 #endif
-    // Append empty rows if needed
+    // Append empty rows if needed.
     while (getNumRows() <= row) {
         nonZeros.emplace_back();
     }
-    // IF EMPTY ROW OR NEW VALUE PLACED AT END, JUST APPEND TO ROW AND EXIT FUNCTION
+    // Append directly if the row is empty or the new entry belongs at the end.
     if ((nonZeros[row].size() == 0) ||
         (nonZeros[row].back().ind < col)) {
         nonZeros[row].emplace_back(col, value);
         numCols_ = std::max(numCols_, (size_t) col + 1);
         return;
     }
-    // FIND CORRECT POSITION BY SEARCHING FOR COLUMN POSITIONS.
-    // ALL COLUMN VALUES MUST INCREASE, I.E MAINTAINING AN ASCENDIGLY
-    // SORTED VECTOR OF NON-ZERO COLUMNS
-    // LOWER BOUND RETURNS ITERATOR TO FIRST ELEMENT THAT DOES NOT
-    // COMPARE TO LESS THAN dim2
+    // Find the correct insertion position while keeping columns sorted.
     IndVal temp(col, value);
     auto itr = std::lower_bound(nonZeros[row].begin(),
                             nonZeros[row].end(),
                             temp,
                           [](const IndVal & iv1, const IndVal & iv2) { return iv1.ind < iv2.ind; }
                         );
-    // IF ADDING DUPLICATE NONZERO, ONLY WRITE VALUE TO EXISTING MEMORY
+    // Update an existing entry if the column already exists.
     if (itr->ind == temp.ind) {
         itr->val = temp.val;
     }
-    // OTHERWISE ADD NEW VALUE
+    // Otherwise insert a new entry.
     else {
         nonZeros[row].insert(itr, temp);
     }
@@ -77,7 +69,7 @@ real FlexiMatrix::getValue(size_t row, size_t col) const {
         return 0.;
     }
     IndVal temp(col, 0.0);
-    // Find iterator to first element that is not less than col (i.e. is equal or greater)
+    // Find the first entry that is not less than col.
     auto itr = std::lower_bound(nonZeros[row].begin(), nonZeros[row].end(), temp,
                 [](const IndVal & iv1, const IndVal & iv2) { return iv1.ind < iv2.ind; });
 
@@ -99,27 +91,20 @@ const std::vector<IndVal>& FlexiMatrix::row(size_t row) const {
 }
 
 void FlexiMatrix::setValue(const idx dim1, const idx dim2, const real val) {
-    /*!
-      Sets value at (dim1,dim2) to value val. If a non-zero does not already
-      exist at (dim1,dim2), a new non-zero is inserted
-      */
 #ifdef DEBUG
     assert(dim1 < numDim1);
     assert(dim2 < numDim2);
 #endif
     real *nnzval;
-    if (isNonZero(dim1, dim2, nnzval)) {    // IF NON-ZERO STORAGE ALREADY EXISTS, SET ITS VALUE
+    if (isNonZero(dim1, dim2, nnzval)) {
         printf("update(%d,%d)=%e\n", dim1, dim2, val);
         *nnzval = val;
-    } else                                  // OTHERWISE INSERT NEW NONZERO LOCATION
+    } else
         addNonZero(dim1, dim2, val);
 }
 
 
 void FlexiMatrix::print() const {
-    /*!
-    Prints the values held in the matrix to stdout
-    */
     printf("FlexiMatrix %zu, %zu\n", getNumRows(), getNumCols());
     for (idx r = 0 ; r < nonZeros.size() ; r++) {
         for (idx c = 0 ; c < getNumCols() ; c++) {
@@ -132,37 +117,31 @@ void FlexiMatrix::print() const {
 }
 
 bool FlexiMatrix::isNonZero(const idx dim1, const idx dim2, real *&val) {
-    /*!
-    Returns true if memory is allocated for a non-zero value at index dim1,dim2.
-
-    Input argument val is a pointer to location of addres of stored value if non-zero
-    (or NULL pointer otherwise).
-    */
-    val = NULL; // ASSUME STORAGE IS NOT ALLOCATED AT dim1,dim2
+    // Assume storage is not allocated at dim1, dim2.
+    val = NULL;
     if (dim1 >= (idx) nonZeros.size())
         return false;
-    // IF VECTOR HAS NOT INITIALISED
+    // If the row vector has not been initialized.
     if (nonZeros[dim1].empty())
         return false;
-    // SET ITERATOR TO FIRST ELEMENT THAT DOES NOT COMPARE TO LESS
-    // THAN dim2.
+    // Set the iterator to the first element not less than dim2.
     IndVal iv(dim2, 0.0);
     std::vector<IndVal>::iterator itr =
         std::lower_bound(nonZeros[dim1].begin(),
                          nonZeros[dim1].end(),
                          iv,
     [](const IndVal & iv1, const IndVal & iv2) {
-        return iv1.ind < iv2.ind;   // lamda column comparison
+        return iv1.ind < iv2.ind;
     }
                         );
-// itr WILL POINT TO END IF ALL INDEXES ARE LESS THAN dim2
+    // itr will point to the end if all indices are less than dim2.
     if (itr == nonZeros[dim1].end())
         return false;
-// itr NOW POINTS EITHER TO dim2 OR THE NEXT AFTER IT
+    // itr now points either to dim2 or the next entry after it.
     if ((*itr).ind == dim2) {
-        val = &(itr->val); // SET POINTER TO VALUE AT INDEX dim1,dim2
+        val = &(itr->val);
         return true;
     } else
-        return false; // NON-ZERO AT INDEX dim1,dim2 NOT FOUND
+        return false;
 }
 } // end namespace SpaMtrix

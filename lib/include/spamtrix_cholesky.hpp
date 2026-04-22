@@ -9,25 +9,46 @@
 
 
 namespace SpaMtrix {
+/**
+ * @brief Sparse Cholesky factorization.
+ */
 class Cholesky {
-  FlexiMatrix L;    // Lower diagonal matrix
+  FlexiMatrix L;
 
   Cholesky():L(){}
+  /**
+   * @brief Forward substitution with the lower factor.
+   *
+   * @param x Solution vector to populate.
+   * @param b Right-hand-side vector.
+   */
   void forwardSubstitution(Vector&x, const Vector& b) const;
+  /**
+   * @brief Backward substitution with the transposed lower factor.
+   *
+   * @param x Solution vector to populate.
+   * @param b Right-hand-side vector.
+   */
   void backwardSubstitution(Vector&x, const Vector& b) const;
 
 public:
-    /** Creates a cholesky decomposition lower diagonal of matrix A*/
+  /**
+   * @brief Compute the Cholesky factorization of a sparse matrix.
+   *
+   * @param A Source matrix.
+   */
     explicit Cholesky(const IRCMatrix& A);
+  /** @brief Print the factorization. */
     void print()const;
 
     /**
-        Solves Ax=b using forward/backward substitution. <br>
-        Ax = b <br>
-        L'(Ly) = b <br>
-        L'x = y <br>
+   * @brief Solve $A x = b$ using forward and backward substitution.
+   *
+   * @param x Solution vector to populate.
+   * @param b Right-hand-side vector.
     */
-    void solve(Vector& x, const Vector& b) const; // SOLVES Ax=b USING FORWARD/BACKWARD SUBSTITUTION
+  void solve(Vector& x, const Vector& b) const;
+  /** @brief Destroy the factorization. */
     virtual ~Cholesky();
 };
 } // end namespace SpaMtrix

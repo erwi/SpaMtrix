@@ -8,22 +8,20 @@
 
 int main(int nargs, char *args[])
 {
-    /*!
-     * A simple example where a sparse matrix with random sparsity pattern and values is created. \n
-     * Tests matrix-vector and matrix-scalar multiplications.
-     */
-    // DEFAULT MATRIX SIZE IS 5, CAN BE CANGED WITH FIRST COMMAND LINE PARAMETER
+    // A simple example that creates a sparse matrix with random values.
+    // It also tests matrix-vector and matrix-scalar multiplications.
+    // Default matrix size is 5 and can be changed with the first command-line parameter.
     idx testSize = 5;
     if (nargs>1)
         testSize = atoi(args[1]);
 
     std::cout << "Matrix test size" << testSize << std::endl;
 
-    // CREATE TEST MATRIX WITH RANDOM DATA
+    // Create a test matrix with random data.
     std::cout << "Creating sparse matrix A with random data" << std::endl;
     SpaMtrix::MatrixMaker mm(testSize, testSize);
     srand(time(NULL));
-    // FOR EACH ROW AND COLUMN, FILL ~%50 NON_ZEROS
+    // Fill about 50% of the entries.
     for (idx r = 0 ; r < testSize ; r++)
         for (idx c = 0 ; c < testSize ; c++){
             if (rand() % 2 ){
@@ -33,21 +31,21 @@ int main(int nargs, char *args[])
         }
     SpaMtrix::IRCMatrix Atemp = mm.getIRCMatrix();
 
-    // ASSIGNMENT TEST
+    // Assignment test.
     SpaMtrix::IRCMatrix A;
     A = Atemp;
-    // DISPLAY CREATED MATRIX AND ITS SPARSITY PATTERN ON SCREEN
+    // Display the matrix and its sparsity pattern.
     A.print();
     A.spy();
 
-    // MATRIX-VECTOR MULTIPLICATION
+    // Matrix-vector multiplication.
     std::cout << "Performing Ax = b, where x is all ones" << std::endl;
     SpaMtrix::Vector x(testSize);
     x = 1.0;
     SpaMtrix::Vector b = A * x;
     b.print("b");
 
-    // MATRIX SCALAR OPERATIONS
+    // Matrix-scalar operations.
     SpaMtrix::IRCMatrix M = -10*A;
     M*=-0.1;
     M.print();

@@ -7,38 +7,47 @@
 #include <spamtrix_vector.hpp>
 
 namespace SpaMtrix {
+    /**
+     * @brief Incomplete LU preconditioner.
+     */
     class LUIncPreconditioner: public Preconditioner {
-        FlexiMatrix M;  // stores both L and U. L is unit lower diagonal, so its
-                    // diagonal values are not stored
+        FlexiMatrix M;  ///< Stores both L and U factors.
         LUIncPreconditioner(){}
 
         /**
-            Performs forward substitution on the lower diagonal part of the incomplete LU factorisation (L).<br>
-
-            L is a lower unit diagonal matrix, stored in the lower part of matrix 'a'.
-            The diagonal entries of L are not explicitly stored, since they are all ones.<br>
-            <br>
-
-            x[i] = { b[i] - sum( L[i,j]*x[j] ) } / L[i,j]; <br>
-            simplifies to<br>
-            x[i] = b[i] - sum( L[i,j]*x[j] ) <br>
+            @brief Forward substitution on the lower triangular factor.
+            
+            The lower factor is unit diagonal, so the diagonal is not stored.
+            
+            @param x Solution vector to populate.
+            @param b Right-hand-side vector.
         */
         void forwardSubstitution(Vector &x, const Vector &b) const;
 
         /**
-            Performs back-substitution of upper diagonal part of the incomplete LU factorisation (U).
-            U is the upper diagonal matrix, stored in the upper diagonal part of 'a'.
+            @brief Back-substitution on the upper triangular factor.
+            
+            @param x Solution vector to populate.
+            @param b Right-hand-side vector.
         */
         void backwardSubstitution(Vector &x, const Vector &b) const;
     public:
         /**
-        * Creates an incomplere LU preconditioner with zero drop tolerance, LU(0).
-        * The implementation is based on the IKJ version of the ILU factorisation
-        * in Saad's book (ALGORITHM 10.3: General ILU Factorization, IKJ Version)
-        */
+         * @brief Create an incomplete LU preconditioner with zero drop tolerance.
+         *
+         * @param A Source matrix.
+         */
         LUIncPreconditioner(const IRCMatrix &A);
+        /** @brief Destroy the preconditioner. */
         virtual ~LUIncPreconditioner();
+        /** @brief Print the factorization. */
         void print() const;
+        /**
+         * @brief Solve the ILU preconditioner system.
+         *
+         * @param x Solution vector to populate.
+         * @param b Right-hand-side vector.
+         */
         void solveMxb(Vector &x, const Vector &b) const;
     };
 }

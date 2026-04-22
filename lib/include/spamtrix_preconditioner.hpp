@@ -4,16 +4,31 @@
 
 
 namespace SpaMtrix {
-/*! PURE VIRTUAL PRECONDITIONER BASE CLASS */
+/**
+ * @brief Abstract base class for linear-system preconditioners.
+ */
 class Preconditioner {
     public:
-        virtual void solveMxb(Vector &x, const Vector &b) const  = 0; // SOLVES Mx = b
+        /**
+         * @brief Solve the preconditioner system $M x = b$.
+         *
+         * @param x Solution vector to populate.
+         * @param b Right-hand-side vector.
+         */
+        virtual void solveMxb(Vector &x, const Vector &b) const = 0;
 
+        /**
+         * @brief Solve the preconditioner system and return the result.
+         *
+         * @param b Right-hand-side vector.
+         * @return The computed solution vector.
+         */
         Vector solve(const Vector &b) const {
             Vector x(b.getLength());
             solveMxb(x, b);
             return x;
         }
+        /** @brief Virtual destructor. */
         virtual ~Preconditioner() { }
     };
 

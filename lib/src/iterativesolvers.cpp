@@ -27,9 +27,6 @@ IterativeSolvers::IterativeSolvers(const idx maxIter,
     toler(toler) {
 }
 
-/**
-  Solves Ax=b using the preconditioned conjugate gradient method.
-*/
 bool IterativeSolvers::pcg(const IRCMatrix &A,
                            Vector &x,
                            const Vector &b,
@@ -54,7 +51,7 @@ bool IterativeSolvers::pcg(const IRCMatrix &A,
         IterativeSolvers::maxIter = 0;
         return true;
     }
-    // MAIN LOOP
+    // Main loop.
     idx i = 1;
     for (; i <= IterativeSolvers::maxIter; i++) {
         M.solveMxb(z, r);
@@ -65,7 +62,7 @@ bool IterativeSolvers::pcg(const IRCMatrix &A,
             beta = rho / rho_1;
             aypx(beta, p, z); // p = beta*p + z;
         }
-        // CALCULATES q = A*p AND dp = dot(q,p)
+        // Calculate q = A*p and dp = dot(q, p).
         real dp = multiply_dot(A, p, q);
         alpha = rho / dp;
         normr = 0;
@@ -73,8 +70,8 @@ bool IterativeSolvers::pcg(const IRCMatrix &A,
         #pragma omp parallel for reduction(+:normr)
 #endif
         for (idx j = 0 ; j < N ; ++j) {
-            x[j] += alpha * p[j]; // x + alpha(0) * p;
-            r[j] -= alpha * q[j]; // r - alpha(0) * q;
+                x[j] += alpha * p[j];
+                r[j] -= alpha * q[j];
             normr += r[j] * r[j];
         }
         normr = sqrt(normr);
@@ -90,8 +87,7 @@ bool IterativeSolvers::pcg(const IRCMatrix &A,
     return false;
 }
 
-//=====================================================
-// FUNCTIONS USED BY GMRES ONLY
+// Functions used by GMRES only.
 inline void GeneratePlaneRotation(const real &dx, const real &dy, real &cs, real &sn) {
     if (dy == 0.0) {
         cs = 1.0;
@@ -122,7 +118,7 @@ inline void Update(Vector &x,
                    Vector &temp,
                    const Vector v[]
                   ) {
-    // Backsolve:
+    // Backsolve.
     for (int i = k; i >= 0; --i) {
         temp(i) /= h(i, i);
         for (int j = i - 1; j >= 0; --j)
@@ -163,22 +159,21 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
     Vector *v = new Vector[maxInnerIter + 1];
     for (idx id = 0; id < maxInnerIter + 1; ++id)
         v[id] = Vector(N);
-    // CREATE HESSENBERG MATRIX NEEDED TO STORE INTERMEDIATES
+    // Create the Hessenberg matrix needed to store intermediates.
     DenseMatrix H(maxInnerIter + 1, maxInnerIter);
     Vector temp(N);
     Vector temp2(maxInnerIter + 1);
-    // MAIN LOOP
+    // Main loop.
     while (j <= maxIter) {
         v[0] = r * (1.0 / beta);
         s = 0.0;
         s(0) = beta;
-        // INNER ITERATIONS
+        // Inner iterations.
         for (i = 0; i < maxInnerIter && j <= maxIter; i++, j++) {
-            // CALCULATE w = M^{-1}(A*v[i])
+            // Calculate w = M^{-1}(A*v[i]).
             multiply(A, v[i], temp);
             M.solveMxb(w, temp);
-            // PRE-CALCULATE DOT PRODUCTS IN PARALLEL
-            // H(k,i) = dot( v[k], w)
+            // Pre-calculate dot products in parallel.
 #ifdef USES_OPENMP
             #pragma omp parallel for
 #endif
@@ -189,17 +184,15 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
                 H(k, i) = dp; //dot(w,v[k]);
             }
             for (k = 0; k <= i; ++k) {
-                // w -= v[k]*H(k,i) without temporaries
+                // Update w without temporaries.
                 real tempr = H(k, i);
 #ifdef USES_OPENMP
-                #pragma omp parallel for // why is this loop so critical??
+                #pragma omp parallel for
 #endif
                 for (idx id = 0 ; id < N ; ++id)
                     w[id] -= v[k][id] * tempr;
             }
-            // BELOW PARALLEL REGION CALCULATES:
-            // H(i+1,i) = norm(w);
-            // v[i+1] = w * (1.0 / H(i+1, i));
+            // Compute the next basis vector and Hessenberg entry.
             H(i + 1, i) = 0;
             real tempr(0);
 #ifdef USES_OPENMP
@@ -223,7 +216,7 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
 #endif
                 for (idx id = 0 ; id < N ; ++id)
                     v[i + 1][id] = w[id] * tempr;
-            }// end for omp parallel
+            }
             for (k = 0; k < i; k++)
                 ApplyPlaneRotation(H(k, i), H(k + 1, i), cs(k), sn(k));
             GeneratePlaneRotation(H(i, i), H(i + 1, i), cs(i), sn(i));
@@ -231,7 +224,7 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
             ApplyPlaneRotation(s(i), s(i + 1), cs(i), sn(i));
             res = fabs(s(i + 1)) / normb;
             if (res < toler) {
-                // COPY S INTO temp WITHOUT RESIZING
+                // Copy S into temp without resizing.
                 for (idx id = 0 ; id < maxInnerIter + 1 ; ++id)
                     temp2[id] = s[id];
                 Update(x, i, H, temp2, v);
@@ -240,8 +233,8 @@ bool IterativeSolvers::gmres(const IRCMatrix &A,
                 delete [] v;
                 return true;
             }
-        }// end for i IINNER ITERATIONS
-        // COPY S INTO temp WITHOUT RESIZING
+        }
+        // Copy S into temp without resizing.
         for (idx id = 0 ; id < maxInnerIter + 1 ; ++id)
             temp2[id] = s[id];
         Update(x, maxInnerIter - 1, H, temp2, v);

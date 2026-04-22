@@ -11,16 +11,26 @@
 
 namespace SpaMtrix{
 class LU{
-/*!
-* A class that performs:\n
-*\t1.\t(non-pivoted) LU factorisation of a sparse matrix using the Crout algorithm.\n
-*\t2.\tforward-backward bustitution to solve the Ax=b system, where A is the factorised matrix
-*/
+/**
+ * @brief Non-pivoted sparse LU factorization using a Crout-style algorithm.
+ */
     idx numRows;
     FlexiMatrix L;
     FlexiMatrix U;
     LU(){} //
+    /**
+     * @brief Forward substitution with the lower factor.
+     *
+     * @param x Solution vector to populate.
+     * @param b Right-hand-side vector.
+     */
     void forwardSubstitution(Vector& x, const Vector &b) const;
+    /**
+     * @brief Backward substitution with the upper factor.
+     *
+     * @param x Solution vector to populate.
+     * @param b Right-hand-side vector.
+     */
     void backwardSubstitution(Vector &x, const Vector &b) const;
     inline void fillFirstColumnL(const IRCMatrix& A, FlexiMatrix &L, const idx &n) {
         for (idx i = 0 ; i < n ; ++i){
@@ -42,14 +52,21 @@ class LU{
         }
     }
 public:
+    /**
+     * @brief Factorize the supplied matrix.
+     *
+     * @param A Matrix to factorize.
+     */
     LU( const IRCMatrix &A);
+    /** @brief Destroy the factorization. */
     virtual ~LU();
+    /** @brief Print the factorization. */
     void print();
     /**
-    * Solves Ax=b using forward/backward substitution. <br>
-    * Ax  = b <br>
-    * L(Uy) = b <br>
-    * Lx = y <br>
+    * @brief Solve $A x = b$ using forward and backward substitution.
+    *
+    * @param x Solution vector to populate.
+    * @param b Right-hand-side vector.
     */
     void solve(Vector& x, const Vector& b) const;
 };
