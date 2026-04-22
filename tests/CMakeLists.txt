@@ -11,23 +11,31 @@ target_include_directories(SpaMtrixTests
 target_link_libraries(SpaMtrixTests SpaMtrix)
 
 if(BUILD_TESTING)
-        add_test(NAME Vector_construction_initializes_all_entries_to_zero COMMAND SpaMtrixTests "Vector construction initializes all entries to zero")
-        add_test(NAME Vector_copy_construction_creates_an_independent_copy COMMAND SpaMtrixTests "Vector copy construction creates an independent copy")
-        add_test(NAME Vector_assignment_creates_an_independent_deep_copy COMMAND SpaMtrixTests "Vector assignment creates an independent deep copy")
-        add_test(NAME Vector_scalar_assignment_sets_every_element COMMAND SpaMtrixTests "Vector scalar assignment sets every element")
-        add_test(NAME Vector_element_access_supports_read_and_write COMMAND SpaMtrixTests "Vector element access supports read and write")
-        add_test(NAME Vector_compound_arithmetic_with_scalars_and_vectors_works COMMAND SpaMtrixTests "Vector compound arithmetic with scalars and vectors works")
-        add_test(NAME Vector_non_mutating_arithmetic_returns_new_vectors COMMAND SpaMtrixTests "Vector non-mutating arithmetic returns new vectors")
-        add_test(NAME Vector_setAllValuesTo_norm_and_normalise_behave_correctly COMMAND SpaMtrixTests "Vector setAllValuesTo, norm, and normalise behave correctly")
-        add_test(NAME Vector_resize_preserves_existing_values_and_zero_fills_new_elements COMMAND SpaMtrixTests "Vector resize preserves existing values and zero-fills new elements")
+        set(SPAMTRIX_TEST_SOURCES
+                ${CMAKE_CURRENT_SOURCE_DIR}/test.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/solver_test.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/ircmatrix_test.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/vector_test.cpp)
 
-        add_test(NAME MatrixMaker_creates_IRCMatrix COMMAND SpaMtrixTests "MatrixMaker creates IRCMatrix")
-        add_test(NAME Expand_block_along_matrix_diagonal COMMAND SpaMtrixTests "Expand block along matrix diagonal")
-        add_test(NAME Expand_block_rows_and_columns COMMAND SpaMtrixTests "Expand block rows and columns")
+        # Re-run CMake automatically when a test source file changes so the
+        # discovered Catch test list stays in sync with the implementation.
+        set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${SPAMTRIX_TEST_SOURCES})
 
-        add_test(NAME Add_sparse_matrix_to_other_identical_sparsity_patterns COMMAND SpaMtrixTests "Add sparse matrix to other - identical sparsity patterns")
-        add_test(NAME Add_sparse_matrix_to_other_different_sparsity_patterns COMMAND SpaMtrixTests "Add sparse matrix to other - different sparsity patterns")
-        add_test(NAME Access_matrix_values_by_pointer COMMAND SpaMtrixTests "Access matrix values by pointer")
+        function(spamtrix_register_catch_tests test_source)
+                file(STRINGS "${test_source}" catch_test_lines REGEX "^[ \t]*TEST_CASE\\(\"[^\"]+\"")
 
-        add_test(NAME Solve_symmetric_positive_definite_5_point_Poisson_finite_difference_system COMMAND SpaMtrixTests "Solve symmetric positive definite 5-point Poisson finite difference system")
+                foreach(catch_test_line IN LISTS catch_test_lines)
+                        string(REGEX REPLACE ".*TEST_CASE\\(\"([^\"]+)\".*" "\\1" catch_test_name "${catch_test_line}")
+                        string(MAKE_C_IDENTIFIER "${catch_test_name}" catch_test_id)
+                        get_filename_component(test_source_name "${test_source}" NAME_WE)
+                        string(MAKE_C_IDENTIFIER "${test_source_name}_${catch_test_id}" ctest_name)
+
+                        add_test(NAME "${ctest_name}" COMMAND SpaMtrixTests "${catch_test_name}")
+                        set_tests_properties("${ctest_name}" PROPERTIES LABELS "${test_source_name}")
+                endforeach()
+        endfunction()
+
+        foreach(test_source IN LISTS SPAMTRIX_TEST_SOURCES)
+                spamtrix_register_catch_tests("${test_source}")
+        endforeach()
 endif()
