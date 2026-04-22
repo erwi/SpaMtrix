@@ -41,12 +41,9 @@ Vector &Vector::operator=(const real &a) {
 }
 
 void Vector::resize(const idx length) {
-    /*! Resizes to specief length. All values are initialised to 0.0 */
-    if (this->getLength() == length) {
-        return;
-    } else {
-        values = std::vector<real>(length, 0.0);
-    }
+    /*! Resizes to specief length. Existing values are preserved up to the
+      new length, and any new entries are initialised to 0.0. */
+    values.resize(length, 0.0);
 }
 
 Vector &Vector::operator+=(const Vector &v) {

@@ -135,13 +135,24 @@ This copies the library binary to `bin/` and the public headers to `include/`.
 
 ## Running tests
 
-Tests use the [Catch2](https://github.com/catchorg/Catch2) (v1, single-header) framework, located in `extern/catch/`. They are built automatically when SpaMtrix is the top-level CMake project and can be run with:
+Tests use the [Catch2](https://github.com/catchorg/Catch2) (v1, single-header) framework, located in `extern/catch/`. Each Catch test case is registered as a separate CTest test, so `ctest` prints the individual test names as it runs them.
+
+They are built automatically when SpaMtrix is the top-level CMake project and can be run with:
 
 ```bash
-ctest
+cd build
+ctest --output-on-failure
 # or directly
 ./tests/SpaMtrixTests
 ```
+
+If your build directory is named differently, pass it explicitly instead of using `cd build`, for example:
+
+```bash
+ctest --test-dir cmake-build-debug --output-on-failure
+```
+
+For a more verbose run that includes extra CTest output, use `ctest -V --test-dir cmake-build-debug`.
 
 
 
