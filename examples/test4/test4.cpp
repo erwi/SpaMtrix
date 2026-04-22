@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #include <iostream>
 #include <spamtrix_matrixmaker.hpp>
 #include <spamtrix_ircmatrix.hpp>

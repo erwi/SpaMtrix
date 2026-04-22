@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #include <spamtrix_luincpreconditioner.hpp>
 namespace SpaMtrix {
 LUIncPreconditioner::~LUIncPreconditioner() {}

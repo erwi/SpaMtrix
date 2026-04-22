@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #ifndef SETUP_H
 #define SETUP_H
 

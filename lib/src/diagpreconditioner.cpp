@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #include <spamtrix_diagpreconditioner.hpp>
 namespace SpaMtrix {
 DiagPreconditioner::DiagPreconditioner(const IRCMatrix& A ):

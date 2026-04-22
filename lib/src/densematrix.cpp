@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #include <stdlib.h>
 #include <iostream>
 #include <stdio.h>

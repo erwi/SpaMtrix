@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #ifndef VECTOR_H
 #define VECTOR_H
 

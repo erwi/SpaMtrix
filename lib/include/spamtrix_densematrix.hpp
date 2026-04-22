@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #ifndef DENSEMATRIX_H
 #define DENSEMATRIX_H
 #include <vector>

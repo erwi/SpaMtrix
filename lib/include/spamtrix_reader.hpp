@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #ifndef READER_H
 #define READER_H
 #include <fstream>

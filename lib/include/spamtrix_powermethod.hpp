@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #ifndef POWERMETHOD_H
 #define POWERMETHOD_H
 #include <spamtrix_blas.hpp>

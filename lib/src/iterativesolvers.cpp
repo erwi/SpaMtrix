@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #include <spamtrix_iterativesolvers.hpp>
 #include <spamtrix_blas.hpp>
 #include <spamtrix_densematrix.hpp>

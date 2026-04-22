@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #ifndef ITERATIVESOLVERS_H
 #define ITERATIVESOLVERS_H
 

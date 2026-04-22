@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #ifndef SPAMTRIX_SPAMTRIX_EXCEPTION_HPP
 #define SPAMTRIX_SPAMTRIX_EXCEPTION_HPP
 #include <stdexcept>

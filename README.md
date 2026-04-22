@@ -156,5 +156,9 @@ ctest --test-dir cmake-build-debug --output-on-failure
 
 For a more verbose run that includes extra CTest output, use `ctest -V --test-dir cmake-build-debug`.
 
+## License
+
+SpaMtrix is licensed under the MIT License. See [LICENSE](LICENSE) for the full text.
+
 
 

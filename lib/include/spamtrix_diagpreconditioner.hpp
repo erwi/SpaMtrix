@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #ifndef DIAGPRECONDITIONER_H
 #define DIAGPRECONDITIONER_H
 #include <omp.h>

@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #ifndef WRITER_H
 #define WRITER_H
 #include <spamtrix_setup.hpp>

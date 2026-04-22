@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #ifndef LUINCPRECONDITIONER_H
 #define LUINCPRECONDITIONER_H
 

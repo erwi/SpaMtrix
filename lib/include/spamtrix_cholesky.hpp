@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #ifndef CHOLESKY_H
 #define CHOLESKY_H
 #include <vector>

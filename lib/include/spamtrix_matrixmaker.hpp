@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #ifndef MATRIXMAKER_H
 #define MATRIXMAKER_H
 #include <vector>

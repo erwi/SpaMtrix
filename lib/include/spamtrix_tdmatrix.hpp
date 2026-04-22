@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Eero
+// SPDX-License-Identifier: MIT
 #ifndef TDMATRIX_H
 #define TDMATRIX_H
 
