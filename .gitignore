@@ -8,3 +8,4 @@ CMakeLists.txt.user
 /build
 .directory
 /.idea
+cmake-build-*/

@@ -1,36 +1,147 @@
 # SpaMtrix
-This is a small standalone library (i.e. doesn't depend on loads of, or even one, other libraries that must be first built and installed) for solving systems of linear simultaneous equations defined
-using sparse matrices. The algorithms and datastructures are adapted from various books and other resources (e.g. Wikipedia) that may describe 
-the method rather than best implementation, so are likely far from optimised.  
 
-## Includes
+SpaMtrix is a small, standalone C++ library for solving systems of linear equations $Ax = b$ defined using sparse matrices. It has no external dependencies beyond a C++11-capable compiler and CMake. The algorithms and data structures are adapted from standard references and are intended to be straightforward rather than highly optimised.
 
-Contains a sparse matrix class and a vector class for defining the system of linear equations Ax=b.
+## Contents
 
-The following solver algorithms for solving the Ax=b system of equation are also implemented:
+### Matrix types
 
+| Class | Description |
+|---|---|
+| `IRCMatrix` | General sparse matrix using an Interleaved Row Compressed (IRC) storage scheme. This is the primary matrix type used for assembly and solving. |
+| `FlexiMatrix` | Flexible sparse matrix used internally during matrix construction. |
+| `TDMatrix` | Specialised tridiagonal matrix with a direct Thomas algorithm solver. |
+| `DenseMatrix` | Dense matrix, used internally by the GMRES solver. |
+
+### Vector
+
+`Vector` — a dense vector class supporting standard arithmetic operators, norm computation, and normalisation.
+
+### Solvers
+
+**Iterative solvers** (via `IterativeSolvers`):
 - Preconditioned Conjugate Gradient (PCG)
-- Generalized Minimal Residual Method (GMRES)
-- Cholesky decomposition method
-- LU decomposition
+- Generalised Minimal Residual Method (GMRES)
 
-The following preconditioners that can be used with the iterative solvers PCG and GMRES are implemented:
+**Direct solvers**:
+- Cholesky decomposition (`Cholesky`) — for symmetric positive-definite matrices
+- LU decomposition (`LU`) — for general square matrices (Crout algorithm, no pivoting)
+- Tridiagonal direct solver (`TDMatrix::solveAxb`) — for tridiagonal systems
 
-- Diagonal preconditioner (a.k.a. Jacobi preconditioner)
-- Incomplete Cholesky factorisation preconditioner
-- Incomplete LU factorisation preconditioner
+### Preconditioners
+
+The following preconditioners can be used with the iterative solvers:
+
+- `DiagPreconditioner` — diagonal (Jacobi) preconditioner
+- `CholIncPreconditioner` — incomplete Cholesky factorisation preconditioner
+- `LUIncPreconditioner` — incomplete LU factorisation preconditioner
+
+### Eigenvalue computation
+
+`powerMethod` — computes the dominant eigenvalue and corresponding eigenvector of a matrix using power iteration.
+
+### I/O
+
+- `Reader::readMatrixMarket` — reads a sparse matrix from a Matrix Market file
+- `Writer::writeMatrixMarket` — writes a sparse matrix to a Matrix Market file
+- `Writer::writeCSV` — writes a vector to a CSV file
 
 ## How to use it
-The general idea is that first the matrix sparsity pattern is defined using the `MatrixMaker` class, which is a builder. This will then be converted
-to the sparse matrix class SpaMtrix which can be used for actual computations. 
 
-In absense of proper documentation, see the unit tests or examples in the `tests` or `examples` directories for details.
+The general workflow is:
 
-## Building 
-Everything is built using CMake either as a library that can be linked to, or the whole projcet code can be included in your own CMake project. 
-TODO: this can surely be improved.
+1. Define the matrix sparsity pattern using `MatrixMaker`.
+2. Populate entries with `addNonZero`.
+3. Convert to `IRCMatrix` with `getIRCMatrix()`.
+4. Construct a right-hand-side `Vector` and solve.
 
-This has been known to work at least with GCC and MinGW compilers, but there shouldn't be anything fundamentally preventing from using other complilers.
+### Quick example: PCG solver
+
+```cpp
+#include <spamtrix_matrixmaker.hpp>
+#include <spamtrix_ircmatrix.hpp>
+#include <spamtrix_vector.hpp>
+#include <spamtrix_iterativesolvers.hpp>
+#include <spamtrix_diagpreconditioner.hpp>
+
+using namespace SpaMtrix;
+
+// Build a 2x2 matrix  A = [[3, 2], [2, 6]]
+MatrixMaker mm(2, 2);
+mm.addNonZero(0, 0, 3);
+mm.addNonZero(0, 1, 2);
+mm.addNonZero(1, 0, 2);
+mm.addNonZero(1, 1, 6);
+IRCMatrix A = mm.getIRCMatrix();
+
+// Right-hand side b = [2, -8]
+Vector b(2); b[0] = 2; b[1] = -8;
+Vector x(2);
+
+// Solve with PCG
+DiagPreconditioner M(A);
+IterativeSolvers solver(100, 1e-7);
+bool converged = solver.pcg(A, x, b, M);
+```
+
+For more complete examples, see the `examples/` directory, and for tests see the `tests/` directory.
+
+### Note on numeric types
+
+`real` is a `typedef` for `double` and `idx` is a `typedef` for `unsigned int`. These are defined in `spamtrix_setup.hpp`.
+
+## Building
+
+### Prerequisites
+
+- CMake 3.0 or later
+- A C++11-capable compiler (GCC and MinGW are known to work; other compilers should work too)
+- OpenMP (optional)
+
+### Build steps
+
+```bash
+mkdir build && cd build
+cmake ..
+cmake --build .
+```
+
+### Optional: OpenMP support
+
+Cholesky and LU decompositions have optional OpenMP parallelism. Enable it at configure time:
+
+```bash
+cmake -DUSES_OPENMP=ON ..
+```
+
+### Using SpaMtrix as a CMake sub-project
+
+The library can be included directly in another CMake project:
+
+```cmake
+add_subdirectory(SpaMtrix)
+target_link_libraries(MyTarget SpaMtrix)
+```
+
+The `lib/include` directory is automatically added to the include search path via the `SpaMtrix` target's public include directories.
+
+### Installation
+
+```bash
+cmake --install .
+```
+
+This copies the library binary to `bin/` and the public headers to `include/`.
+
+## Running tests
+
+Tests use the [Catch2](https://github.com/catchorg/Catch2) (v1, single-header) framework, located in `extern/catch/`. They are built automatically when SpaMtrix is the top-level CMake project and can be run with:
+
+```bash
+ctest
+# or directly
+./tests/SpaMtrixTests
+```
 
 
 
