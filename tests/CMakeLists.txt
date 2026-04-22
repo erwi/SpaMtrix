@@ -1,4 +1,5 @@
 add_executable(SpaMtrixTests
+        test_main.cpp
         test.cpp
         solver_test.cpp
         ircmatrix_test.cpp)

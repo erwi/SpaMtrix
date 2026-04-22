@@ -1,7 +1,7 @@
 #include <catch.h>
 #include "spamtrix_matrixmaker.hpp"
 
-TEST_CASE("Add sparse matrix to other - identical sparsity patterns") {
+TEST_CASE("Add sparse matrix to other - identical sparsity patterns", "[IRCMatrix]") {
   using namespace SpaMtrix;
   MatrixMaker mm(3, 3);
   mm.identity();
@@ -26,7 +26,7 @@ TEST_CASE("Add sparse matrix to other - identical sparsity patterns") {
   }
 }
 
-TEST_CASE("Add sparse matrix to other - different sparsity patterns") {
+TEST_CASE("Add sparse matrix to other - different sparsity patterns", "[IRCMatrix]") {
   using namespace SpaMtrix;
   // ARRANGE
   MatrixMaker mm1(3, 3);
@@ -46,7 +46,7 @@ TEST_CASE("Add sparse matrix to other - different sparsity patterns") {
   REQUIRE(I1.getValue(2, 2) == 1);
 }
 
-TEST_CASE("Access matrix values by pointer") {
+TEST_CASE("Access matrix values by pointer", "[IRCMatrix]") {
   using namespace SpaMtrix;
 
   MatrixMaker mm(3, 3);
@@ -56,8 +56,7 @@ TEST_CASE("Access matrix values by pointer") {
   REQUIRE(I.getValuePtr(0, 0) != nullptr);
   REQUIRE(*I.getValuePtr(1, 1) == 1.);
 
-  // Modify the matrix value
-
+  // Modify the matrix value.
   *I.getValuePtr(2, 2) = 2;
   REQUIRE(*I.getValuePtr(2, 2) == 2);
 }
