@@ -31,6 +31,7 @@ public:
     IRCMatrix(IRCMatrix &&m);
     IRCMatrix(const FlexiMatrix &M); // copy constructor with move semantics
     IRCMatrix& operator=(const IRCMatrix& m);
+    IRCMatrix& operator=(IRCMatrix&& m);
     IRCMatrix& operator=(const real &s);
     IRCMatrix& operator=(const FlexiMatrix &m);
     virtual ~IRCMatrix();

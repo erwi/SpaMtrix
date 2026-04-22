@@ -3,7 +3,13 @@ add_executable(SpaMtrixTests
         test.cpp
         solver_test.cpp
         ircmatrix_test.cpp
-        vector_test.cpp)
+        vector_test.cpp
+        tdmatrix_test.cpp
+        densematrix_test.cpp
+        fleximatrix_test.cpp
+        blas_test.cpp
+        powermethod_test.cpp
+        io_test.cpp)
 target_include_directories(SpaMtrixTests
         PRIVATE
             ../extern/catch)
@@ -15,7 +21,13 @@ if(BUILD_TESTING)
                 ${CMAKE_CURRENT_SOURCE_DIR}/test.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/solver_test.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/ircmatrix_test.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/vector_test.cpp)
+                ${CMAKE_CURRENT_SOURCE_DIR}/vector_test.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/tdmatrix_test.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/densematrix_test.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/fleximatrix_test.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/blas_test.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/powermethod_test.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/io_test.cpp)
 
         # Re-run CMake automatically when a test source file changes so the
         # discovered Catch test list stays in sync with the implementation.

@@ -12,6 +12,9 @@ FlexiMatrix::FlexiMatrix(const IRCMatrix &A) {
         idx rowStart = A.rows[r];
         idx rowEnd   = A.rows[r + 1];
         nonZeros[r] = std::vector<IndVal>(&A.cvPairs[rowStart] , &A.cvPairs[rowEnd]);
+        for (const auto &entry : nonZeros[r]) {
+            numCols_ = std::max(numCols_, static_cast<size_t>(entry.ind) + 1);
+        }
     }
 }
 

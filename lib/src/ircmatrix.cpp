@@ -57,6 +57,9 @@ IRCMatrix::IRCMatrix(IRCMatrix &&m) {
     // Clear m data
     m.rows = nullptr;
     m.cvPairs = nullptr;
+    m.nnz = 0;
+    m.numRows = 0;
+    m.numCols = 0;
 }
 
 
@@ -93,6 +96,29 @@ IRCMatrix &IRCMatrix::operator=(const IRCMatrix &M) {
     }
     return *this;
 }
+
+  IRCMatrix &IRCMatrix::operator=(IRCMatrix &&M) {
+    if (&M == this) {
+      return *this;
+    }
+
+    delete [] rows;
+    delete [] cvPairs;
+
+    rows = M.rows;
+    cvPairs = M.cvPairs;
+    nnz = M.nnz;
+    numRows = M.numRows;
+    numCols = M.numCols;
+
+    M.rows = nullptr;
+    M.cvPairs = nullptr;
+    M.nnz = 0;
+    M.numRows = 0;
+    M.numCols = 0;
+
+    return *this;
+  }
 
 IRCMatrix &IRCMatrix::operator=(const real &s) {
     /*! SETS ALL NONZEROS TO SCALAR s.*/

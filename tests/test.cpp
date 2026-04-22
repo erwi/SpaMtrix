@@ -17,9 +17,9 @@ TEST_CASE("MatrixMaker creates IRCMatrix", "[MatrixMaker]") {
     MatrixMaker matrixMaker(numRows, numCols);
     // Create sparse matrix with non-zeros in upper diagonal only
     for (idx r = 0; r < numRows; r++) {
-        for (idx c = 0; c < numCols; c++) {
-            if (r <= c) {
-                matrixMaker.addNonZero(r, c);
+        for (idx col = 0; col < numCols; col++) {
+            if (r <= col) {
+                matrixMaker.addNonZero(r, col);
                 numAdded ++;
                 REQUIRE(numAdded == matrixMaker.calcNumNonZeros());
             }
@@ -135,4 +135,43 @@ TEST_CASE("Expand block rows and columns", "[MatrixMaker]") {
                         }
                 }
         }
+}
+
+TEST_CASE("MatrixMaker newIRCMatrix returns a heap-allocated IRCMatrix", "[MatrixMaker]") {
+    using namespace SpaMtrix;
+
+    MatrixMaker mm(2, 2);
+    mm.addNonZero(0, 0, 1.0);
+    mm.addNonZero(1, 1, 2.0);
+
+    IRCMatrix *matrix = mm.newIRCMatrix();
+    REQUIRE(matrix != nullptr);
+    REQUIRE(matrix->getNumRows() == 2);
+    REQUIRE(matrix->getNumCols() == 2);
+    REQUIRE(matrix->getnnz() == 2);
+    REQUIRE(matrix->getValue(0, 0) == Approx(1.0));
+    REQUIRE(matrix->getValue(1, 1) == Approx(2.0));
+
+    delete matrix;
+}
+
+TEST_CASE("MatrixMaker expandDiagonal(1) leaves the matrix unchanged", "[MatrixMaker]") {
+    using namespace SpaMtrix;
+
+    MatrixMaker mm(2, 2);
+    mm.addNonZero(0, 0, 1.0);
+    mm.addNonZero(0, 1, 2.0);
+    mm.addNonZero(1, 0, 3.0);
+    mm.addNonZero(1, 1, 4.0);
+
+    mm.expandDiagonal(1);
+
+    auto matrix = mm.getIRCMatrix();
+    REQUIRE(matrix.getNumRows() == 2);
+    REQUIRE(matrix.getNumCols() == 2);
+    REQUIRE(matrix.getnnz() == 4);
+    REQUIRE(matrix.getValue(0, 0) == Approx(1.0));
+    REQUIRE(matrix.getValue(0, 1) == Approx(2.0));
+    REQUIRE(matrix.getValue(1, 0) == Approx(3.0));
+    REQUIRE(matrix.getValue(1, 1) == Approx(4.0));
 }

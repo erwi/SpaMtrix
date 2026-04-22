@@ -137,6 +137,8 @@ This copies the library binary to `bin/` and the public headers to `include/`.
 
 Tests use the [Catch2](https://github.com/catchorg/Catch2) (v1, single-header) framework, located in `extern/catch/`. Each Catch test case is discovered automatically from the test source files and registered as a separate CTest test, so `ctest` prints the individual test names as it runs them.
 
+The current suite includes dedicated tests for `MatrixMaker`, `IRCMatrix`, `TDMatrix`, `DenseMatrix`, `FlexiMatrix`, BLAS helpers, `powerMethod`, `Vector`, and Reader/Writer round-trips.
+
 They are built automatically when SpaMtrix is the top-level CMake project and can be run with:
 
 ```bash
