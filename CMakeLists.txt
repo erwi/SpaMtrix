@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED (VERSION 3.0.0)
+CMAKE_MINIMUM_REQUIRED (VERSION 3.5.0)
 PROJECT (SpaMtrix)
 # let user define whether to compile with support for OpenMP
 # value should be ON/OFF

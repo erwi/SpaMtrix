@@ -139,6 +139,67 @@ public:
      * @return The 2-norm of the vector.
      */
     real getNorm() const;
+    /**
+     * @brief Compute the sum of all entries.
+     *
+     * @return Sum of the vector elements.
+     */
+    real sum() const;
+    /**
+     * @brief Get the largest element value.
+     *
+     * @return Largest element in the vector.
+     */
+    real max() const;
+    /**
+     * @brief Get the smallest element value.
+     *
+     * @return Smallest element in the vector.
+     */
+    real min() const;
+    /**
+     * @brief Get the element with the largest absolute value.
+     *
+     * @return Element value whose absolute value is maximal.
+     */
+    real absMax() const;
+    /**
+     * @brief Get the element with the smallest absolute value.
+     *
+     * @return Element value whose absolute value is minimal.
+     */
+    real absMin() const;
+    /**
+     * @brief Get the index of the largest element.
+     *
+     * @return Zero-based index of the first maximal element.
+     */
+    idx argMax() const;
+    /**
+     * @brief Get the index of the smallest element.
+     *
+     * @return Zero-based index of the first minimal element.
+     */
+    idx argMin() const;
+    /**
+     * @brief Get the index of the element with the largest absolute value.
+     *
+     * @return Zero-based index of the first element whose absolute value is maximal.
+     */
+    idx argAbsMax() const;
+    /**
+     * @brief Get the index of the element with the smallest absolute value.
+     *
+     * @return Zero-based index of the first element whose absolute value is minimal.
+     */
+    idx argAbsMin() const;
+    /**
+     * @brief Compute the largest absolute element-wise difference to another vector.
+     *
+     * @param other Vector to compare against.
+     * @return Maximum absolute difference between corresponding elements.
+     */
+    real maxAbsDiff(const Vector& other) const;
     /** @brief Scale the vector to unit norm. */
     void normalise();
 
@@ -162,4 +223,3 @@ inline const Vector operator*(const real a, const Vector &v)
 
 
 #endif
-

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 #include <catch.h>
 #include <spamtrix_vector.hpp>
+#include <spamtrix_exception.hpp>
 
 TEST_CASE("Vector construction initializes all entries to zero", "[Vector]") {
     using namespace SpaMtrix;
@@ -168,6 +169,78 @@ TEST_CASE("Vector setAllValuesTo, norm, and normalise behave correctly", "[Vecto
     v.setAllValuesTo(7.0);
     REQUIRE(v[0] == 7.0);
     REQUIRE(v[1] == 7.0);
+}
+
+TEST_CASE("Vector reduction helpers return expected values and indices", "[Vector]") {
+    using namespace SpaMtrix;
+
+    Vector v(5);
+    v[0] = -2.0;
+    v[1] = 4.0;
+    v[2] = -7.5;
+    v[3] = 0.5;
+    v[4] = 4.0;
+
+    REQUIRE(v.sum() == Approx(-1.0));
+    REQUIRE(v.max() == Approx(4.0));
+    REQUIRE(v.min() == Approx(-7.5));
+    REQUIRE(v.absMax() == Approx(-7.5));
+    REQUIRE(v.absMin() == Approx(0.5));
+
+    REQUIRE(v.argMax() == 1);
+    REQUIRE(v.argMin() == 2);
+    REQUIRE(v.argAbsMax() == 2);
+    REQUIRE(v.argAbsMin() == 3);
+}
+
+TEST_CASE("Vector reduction helpers prefer the first index on ties", "[Vector]") {
+    using namespace SpaMtrix;
+
+    Vector v(4);
+    v[0] = -3.0;
+    v[1] = 3.0;
+    v[2] = -3.0;
+    v[3] = 3.0;
+
+    REQUIRE(v.argMax() == 1);
+    REQUIRE(v.argMin() == 0);
+    REQUIRE(v.argAbsMax() == 0);
+}
+
+TEST_CASE("Vector maxAbsDiff returns the largest element-wise difference", "[Vector]") {
+    using namespace SpaMtrix;
+
+    Vector lhs(4);
+    lhs[0] = 1.0;
+    lhs[1] = -2.0;
+    lhs[2] = 3.5;
+    lhs[3] = 0.0;
+
+    Vector rhs(4);
+    rhs[0] = -1.0;
+    rhs[1] = -5.5;
+    rhs[2] = 3.0;
+    rhs[3] = 2.0;
+
+    REQUIRE(lhs.maxAbsDiff(rhs) == Approx(3.5));
+    REQUIRE(rhs.maxAbsDiff(lhs) == Approx(3.5));
+}
+
+TEST_CASE("Vector reductions on an empty vector throw", "[Vector]") {
+    using namespace SpaMtrix;
+
+    Vector empty;
+
+    REQUIRE_THROWS_AS(empty.max(), SpaMtrixException);
+    REQUIRE_THROWS_AS(empty.min(), SpaMtrixException);
+    REQUIRE_THROWS_AS(empty.absMax(), SpaMtrixException);
+    REQUIRE_THROWS_AS(empty.absMin(), SpaMtrixException);
+    REQUIRE_THROWS_AS(empty.argMax(), SpaMtrixException);
+    REQUIRE_THROWS_AS(empty.argMin(), SpaMtrixException);
+    REQUIRE_THROWS_AS(empty.argAbsMax(), SpaMtrixException);
+    REQUIRE_THROWS_AS(empty.argAbsMin(), SpaMtrixException);
+    REQUIRE(empty.sum() == Approx(0.0));
+    REQUIRE(empty.maxAbsDiff(empty) == Approx(0.0));
 }
 
 TEST_CASE("Vector resize preserves existing values and zero-fills new elements", "[Vector]") {

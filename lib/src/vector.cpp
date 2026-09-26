@@ -5,6 +5,17 @@
 
 namespace SpaMtrix {
 
+namespace {
+
+idx requireNonEmptyVector(const Vector& vector, const char* functionName) {
+    if (vector.getLength() == 0) {
+        throw SpaMtrixException("Vector must not be empty in " + std::string(functionName) + " at " + std::string(ERROR_LOCATION));
+    }
+    return vector.getLength();
+}
+
+}
+
 Vector::Vector(const idx length) {
     values = std::vector<real>(length, 0.0);
     if (values.size() != length) {
@@ -108,6 +119,99 @@ real Vector::getNorm() const {
     for (idx i = 0; i < this->getLength(); i++)
         sum += values[i] * values[i];
     return sqrt(sum);
+}
+
+real Vector::sum() const {
+    real result(0);
+    for (idx i = 0; i < this->getLength(); ++i) {
+        result += values[i];
+    }
+    return result;
+}
+
+real Vector::max() const {
+    return values[argMax()];
+}
+
+real Vector::min() const {
+    return values[argMin()];
+}
+
+real Vector::absMax() const {
+    return values[argAbsMax()];
+}
+
+real Vector::absMin() const {
+    return values[argAbsMin()];
+}
+
+idx Vector::argMax() const {
+    idx len = requireNonEmptyVector(*this, "argMax");
+    idx bestIndex = 0;
+    real bestValue = values[0];
+    for (idx i = 1; i < len; ++i) {
+        if (values[i] > bestValue) {
+            bestValue = values[i];
+            bestIndex = i;
+        }
+    }
+    return bestIndex;
+}
+
+idx Vector::argMin() const {
+    idx len = requireNonEmptyVector(*this, "argMin");
+    idx bestIndex = 0;
+    real bestValue = values[0];
+    for (idx i = 1; i < len; ++i) {
+        if (values[i] < bestValue) {
+            bestValue = values[i];
+            bestIndex = i;
+        }
+    }
+    return bestIndex;
+}
+
+idx Vector::argAbsMax() const {
+    idx len = requireNonEmptyVector(*this, "argAbsMax");
+    idx bestIndex = 0;
+    real bestValue = fabs(values[0]);
+    for (idx i = 1; i < len; ++i) {
+        real candidate = fabs(values[i]);
+        if (candidate > bestValue) {
+            bestValue = candidate;
+            bestIndex = i;
+        }
+    }
+    return bestIndex;
+}
+
+idx Vector::argAbsMin() const {
+    idx len = requireNonEmptyVector(*this, "argAbsMin");
+    idx bestIndex = 0;
+    real bestValue = fabs(values[0]);
+    for (idx i = 1; i < len; ++i) {
+        real candidate = fabs(values[i]);
+        if (candidate < bestValue) {
+            bestValue = candidate;
+            bestIndex = i;
+        }
+    }
+    return bestIndex;
+}
+
+real Vector::maxAbsDiff(const Vector& other) const {
+#ifdef DEBUG
+    assert(this->getLength() == other.getLength());
+#endif
+    Vector diff(*this);
+    if (diff.getLength() == 0) {
+        return 0.0;
+    }
+    diff -= other;
+    for (idx i = 0; i < diff.getLength(); ++i) {
+        diff[i] = fabs(diff[i]);
+    }
+    return diff.max();
 }
 
 void Vector::normalise() {

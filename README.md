@@ -15,7 +15,7 @@ SpaMtrix is a small, standalone C++ library for solving systems of linear equati
 
 ### Vector
 
-`Vector` — a dense vector class supporting standard arithmetic operators, norm computation, and normalisation.
+`Vector` — a dense vector class supporting standard arithmetic operators, norm computation, normalisation, extrema queries such as `max()`, `min()`, `absMax()`, `absMin()`, their index counterparts, plus helpers such as `sum()` and `maxAbsDiff()` for convergence monitoring.
 
 ### Solvers
 
@@ -159,6 +159,5 @@ For a more verbose run that includes extra CTest output, use `ctest -V --test-di
 ## License
 
 SpaMtrix is licensed under the MIT License. See [LICENSE](LICENSE) for the full text.
-
 
 
